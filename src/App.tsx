@@ -1,11 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
+import { Header } from './components/organisums/header/Header'
+import { Admin } from './components/pages/Admin'
+import firebase from 'firebase'
+
+import { registerUserInfoAsync } from './features/user/userSlice'
 
 function App() {
+  const dispach = useDispatch()
+  useEffect(() => {
+    dispach(registerUserInfoAsync())
+  }, [dispach])
+
   return (
     <div className="App">
+      <Header></Header>
+      <Admin></Admin>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Counter />
