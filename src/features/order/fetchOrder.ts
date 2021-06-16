@@ -2,72 +2,41 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import firebase from 'firebase'
 
-// 型のインポート
-import { OrderInfo, AddOrder } from '../../types/order/order'
 
 
-const initialState: AddOrder = {
-  userId: '',
-  orderInfo: {
-    orderItems: [{
-      itemCount: 0,
-      itemId: 0,
-      itemPrice: 0,
-      uniqueItemId: ''
-    }],
-  },
-  status: 0,
-}
+const initialState: any = []
 
-export const addOrderAsync = createAsyncThunk('addOrder/addOrderAsync', async (addOrder: any) => {
-  console.log(addOrder)
-  // 注文情報の商品に一意のIDを作成
+export const fetchOrderAsync = createAsyncThunk('fetchOrder/fetchOrderAsync', async (userId: string) => {
+  // stateで管理するための配列を用意
+  let fetchOrderStatus: any = []
   const ordersRef =
     firebase
       .firestore()
       .collection('users')
-      .doc(addOrder.userId)
+      .doc(userId)
       .collection('orders');
-  const ref = ordersRef.doc();
-  // 商品情報の配列0番目にユニークなIDを付与
-  addOrder.orderInfo.orderItems[0].uniqueItemId = ref.id;
-  console.log(addOrder)
-  // 実際に注文情報を追加（新規注文）
-  // await firebase
-  //   .firestore()
-  //   .collection(`users/${addOrder.userId}/orders`)
-  //   .add(addOrder.orderInfo)
-  //   .then((doc) => {
-  //     console.log(doc.id)
-  //   })
-  //   .catch((error) => {
-  //     console.log(error)
-  //   })
-  // 実際に注文情報を追加（追加注文）
-  let status0Id: any = [];
+  // statusが0のもをFirestoreから引っ張ってくる
   await ordersRef
     .where('status', '==', 0)
     .get()
     .then((querySnapshot) => {
+      console.log(querySnapshot)
       querySnapshot.forEach((doc) => {
-        status0Id.push(doc.id)
-        console.log(doc.id)
-      });
-      console.log(status0Id[0])
-      const status0Ref = ordersRef.doc(status0Id[0]);
-      status0Ref.update({
-        orderItems: firebase.firestore.FieldValue.arrayUnion(
-          addOrder.orderInfo
-        ),
-      });
+        console.log(doc.data(), doc.id)
+        fetchOrderStatus = doc.data().orderItems
+      })
+    })
+    .catch((error) => {
+      console.log(error)
     });
-  console.log(addOrder)
+  console.log(userId)
+  console.log(fetchOrderStatus)
   // return addOrder.orderInfo
-  return 'aa'
+  return fetchOrderStatus
 });
 
-export const addOrderSlice = createSlice({
-  name: 'addOrder',
+export const fetchOrderSlice = createSlice({
+  name: 'fetchOrder',
   initialState,
 
   reducers: {
@@ -85,10 +54,10 @@ export const addOrderSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    console.log('addOrderAsync')
+    console.log('fetchOrderAsync')
     console.log(builder)
     // addOrderAsyncの非同期通信だった時
-    builder.addCase(addOrderAsync.fulfilled, (state, action: any) => {
+    builder.addCase(fetchOrderAsync.fulfilled, (state, action: any) => {
       console.log(state)
       console.log(action)
       return action.payload
@@ -99,6 +68,6 @@ export const addOrderSlice = createSlice({
 // export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
 
-export const selectAddOrder = (state: RootState) => state.addOrder
+export const selectFetchOrder = (state: RootState) => state.fetchOrder
 
-export default addOrderSlice.reducer;
+export default fetchOrderSlice.reducer;

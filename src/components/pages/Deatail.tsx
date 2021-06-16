@@ -8,6 +8,8 @@ import { selectItemPrice } from '../../features/itemPrice/itemPrice'
 import { selectItemCount } from '../../features/itemCount/itemCount'
 import { addOrderAsync } from '../../features/order/orderSlice'
 import { selectUserId } from '../../features/user/userSlice'
+import { selectFetchOrder } from '../../features/order/fetchOrder'
+import { orderUpdateAsync } from '../../features/order/orderUpdateSlice'
 
 
 // コンポーネント
@@ -48,6 +50,7 @@ export const Deatail = () => {
   const itemPrice: number = useSelector(selectItemPrice)
   const itemCount: number = useSelector(selectItemCount)
   const userId = useSelector(selectUserId)
+  const fetchOrder: any = useSelector(selectFetchOrder)
   const { id }: Params = useParams()
 
   const itemDetail = items.filter((item: fetchItems) => {
@@ -69,7 +72,13 @@ export const Deatail = () => {
       status: 0
     }
     console.log(userId)
-    dispatch(addOrderAsync(addOrder))
+    console.log(fetchOrder.length)
+    // statusが0のものが存在するか否かでの場合わけ（新規or追加）
+    if (!fetchOrder.length) {
+      dispatch(addOrderAsync(addOrder))
+    } else {
+      dispatch(orderUpdateAsync(addOrder))
+    }
   }
 
   return (

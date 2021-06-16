@@ -6,7 +6,7 @@ import {
   Link,
 } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
-import { selectItems } from './features/items/itemsSlice'
+import { selectUserId } from './features/user/userSlice'
 import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
@@ -16,13 +16,22 @@ import { Admin } from './components/pages/Admin'
 
 import { registerUserInfoAsync } from './features/user/userSlice'
 import { fetchItemsAsync } from './features/items/itemsSlice'
+import { fetchOrderAsync } from './features/order/fetchOrder'
 
 function App() {
   const dispach = useDispatch()
+  const userId = useSelector(selectUserId)
   useEffect(() => {
     dispach(registerUserInfoAsync())
     dispach(fetchItemsAsync())
   }, [dispach])
+
+  useEffect(() => {
+    console.log(userId)
+    if (userId) {
+      dispach(fetchOrderAsync(userId))
+    }
+  }, [userId])
 
   return (
     <div className="App">

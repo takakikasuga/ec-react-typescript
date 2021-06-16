@@ -6,7 +6,7 @@ import firebase from 'firebase'
 import { OrderInfo, AddOrder } from '../../types/order/order'
 
 
-const initialState: AddOrder = {
+const initialState: any = {
   userId: '',
   orderInfo: {
     orderItems: [{
@@ -32,38 +32,26 @@ export const addOrderAsync = createAsyncThunk('addOrder/addOrderAsync', async (a
   // 商品情報の配列0番目にユニークなIDを付与
   addOrder.orderInfo.orderItems[0].uniqueItemId = ref.id;
   console.log(addOrder)
+
+  // status = 0を追加
+  addOrder.orderInfo.status = 0
   // 実際に注文情報を追加（新規注文）
-  // await firebase
-  //   .firestore()
-  //   .collection(`users/${addOrder.userId}/orders`)
-  //   .add(addOrder.orderInfo)
-  //   .then((doc) => {
-  //     console.log(doc.id)
-  //   })
-  //   .catch((error) => {
-  //     console.log(error)
-  //   })
-  // 実際に注文情報を追加（追加注文）
-  let status0Id: any = [];
-  await ordersRef
-    .where('status', '==', 0)
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        status0Id.push(doc.id)
-        console.log(doc.id)
-      });
-      console.log(status0Id[0])
-      const status0Ref = ordersRef.doc(status0Id[0]);
-      status0Ref.update({
-        orderItems: firebase.firestore.FieldValue.arrayUnion(
-          addOrder.orderInfo
-        ),
-      });
-    });
+  await firebase
+    .firestore()
+    .collection(`users/${addOrder.userId}/orders`)
+    .add(addOrder.orderInfo)
+    .then((doc) => {
+      console.log(doc.id)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+
   console.log(addOrder)
-  // return addOrder.orderInfo
-  return 'aa'
+  console.log(addOrder.orderInfo)
+
+  console.log(addOrder.orderInfo)
+  return addOrder.orderInfo.orderItems
 });
 
 export const addOrderSlice = createSlice({
