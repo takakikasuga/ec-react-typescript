@@ -13,6 +13,7 @@ import './App.css';
 import { Home } from './components/pages/Home'
 import { Deatail } from './components/pages/Deatail'
 import { Admin } from './components/pages/Admin'
+import { CartList } from './components/pages/CartList'
 
 import { registerUserInfoAsync } from './features/user/userSlice'
 import { fetchItemsAsync } from './features/items/itemsSlice'
@@ -41,6 +42,7 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/detail/:id" component={Deatail} />
+          <Route exact path="/cartList" component={CartList} />
           <Route exact path="/" component={Home} />
         </Switch>
       </Router>
