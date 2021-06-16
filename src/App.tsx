@@ -5,6 +5,7 @@ import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
 import { Header } from './components/organisums/header/Header'
+import { Items } from './components/organisums/itemLists/Items'
 import { Admin } from './components/pages/Admin'
 import firebase from 'firebase'
 
@@ -23,6 +24,7 @@ function App() {
     <div className="App">
       <Header></Header>
       <Admin></Admin>
+      <Items></Items>
       {items.map((item) => (
         <p>{item.name}</p>
       ))}
