@@ -18,6 +18,7 @@ import { ItemCount } from '../organisums/count/ItemCount'
 // 型のインポート
 import { Params } from '../../types/params/parameter'
 import { fetchItems } from '../../types/items/items'
+import { AddOrder } from '../../types/order/order'
 
 // マテリアルUI
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -55,17 +56,17 @@ export const Deatail = () => {
   })
 
   const addOrder = () => {
-    let addOrder = {
+    let addOrder: AddOrder = {
       userId: userId,
       orderInfo: {
         orderItems: [{
           itemCount: itemCount,
           itemId: itemDetail[0].id,
           itemPrice: itemPrice,
-          uniqueItemId: 0
+          uniqueItemId: ''
         }],
-        status: 0
-      }
+      },
+      status: 0
     }
     console.log(userId)
     dispatch(addOrderAsync(addOrder))

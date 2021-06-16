@@ -1,25 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import firebase from 'firebase'
-
-// 型のインポート
-import { OrderInfo, AddOrder } from '../../types/order/order'
+// ユーザーIDの参照
 
 
-const initialState: AddOrder = {
-  userId: '',
-  orderInfo: {
-    orderItems: [{
-      itemCount: 0,
-      itemId: 0,
-      itemPrice: 0,
-      uniqueItemId: ''
-    }],
-  },
-  status: 0,
-}
+const initialState: any = ''
 
-export const addOrderAsync = createAsyncThunk('addOrder/addOrderAsync', async (addOrder: any) => {
+export const orderUpdateAsync = createAsyncThunk('orderUpdate/orderUpdateAsync', async (addOrder: any) => {
   console.log(addOrder)
   // 注文情報の商品に一意のIDを作成
   const ordersRef =
@@ -32,17 +19,6 @@ export const addOrderAsync = createAsyncThunk('addOrder/addOrderAsync', async (a
   // 商品情報の配列0番目にユニークなIDを付与
   addOrder.orderInfo.orderItems[0].uniqueItemId = ref.id;
   console.log(addOrder)
-  // 実際に注文情報を追加（新規注文）
-  // await firebase
-  //   .firestore()
-  //   .collection(`users/${addOrder.userId}/orders`)
-  //   .add(addOrder.orderInfo)
-  //   .then((doc) => {
-  //     console.log(doc.id)
-  //   })
-  //   .catch((error) => {
-  //     console.log(error)
-  //   })
   // 実際に注文情報を追加（追加注文）
   let status0Id: any = [];
   await ordersRef
@@ -67,7 +43,7 @@ export const addOrderAsync = createAsyncThunk('addOrder/addOrderAsync', async (a
 });
 
 export const addOrderSlice = createSlice({
-  name: 'addOrder',
+  name: 'orderUpdate',
   initialState,
 
   reducers: {
@@ -85,10 +61,10 @@ export const addOrderSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    console.log('addOrderAsync')
+    console.log('orderUpdate')
     console.log(builder)
     // addOrderAsyncの非同期通信だった時
-    builder.addCase(addOrderAsync.fulfilled, (state, action: any) => {
+    builder.addCase(orderUpdateAsync.fulfilled, (state, action: any) => {
       console.log(state)
       console.log(action)
       return action.payload
