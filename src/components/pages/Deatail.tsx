@@ -6,6 +6,8 @@ import { useParams, useHistory } from 'react-router-dom'
 import { selectItems } from '../../features/items/itemsSlice'
 import { selectItemPrice } from '../../features/itemPrice/itemPrice'
 import { selectItemCount } from '../../features/itemCount/itemCount'
+import { addOrderAsync } from '../../features/order/orderSlice'
+import { selectUserId } from '../../features/user/userSlice'
 
 
 // コンポーネント
@@ -40,18 +42,35 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Deatail = () => {
   const classes = useStyles();
+  const dispatch = useDispatch()
   const items: Array<fetchItems> = useSelector(selectItems)
   const itemPrice: number = useSelector(selectItemPrice)
   const itemCount: number = useSelector(selectItemCount)
+  const userId = useSelector(selectUserId)
   const { id }: Params = useParams()
 
-  console.log(id)
   const itemDetail = items.filter((item: fetchItems) => {
     console.log(item)
     return item.id === Number(id)
   })
-  console.log(id)
-  console.log(itemDetail)
+
+  const addOrder = () => {
+    let addOrder = {
+      userId: userId,
+      orderInfo: {
+        orderItems: [{
+          itemCount: itemCount,
+          itemId: itemDetail[0].id,
+          itemPrice: itemPrice,
+          uniqueItemId: 0
+        }],
+        status: 0
+      }
+    }
+    console.log(userId)
+    dispatch(addOrderAsync(addOrder))
+  }
+
   return (
     <div>
       <h1>Detailです</h1>
@@ -74,7 +93,9 @@ export const Deatail = () => {
           </Grid>
         </Grid>
       ))}
-      <PrimaryButton>カートに追加</PrimaryButton>
+      <span onClick={addOrder}>
+        <PrimaryButton>カートに追加</PrimaryButton>
+      </span>
     </div>
   )
 }

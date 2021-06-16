@@ -4,6 +4,7 @@ import userReducer from '../features/user/userSlice'
 import itemsReducer from '../features/items/itemsSlice'
 import itemsCountReducer from '../features/itemCount/itemCount'
 import itemPriceReducer from '../features/itemPrice/itemPrice'
+import addOrderReducer from '../features/order/orderSlice'
 
 
 export const store = configureStore({
@@ -12,7 +13,8 @@ export const store = configureStore({
     user: userReducer,
     items: itemsReducer,
     itemCount: itemsCountReducer,
-    itemPrice: itemPriceReducer
+    itemPrice: itemPriceReducer,
+    addOrder: addOrderReducer,
   },
 });
 
