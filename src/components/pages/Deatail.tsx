@@ -6,7 +6,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import { selectItems } from '../../features/items/itemsSlice'
 import { selectItemPrice } from '../../features/itemPrice/itemPrice'
 import { selectItemCount } from '../../features/itemCount/itemCount'
-import { addOrderAsync } from '../../features/order/orderSlice'
+import { addOrderAsync, selectAddOrder } from '../../features/order/orderSlice'
 import { selectUserId } from '../../features/user/userSlice'
 import { selectFetchOrder } from '../../features/order/fetchOrder'
 import { orderUpdateAsync } from '../../features/order/orderUpdateSlice'
@@ -47,9 +47,11 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Deatail = () => {
   const classes = useStyles();
   const dispatch = useDispatch()
+  const history = useHistory()
   const items: Array<fetchItems> = useSelector(selectItems)
   const itemPrice: number = useSelector(selectItemPrice)
   const itemCount: number = useSelector(selectItemCount)
+  const addOrderStatus: any = useSelector(selectAddOrder)
   const userId = useSelector(selectUserId)
   const fetchOrder: any = useSelector(selectFetchOrder)
   const { id }: Params = useParams()
@@ -59,7 +61,7 @@ export const Deatail = () => {
     return item.id === Number(id)
   })
 
-  const addOrder = () => {
+  const addOrder = (path: string) => {
     let addOrder: AddOrder = {
       userId: userId,
       orderInfo: {
@@ -80,6 +82,8 @@ export const Deatail = () => {
     } else {
       dispatch(orderUpdateAsync(addOrder))
     }
+    // カートリストへ画面遷移
+    history.push(path)
   }
 
   return (
@@ -105,7 +109,7 @@ export const Deatail = () => {
           </Grid>
         </Grid>
       ))}
-      <span onClick={addOrder}>
+      <span onClick={() => { addOrder(`/cartList`) }}>
         <PrimaryButton>カートに追加</PrimaryButton>
       </span>
     </>

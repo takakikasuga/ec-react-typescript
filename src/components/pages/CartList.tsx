@@ -8,7 +8,7 @@ import { DeleteButton } from '../atoms/button/DeleteButton'
 import { selectFetchOrder } from '../../features/order/fetchOrder'
 import { selectItems } from '../../features/items/itemsSlice'
 import { setCartList, selectCartLists } from '../../features/cartLists/cartLists'
-import { deleteOrderItem, deleteOrderAsync } from '../../features/order/fetchOrder'
+import { deleteOrderItem, deleteOrderAsync, fetchOrderAsync } from '../../features/order/fetchOrder'
 import { selectUserId } from '../../features/user/userSlice'
 import { selectStatusZoroId } from '../../features/statusZoroId/statusZoroIdSlice'
 
@@ -35,6 +35,11 @@ export const CartList = () => {
   const cartLists = useSelector(selectCartLists)
   const StatusZoroId = useSelector(selectStatusZoroId)
   const userId: any = useSelector(selectUserId)
+
+  useEffect(() => {
+    // カートリストの中でstatusが0の注文情報をとってくる
+    dipatch(fetchOrderAsync(userId))
+  }, [])
 
   const deleteCart = (index: number) => {
     console.log('deleteCartが発火')

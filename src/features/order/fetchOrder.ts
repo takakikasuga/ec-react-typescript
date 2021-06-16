@@ -15,7 +15,7 @@ export const fetchOrderAsync = createAsyncThunk('fetchOrder/fetchOrderAsync', as
       .collection('users')
       .doc(userId)
       .collection('orders');
-  // statusが0のもをFirestoreから引っ張ってくる
+  // statusが0の注文情報をFirestoreから引っ張ってくる
   await ordersRef
     .where('status', '==', 0)
     .get()
@@ -35,24 +35,73 @@ export const fetchOrderAsync = createAsyncThunk('fetchOrder/fetchOrderAsync', as
   return fetchOrderStatus
 });
 
+// export const addOrderAsync = createAsyncThunk('addOrder/addOrderAsync', async (addOrder: any) => {
+//   console.log(addOrder)
+//   // 注文情報の商品に一意のIDを作成
+//   const ordersRef =
+//     firebase
+//       .firestore()
+//       .collection('users')
+//       .doc(addOrder.userId)
+//       .collection('orders');
+//   const ref = ordersRef.doc();
+//   // 商品情報の配列0番目にユニークなIDを付与
+//   addOrder.orderInfo.orderItems[0].uniqueItemId = ref.id;
+//   console.log(addOrder)
+
+//   // status = 0を追加
+//   addOrder.orderInfo.status = 0
+//   // 実際に注文情報を追加（新規注文）
+//   await firebase
+//     .firestore()
+//     .collection(`users/${addOrder.userId}/orders`)
+//     .add(addOrder.orderInfo)
+//     .then((doc) => {
+//       console.log(doc.id)
+//     })
+//     .catch((error) => {
+//       console.log(error)
+//     })
+
+//   console.log(addOrder)
+//   console.log(addOrder.orderInfo)
+
+//   console.log(addOrder.orderInfo)
+//   return addOrder.orderInfo.orderItems
+// });
+
 export const deleteOrderAsync = createAsyncThunk('deleteOrder/deleteOrderAsync', async (deleteElements: any) => {
   console.log('deleteOrderAsync')
   console.log(deleteElements)
   const { userId, StatusZoroId, updateFetchData } = deleteElements
   console.log(userId, StatusZoroId)
   console.log(updateFetchData)
-  await firebase
-    .firestore()
-    .collection(`users/${userId}/orders`)
-    .doc(StatusZoroId)
-    .update({
-      orderItems: updateFetchData,
-    })
-    .then(() => {
-      console.log('成功しました。')
-    })
-  console.log('成功しました。')
-  return updateFetchData
+  if (updateFetchData.length !== 0) {
+    await firebase
+      .firestore()
+      .collection(`users/${userId}/orders`)
+      .doc(StatusZoroId)
+      .update({
+        orderItems: updateFetchData,
+      })
+      .then(() => {
+        console.log('アップデートに成功しました。')
+      })
+    console.log('アップデートした値を返します')
+    return updateFetchData
+  } else {
+    await firebase
+      .firestore()
+      .collection(`users/${userId}/orders`)
+      .doc(StatusZoroId)
+      .delete()
+      .then(() => {
+        console.log('全削除に成功しました。')
+      })
+    console.log(updateFetchData)
+    console.log('空の配列を返します')
+    return updateFetchData
+  }
 });
 
 
@@ -79,10 +128,17 @@ export const fetchOrderSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    console.log('fetchOrderAsync')
+
     console.log(builder)
-    // addOrderAsyncの非同期通信だった時
+    // fetchOrderAsyncの非同期通信だった時
     builder.addCase(fetchOrderAsync.fulfilled, (state, action: any) => {
+      console.log('fetchOrderAsync')
+      console.log(state)
+      console.log(action)
+      return action.payload
+    })
+    builder.addCase(deleteOrderAsync.fulfilled, (state, action: any) => {
+      console.log('deleteOrderAsync')
       console.log(state)
       console.log(action)
       return action.payload

@@ -6,18 +6,14 @@ import firebase from 'firebase'
 import { OrderInfo, AddOrder } from '../../types/order/order'
 
 
-const initialState: any = {
-  userId: '',
-  orderInfo: {
-    orderItems: [{
-      itemCount: 0,
-      itemId: 0,
-      itemPrice: 0,
-      uniqueItemId: ''
-    }],
-  },
-  status: 0,
-}
+const initialState: any = [
+  // {
+  //   itemCount: 0,
+  //   itemId: 0,
+  //   itemPrice: 0,
+  //   uniqueItemId: ''
+  // }
+]
 
 export const addOrderAsync = createAsyncThunk('addOrder/addOrderAsync', async (addOrder: any) => {
   console.log(addOrder)
@@ -73,10 +69,9 @@ export const addOrderSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    console.log('addOrderAsync')
-    console.log(builder)
     // addOrderAsyncの非同期通信だった時
     builder.addCase(addOrderAsync.fulfilled, (state, action: any) => {
+      console.log('addOrderAsync')
       console.log(state)
       console.log(action)
       return action.payload

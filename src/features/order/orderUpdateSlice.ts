@@ -38,8 +38,7 @@ export const orderUpdateAsync = createAsyncThunk('orderUpdate/orderUpdateAsync',
       });
     });
   console.log(addOrder)
-  // return addOrder.orderInfo
-  return 'aa'
+  return addOrder.orderInfo.orderItems
 });
 
 export const addOrderSlice = createSlice({
