@@ -12,22 +12,31 @@ import axios from 'axios'
 
 const initialState: any = null
 
-let fetchItemsData: any = null
+let itemObject: any = {
+  imagePath: null,
+  name: null,
+  description: null,
+  price: {
+    m: null,
+    l: null,
+  }
+}
 
 export const uploadItemData = createAsyncThunk('uploadData/uploadItemDataAsync', async (object: any) => {
+  // 上記変数オブジェクトに代入
+  itemObject.name = object.name
+  itemObject.description = object.description
+  itemObject.price.m = object.price.m
+  itemObject.price.l = object.price.l
+
   console.log('uploadItemDataAsync')
   console.log(object)
-  function authStorage() {
+  function auth() {
     const uploadTask = strage.ref(`images/${object.image.name}`).put(object.image);
     return new Promise(resolve => {
       uploadTask.on(
         "state_changed",
-        snapshot => {
-          // const progress = Math.round(
-          //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          // )
-          // setProgress(progress)
-        },
+        snapshot => { },
         error => {
           console.log(error)
         },
@@ -39,51 +48,27 @@ export const uploadItemData = createAsyncThunk('uploadData/uploadItemDataAsync',
             .getDownloadURL()
             .then((url) => {
               console.log(url)
-              // setProgress(0)
-              // let itemObject = {
-              //   imagePath: image,
-              //   name: name,
-              //   description: description,
-              //   price: {
-              //     m: price_m,
-              //     l: price_l,
-              //   }
-              // }
+              itemObject.imagePath = url
+              // Promiseで成功を返却する
+              resolve('')
             })
-        }
-      )
-      resolve('')
+        })
     })
   }
   console.log('await直前')
-  await authStorage()
-  console.log('await直後')
-  return fetchItemsData
-});
-
-export const registerUserInfoAsync = createAsyncThunk('register/registerUserInfo', async () => {
-  // firebase.auth().onAuthStateChangedはPromiseを返却しないため明示的にPromiseを返すようにしている
-  function auth() {
-    return new Promise(resolve => {
-      firebase.auth().onAuthStateChanged((user) => {
-        console.log('firebaseの通信を行っています。')
-        if (user) {
-          userStatus.userId = user.uid
-          userStatus.userName = user.displayName
-        }
-        // Promiseで成功を返却する
-        resolve(userStatus)
-      })
-    })
-  }
   await auth()
-  console.log('registerUserInfoAsync')
-  return userStatus
-});
-
-export const signOutUserInfoAsync = createAsyncThunk('signOut/signOutUserInfo', async () => {
-  await firebase.auth().signOut()
-  return initialState
+  await firebase
+    .firestore()
+    .collection(`items`)
+    .add(itemObject)
+    .then((doc) => {
+      console.log(doc.id)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  console.log('await直後')
+  return itemObject
 });
 
 export const userSlice = createSlice({
