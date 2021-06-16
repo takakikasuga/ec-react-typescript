@@ -4,6 +4,9 @@ import { useParams, useHistory } from 'react-router-dom'
 
 // スライサーよりアイテムデータを取得
 import { selectItems } from '../../features/items/itemsSlice'
+import { selectItemPrice } from '../../features/itemPrice/itemPrice'
+import { selectItemCount } from '../../features/itemCount/itemCount'
+
 
 // コンポーネント
 import { PrimaryButton } from '../atoms/button/PrimaryButton'
@@ -11,10 +14,8 @@ import { RadioButton } from '../organisums/radio/RadioButton'
 import { ItemCount } from '../organisums/count/ItemCount'
 
 // 型のインポート
-import { RadioProps } from '../../types/radio/radio'
 import { Params } from '../../types/params/parameter'
 import { fetchItems } from '../../types/items/items'
-
 
 // マテリアルUI
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -39,7 +40,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Deatail = () => {
   const classes = useStyles();
-  const items = useSelector(selectItems)
+  const items: Array<fetchItems> = useSelector(selectItems)
+  const itemPrice: number = useSelector(selectItemPrice)
+  const itemCount: number = useSelector(selectItemCount)
   const { id }: Params = useParams()
 
   console.log(id)
@@ -63,6 +66,10 @@ export const Deatail = () => {
             <div>
               <RadioButton detail={detail}></RadioButton>
               <ItemCount>数量を選択</ItemCount>
+            </div>
+            <div>
+              <h4>合計金額</h4>
+              <p>{(itemPrice * itemCount).toLocaleString()}円（税込）</p>
             </div>
           </Grid>
         </Grid>

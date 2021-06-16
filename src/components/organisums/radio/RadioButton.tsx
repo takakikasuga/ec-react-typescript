@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-
+import { useDispatch } from 'react-redux'
+import { setItemPrice } from '../../../features/itemPrice/itemPrice'
 // 型のインポート
 import { RadioProps } from '../../../types/radio/radio'
 
@@ -13,23 +14,27 @@ import FormLabel from '@material-ui/core/FormLabel';
 export const RadioButton = (props: RadioProps) => {
   console.log(props)
   const { detail } = props
+  const dispatch = useDispatch()
   console.log(detail)
   // ラジオボタンはstring型の時に動作する
   const [value, setValue] = useState<string>('');
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue((event.target as HTMLInputElement).value);
+    setValue((pre: string) => {
+      console.log(pre)
+      dispatch(setItemPrice(Number(pre)))
+      return pre
+    })
   };
   return (
     <>
       <FormControl component="fieldset">
         <FormLabel component="legend">プライス</FormLabel>
         <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-          <FormControlLabel value={String(detail.price?.m)} control={<Radio />} label={`M-Size：${Math.round((detail!.price!.m! * 1.1)).toLocaleString()}円（税込）`} />
-          <FormControlLabel value={String(detail.price?.l)} control={<Radio />} label={`L-Size：${Math.round((detail!.price!.l! * 1.1)).toLocaleString()}円（税込）`} />
+          <FormControlLabel value={String(Math.round((detail!.price!.m! * 1.1)).toLocaleString())} control={<Radio />} label={`M-Size：${Math.round((detail!.price!.m! * 1.1)).toLocaleString()}円（税込）`} />
+          <FormControlLabel value={String(Math.round((detail!.price!.l! * 1.1)).toLocaleString())} control={<Radio />} label={`L-Size：${Math.round((detail!.price!.l! * 1.1)).toLocaleString()}円（税込）`} />
         </RadioGroup>
       </FormControl>
-      <h4>合計金額</h4>
-      <p>{Number(Math.round(Number(value)).toLocaleString())}円（税込）</p>
     </>
   )
 }

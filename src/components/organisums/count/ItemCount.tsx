@@ -1,4 +1,7 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { setItemCount } from '../../../features/itemCount/itemCount'
+// マテリアルUI
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -25,12 +28,18 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 export const ItemCount = (props: any) => {
   const { children } = props
+  const dispatch = useDispatch()
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [count, serCount] = React.useState<number | string>('');
+  const [count, setCount] = React.useState<number | string>('');
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    serCount(Number(event.target.value) || '');
+    setCount(Number(event.target.value) || '');
+    setCount((pre: number | string) => {
+      console.log(pre)
+      dispatch(setItemCount(Number(pre)))
+      return pre
+    })
   };
 
   const handleClickOpen = () => {
