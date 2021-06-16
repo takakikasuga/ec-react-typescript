@@ -17,6 +17,7 @@ import { CartList } from './components/pages/CartList'
 
 import { registerUserInfoAsync } from './features/user/userSlice'
 import { fetchItemsAsync } from './features/items/itemsSlice'
+import { statusZoroIdAsync } from './features/statusZoroId/statusZoroIdSlice'
 import { fetchOrderAsync } from './features/order/fetchOrder'
 
 function App() {
@@ -25,21 +26,22 @@ function App() {
   useEffect(() => {
     dispach(registerUserInfoAsync())
     dispach(fetchItemsAsync())
+
   }, [dispach])
 
   useEffect(() => {
     console.log(userId)
     if (userId) {
       dispach(fetchOrderAsync(userId))
+      dispach(statusZoroIdAsync(userId))
     }
   }, [userId])
 
   return (
     <div className="App">
-
-      {/* <Admin></Admin> */}
-      {/* <Items></Items> */}
       <Router>
+        <Link to='/cartlist'>ショッピングカート</Link><br />
+        <Link to='/'>トップページ</Link><br />
         <Switch>
           <Route exact path="/detail/:id" component={Deatail} />
           <Route exact path="/cartList" component={CartList} />

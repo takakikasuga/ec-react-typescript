@@ -33,7 +33,7 @@ export const orderUpdateAsync = createAsyncThunk('orderUpdate/orderUpdateAsync',
       const status0Ref = ordersRef.doc(status0Id[0]);
       status0Ref.update({
         orderItems: firebase.firestore.FieldValue.arrayUnion(
-          addOrder.orderInfo
+          addOrder.orderInfo.orderItems[0]
         ),
       });
     });

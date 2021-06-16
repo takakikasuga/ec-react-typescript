@@ -6,6 +6,8 @@ import itemsCountReducer from '../features/itemCount/itemCount'
 import itemPriceReducer from '../features/itemPrice/itemPrice'
 import addOrderReducer from '../features/order/orderSlice'
 import fetchOrderReducer from '../features/order/fetchOrder'
+import cartListsReducer from '../features/cartLists/cartLists'
+import statusZoroIdReducer from '../features/statusZoroId/statusZoroIdSlice'
 
 
 export const store = configureStore({
@@ -17,6 +19,8 @@ export const store = configureStore({
     itemPrice: itemPriceReducer,
     addOrder: addOrderReducer,
     fetchOrder: fetchOrderReducer,
+    cartLists: cartListsReducer,
+    statusZoroId: statusZoroIdReducer,
   },
 });
 

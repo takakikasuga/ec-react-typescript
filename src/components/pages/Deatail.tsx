@@ -16,6 +16,7 @@ import { orderUpdateAsync } from '../../features/order/orderUpdateSlice'
 import { PrimaryButton } from '../atoms/button/PrimaryButton'
 import { RadioButton } from '../organisums/radio/RadioButton'
 import { ItemCount } from '../organisums/count/ItemCount'
+import { Header } from '../organisums/header/Header'
 
 // 型のインポート
 import { Params } from '../../types/params/parameter'
@@ -82,7 +83,8 @@ export const Deatail = () => {
   }
 
   return (
-    <div>
+    <>
+      <Header></Header>
       <h1>Detailです</h1>
       {itemDetail.map((detail: fetchItems, index: number) => (
         <Grid container spacing={3} className={classes.root} key={index}>
@@ -106,6 +108,6 @@ export const Deatail = () => {
       <span onClick={addOrder}>
         <PrimaryButton>カートに追加</PrimaryButton>
       </span>
-    </div>
+    </>
   )
 }

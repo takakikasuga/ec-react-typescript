@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { setItemCount } from '../../../features/itemCount/itemCount'
 // マテリアルUI
@@ -30,8 +30,8 @@ export const ItemCount = (props: any) => {
   const { children } = props
   const dispatch = useDispatch()
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [count, setCount] = React.useState<number | string>('');
+  const [open, setOpen] = useState(false);
+  const [count, setCount] = useState<number | string>('');
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setCount(Number(event.target.value) || '');

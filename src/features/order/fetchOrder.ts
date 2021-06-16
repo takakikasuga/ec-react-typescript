@@ -35,15 +35,40 @@ export const fetchOrderAsync = createAsyncThunk('fetchOrder/fetchOrderAsync', as
   return fetchOrderStatus
 });
 
+export const deleteOrderAsync = createAsyncThunk('deleteOrder/deleteOrderAsync', async (deleteElements: any) => {
+  console.log('deleteOrderAsync')
+  console.log(deleteElements)
+  const { userId, StatusZoroId, updateFetchData } = deleteElements
+  console.log(userId, StatusZoroId)
+  console.log(updateFetchData)
+  await firebase
+    .firestore()
+    .collection(`users/${userId}/orders`)
+    .doc(StatusZoroId)
+    .update({
+      orderItems: updateFetchData,
+    })
+    .then(() => {
+      console.log('成功しました。')
+    })
+  console.log('成功しました。')
+  return updateFetchData
+});
+
+
 export const fetchOrderSlice = createSlice({
   name: 'fetchOrder',
   initialState,
 
   reducers: {
-    // setUserId: (state) => {
-
-    //   state.value += 1;
-    // },
+    deleteOrderItem: (state, action) => {
+      console.log('deleteOrderItem')
+      console.log(state, action)
+      const updateItem = [...state]
+      updateItem.splice(action.payload, 1)
+      console.log(updateItem)
+      return updateItem
+    },
     // setUserName: (state) => {
     //   state.value -= 1;
     // },
@@ -65,7 +90,7 @@ export const fetchOrderSlice = createSlice({
   },
 });
 
-// export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export const { deleteOrderItem } = fetchOrderSlice.actions;
 
 
 export const selectFetchOrder = (state: RootState) => state.fetchOrder
