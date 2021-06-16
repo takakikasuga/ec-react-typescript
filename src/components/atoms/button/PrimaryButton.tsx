@@ -11,7 +11,6 @@ export const PrimaryButton = (props: PrimaryButtonName) => {
       <Button variant="contained">
         {children}
       </Button>
-      {/* <PermIdentityRoundedIcon></PermIdentityRoundedIcon> */}
     </>
   )
 }

@@ -6,8 +6,6 @@ import firebase from 'firebase'
 import { strage } from '../../firebase/firebase.js'
 import { providerGoogle } from '../../firebase/firebase'
 
-import axios from 'axios'
-
 
 
 const initialState: UserStatus = {

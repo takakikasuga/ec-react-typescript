@@ -1,4 +1,5 @@
 export interface fetchItems {
+  id?: number | null,
   description?: string | null;
   imagePath?: string | null;
   name?: string | null;

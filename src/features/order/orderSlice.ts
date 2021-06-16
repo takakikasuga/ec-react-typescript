@@ -11,7 +11,12 @@ const initialState: Array<fetchItems> = [
 
 let fetchItemsData: Array<fetchItems> = []
 
-export const fetchItemsAsync = createAsyncThunk('items/fetchItemsAsync', async () => {
+interface AddOreder {
+  orderItems: []
+  status: number
+}
+
+export const addOrderItemAsync = createAsyncThunk('addOrder/addOrderItemAsync', async () => {
   await firebase
     .firestore()
     .collection(`Items/`)

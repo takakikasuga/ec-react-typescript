@@ -1,19 +1,23 @@
 import React, { useEffect } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
 import { selectItems } from './features/items/itemsSlice'
 import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
-import { Header } from './components/organisums/header/Header'
-import { Items } from './components/organisums/itemLists/Items'
+import { Home } from './components/pages/Home'
+import { Deatail } from './components/pages/Deatail'
 import { Admin } from './components/pages/Admin'
-import firebase from 'firebase'
 
 import { registerUserInfoAsync } from './features/user/userSlice'
 import { fetchItemsAsync } from './features/items/itemsSlice'
 
 function App() {
-  const items = useSelector(selectItems)
   const dispach = useDispatch()
   useEffect(() => {
     dispach(registerUserInfoAsync())
@@ -22,57 +26,15 @@ function App() {
 
   return (
     <div className="App">
-      <Header></Header>
-      <Admin></Admin>
-      <Items></Items>
-      {items.map((item) => (
-        <p>{item.name}</p>
-      ))}
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header> */}
+
+      {/* <Admin></Admin> */}
+      {/* <Items></Items> */}
+      <Router>
+        <Switch>
+          <Route exact path="/detail/:id" component={Deatail} />
+          <Route exact path="/" component={Home} />
+        </Switch>
+      </Router>
     </div>
   );
 }

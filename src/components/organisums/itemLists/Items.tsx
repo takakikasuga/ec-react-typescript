@@ -1,8 +1,15 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 // スライサーより取得
 import { selectItems } from '../../../features/items/itemsSlice'
+
+// コンポーネント
+import { ItemdetailPrice } from '../../molecules/itemPrice/ItemdetailPrice'
+import { FavoriteIconHeart } from '../../atoms/icons/FavoriteIconHeart'
+import { StarIcon } from '../../atoms/icons/StarIcon'
+import { PrimaryButton } from '../../atoms/button/PrimaryButton'
 // マテリアルUI
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -12,8 +19,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+
 
 const useStyles = makeStyles({
   root: {
@@ -26,12 +32,19 @@ const useStyles = makeStyles({
 export const Items = () => {
   const items = useSelector(selectItems)
   const dispach = useDispatch()
+  const history = useHistory()
+
+
+  const changeToDetail = (path: string) => {
+    history.push(path)
+  }
 
   const classes = useStyles();
   return (
-    <Card className={classes.root}>
+    <div>
       {items.map((item: any, index: number) => (
-        <>
+        <Card className={classes.root}>
+          {console.log(item.id)}
           <CardActionArea key={index}>
             <CardMedia
               className={classes.media}
@@ -42,24 +55,18 @@ export const Items = () => {
               <Typography gutterBottom variant="h5" component="h2">
                 {item.name}
               </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Mサイズ：{Math.round((item.price.m * 1.1)).toLocaleString()}円（税込）
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Lサイズ： {Math.round((item.price.l * 1.1)).toLocaleString()}円（税込）
-              </Typography>
+              <ItemdetailPrice item={item}></ItemdetailPrice>
             </CardContent>
           </CardActionArea>
           <CardActions>
-            <IconButton aria-label="add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-            <Button size="small" color="primary">
-              Learn More
-            </Button>
+            <FavoriteIconHeart></FavoriteIconHeart>
+            <StarIcon></StarIcon>
           </CardActions>
-        </>
+          <div onClick={() => { changeToDetail(`/detail/${item.id}`) }}>
+            <PrimaryButton>詳細へ</PrimaryButton>
+          </div>
+        </Card>
       ))}
-    </Card>
+    </div>
   );
 }
