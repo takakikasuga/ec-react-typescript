@@ -26,7 +26,7 @@ function App() {
       {items.map((item) => (
         <p>{item.name}</p>
       ))}
-      <header className="App-header">
+      {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Counter />
         <p>
@@ -70,7 +70,7 @@ function App() {
             React Redux
           </a>
         </span>
-      </header>
+      </header> */}
     </div>
   );
 }
