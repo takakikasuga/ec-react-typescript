@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
-import { UserStatus } from '../../types/userStatus/userStatus'
+import { fetchItems } from '../../types/items/items'
 // import { fetchCount } from './counterAPI';
 import firebase from 'firebase'
 import { strage } from '../../firebase/firebase.js'
@@ -10,20 +10,55 @@ import axios from 'axios'
 
 
 
-const initialState: UserStatus = {
-  userId: null,
-  userName: null,
-};
+const initialState: any = null
 
-let userStatus: UserStatus = {
-  userId: null,
-  userName: null,
-}
+let fetchItemsData: any = null
 
-export const loginUserAsync = createAsyncThunk('login/loginUserAsync', async () => {
-  await firebase.auth().signInWithRedirect(providerGoogle);
-  await firebase.auth().getRedirectResult();
-  return initialState
+export const uploadItemData = createAsyncThunk('uploadData/uploadItemDataAsync', async (object: any) => {
+  console.log('uploadItemDataAsync')
+  console.log(object)
+  function authStorage() {
+    const uploadTask = strage.ref(`images/${object.image.name}`).put(object.image);
+    return new Promise(resolve => {
+      uploadTask.on(
+        "state_changed",
+        snapshot => {
+          // const progress = Math.round(
+          //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          // )
+          // setProgress(progress)
+        },
+        error => {
+          console.log(error)
+        },
+        () => {
+          console.log('第二引数が発火')
+          strage
+            .ref("images")
+            .child(object.image.name)
+            .getDownloadURL()
+            .then((url) => {
+              console.log(url)
+              // setProgress(0)
+              // let itemObject = {
+              //   imagePath: image,
+              //   name: name,
+              //   description: description,
+              //   price: {
+              //     m: price_m,
+              //     l: price_l,
+              //   }
+              // }
+            })
+        }
+      )
+      resolve('')
+    })
+  }
+  console.log('await直前')
+  await authStorage()
+  console.log('await直後')
+  return fetchItemsData
 });
 
 export const registerUserInfoAsync = createAsyncThunk('register/registerUserInfo', async () => {
@@ -71,43 +106,20 @@ export const userSlice = createSlice({
 
   extraReducers: (builder) => {
     // loginUserAsyncの非同期通信だった時
-    builder.addCase(loginUserAsync.fulfilled, (state, action) => {
+    builder.addCase(uploadItemData.fulfilled, (state, action: any) => {
       console.log(state)
       console.log(action)
-      console.log('loginUserAsync')
-      return initialState
+      console.log('fetchItemsAsync')
+      return action.payload
     })
-
-    // registerUserInfoAsyncの非同期通信だった時
-    builder.addCase(registerUserInfoAsync.fulfilled, (state, action) => {
-      console.log(state)
-      console.log(action)
-      return {
-        ...state,
-        userId: action.payload.userId,
-        userName: action.payload.userName,
-      }
-    })
-    // signOutUserInfoAsyncの非同期通信だった時
-    builder.addCase(signOutUserInfoAsync.fulfilled, (state, action) => {
-      console.log(state)
-      console.log(action)
-      console.log('signOutUserInfoAsync')
-      return {
-        ...state,
-        userId: action.payload.userId,
-        userName: action.payload.userName,
-      }
-    });
   },
 });
 
 // export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
 
-export const selectUserId = (state: RootState) => state.user.userId;
+export const selectItems = (state: RootState) => state.items
 
-export const selectUserName = (state: RootState) => state.user.userName;
 
 // export const incrementIfOdd = (amount: number): AppThunk => (
 //   dispatch,

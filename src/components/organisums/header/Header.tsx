@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUserId, selectUserName, loginUserAsync, signOutUserInfoAsync } from '../../../features/user/userSlice'
+import { fetchItemsAsync } from '../../../features/items/itemsSlice'
 
 import { SearchInput } from '../../atoms/search/SearchInput'
 

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
-import { UserStatus } from '../../types/userStatus/userStatus'
+import { fetchItems } from '../../types/items/items'
 // import { fetchCount } from './counterAPI';
 import firebase from 'firebase'
 import { strage } from '../../firebase/firebase.js'
@@ -10,20 +10,25 @@ import axios from 'axios'
 
 
 
-const initialState: UserStatus = {
-  userId: null,
-  userName: null,
-};
+const initialState: Array<fetchItems> = [
 
-let userStatus: UserStatus = {
-  userId: null,
-  userName: null,
-}
+]
 
-export const loginUserAsync = createAsyncThunk('login/loginUserAsync', async () => {
-  await firebase.auth().signInWithRedirect(providerGoogle);
-  await firebase.auth().getRedirectResult();
-  return initialState
+let fetchItemsData: Array<fetchItems> = []
+
+export const fetchItemsAsync = createAsyncThunk('items/fetchItemsAsync', async () => {
+  await firebase
+    .firestore()
+    .collection(`Items/`)
+    .get()
+    .then((snapshot: any) => {
+      snapshot.forEach((element: any) => {
+        console.log('loginUserAsync')
+        fetchItemsData.push(element.data())
+      });
+      console.log(fetchItemsData)
+    })
+  return fetchItemsData
 });
 
 export const registerUserInfoAsync = createAsyncThunk('register/registerUserInfo', async () => {
@@ -71,43 +76,20 @@ export const userSlice = createSlice({
 
   extraReducers: (builder) => {
     // loginUserAsyncの非同期通信だった時
-    builder.addCase(loginUserAsync.fulfilled, (state, action) => {
+    builder.addCase(fetchItemsAsync.fulfilled, (state, action: any) => {
       console.log(state)
       console.log(action)
-      console.log('loginUserAsync')
-      return initialState
+      console.log('fetchItemsAsync')
+      return action.payload
     })
-
-    // registerUserInfoAsyncの非同期通信だった時
-    builder.addCase(registerUserInfoAsync.fulfilled, (state, action) => {
-      console.log(state)
-      console.log(action)
-      return {
-        ...state,
-        userId: action.payload.userId,
-        userName: action.payload.userName,
-      }
-    })
-    // signOutUserInfoAsyncの非同期通信だった時
-    builder.addCase(signOutUserInfoAsync.fulfilled, (state, action) => {
-      console.log(state)
-      console.log(action)
-      console.log('signOutUserInfoAsync')
-      return {
-        ...state,
-        userId: action.payload.userId,
-        userName: action.payload.userName,
-      }
-    });
   },
 });
 
 // export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
 
-export const selectUserId = (state: RootState) => state.user.userId;
+export const selectItems = (state: RootState) => state.items
 
-export const selectUserName = (state: RootState) => state.user.userName;
 
 // export const incrementIfOdd = (amount: number): AppThunk => (
 //   dispatch,

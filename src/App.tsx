@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
+import { selectItems } from './features/items/itemsSlice'
 import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
@@ -8,17 +9,23 @@ import { Admin } from './components/pages/Admin'
 import firebase from 'firebase'
 
 import { registerUserInfoAsync } from './features/user/userSlice'
+import { fetchItemsAsync } from './features/items/itemsSlice'
 
 function App() {
+  const items = useSelector(selectItems)
   const dispach = useDispatch()
   useEffect(() => {
     dispach(registerUserInfoAsync())
+    dispach(fetchItemsAsync())
   }, [dispach])
 
   return (
     <div className="App">
       <Header></Header>
       <Admin></Admin>
+      {items.map((item) => (
+        <p>{item.name}</p>
+      ))}
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Counter />
