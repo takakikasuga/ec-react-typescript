@@ -41,7 +41,7 @@ export const orderUpdateAsync = createAsyncThunk('orderUpdate/orderUpdateAsync',
   return addOrder.orderInfo.orderItems
 });
 
-export const addOrderSlice = createSlice({
+export const orderUpdateSlice = createSlice({
   name: 'orderUpdate',
   initialState,
 
@@ -74,6 +74,6 @@ export const addOrderSlice = createSlice({
 // export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
 
-export const selectAddOrder = (state: RootState) => state.addOrder
+export const selectOrderUpdate = (state: RootState) => state.orderUpdate
 
-export default addOrderSlice.reducer;
+export default orderUpdateSlice.reducer;

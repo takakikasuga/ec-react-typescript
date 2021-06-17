@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Header } from '../organisums/header/Header'
 import { DeleteButton } from '../atoms/button/DeleteButton'
 
-import { selectFetchOrder } from '../../features/order/fetchOrder'
+import { selectOrderUpdate } from '../../features/order/orderUpdateSlice'
 import { selectItems } from '../../features/items/itemsSlice'
 import { setCartList, selectCartLists } from '../../features/cartLists/cartLists'
-import { deleteOrderItem, deleteOrderAsync, fetchOrderAsync } from '../../features/order/fetchOrder'
+import { deleteOrderItem, deleteOrderAsync, fetchOrderAsync, selectFetchOrder } from '../../features/order/fetchOrder'
 import { selectUserId } from '../../features/user/userSlice'
-import { selectStatusZoroId } from '../../features/statusZoroId/statusZoroIdSlice'
+import { selectStatusZoroId, statusZoroIdAsync } from '../../features/statusZoroId/statusZoroIdSlice'
 
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -33,13 +33,19 @@ export const CartList = () => {
   const fetchData: [] = useSelector(selectFetchOrder)
   const items = useSelector(selectItems)
   const cartLists = useSelector(selectCartLists)
+  const orderUpdate = useSelector(selectOrderUpdate)
+  const fetchOrder = useSelector(selectFetchOrder)
   const StatusZoroId = useSelector(selectStatusZoroId)
   const userId: any = useSelector(selectUserId)
 
   useEffect(() => {
     // カートリストの中でstatusが0の注文情報をとってくる
     dipatch(fetchOrderAsync(userId))
-  }, [])
+    // 注文情報の固有のIDを取得する
+    dipatch(statusZoroIdAsync(userId))
+    console.log('useEffectでfetchOrderAsyncが発火します')
+    // orderUpdateの配列状況が変更されるたびに発火して最新のカート情報をFirebaseから取得するようにする。
+  }, [orderUpdate.length])
 
   const deleteCart = (index: number) => {
     console.log('deleteCartが発火')
@@ -52,43 +58,46 @@ export const CartList = () => {
     updateFetchData.splice(index, 1)
     dipatch(deleteOrderAsync({ userId, StatusZoroId, updateFetchData }))
   }
+  console.log('fetchOrder.length', fetchOrder.length)
 
   return (
     <>
       <Header></Header>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell>商品名</TableCell>
-              <TableCell align="right">値段（税込）</TableCell>
-              <TableCell align="right">個数</TableCell>
-              <TableCell align="right">合計金額（税込）</TableCell>
-              <TableCell align="right">
-                削除
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {fetchData.map((row: any, index: number) => (
-              <TableRow key={index}>
-                {console.log('発火しています')}
-                <TableCell component="th" scope="row">
-                  {row.name}
-                </TableCell>
-                <TableCell align="right">{row.itemPrice}</TableCell>
-                <TableCell align="right">{row.itemCount}</TableCell>
-                <TableCell align="right">{((row.itemPrice) * (row.itemCount)).toLocaleString()}</TableCell>
+      {!fetchOrder.length ? <h2>カートに商品情報はありません</h2> :
+        <TableContainer component={Paper}>
+          <Table className={classes.table} size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell>商品名</TableCell>
+                <TableCell align="right">値段（税込）</TableCell>
+                <TableCell align="right">個数</TableCell>
+                <TableCell align="right">合計金額（税込）</TableCell>
                 <TableCell align="right">
-                  <span onClick={() => { deleteCart(index) }}>
-                    <DeleteButton></DeleteButton>
-                  </span>
+                  削除
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {fetchData.map((row: any, index: number) => (
+                <TableRow key={index}>
+                  {console.log('発火しています')}
+                  <TableCell component="th" scope="row">
+                    {row.name}
+                  </TableCell>
+                  <TableCell align="right">{row.itemPrice}</TableCell>
+                  <TableCell align="right">{row.itemCount}</TableCell>
+                  <TableCell align="right">{((row.itemPrice) * (row.itemCount)).toLocaleString()}</TableCell>
+                  <TableCell align="right">
+                    <span onClick={() => { deleteCart(index) }}>
+                      <DeleteButton></DeleteButton>
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      }
     </>
   );
 }
