@@ -11,6 +11,7 @@ import { DeleteOrder } from '../../types/order/order'
 const initialState: Array<FetchOrder> = []
 
 export const fetchOrderAsync = createAsyncThunk('fetchOrder/fetchOrderAsync', async (userId: string) => {
+  console.log('fetchOrderAsyncが発火します。')
   // stateで管理するための配列を用意
   let fetchOrderStatus: Array<FetchOrder> = []
   const ordersRef =
@@ -24,28 +25,20 @@ export const fetchOrderAsync = createAsyncThunk('fetchOrder/fetchOrderAsync', as
     .where('status', '==', 0)
     .get()
     .then((querySnapshot) => {
-      console.log(querySnapshot)
       querySnapshot.forEach((doc) => {
-        console.log(doc.data(), doc.id)
         fetchOrderStatus = doc.data().orderItems
-        console.log(fetchOrderStatus)
       })
     })
     .catch((error) => {
       console.log(error)
     });
-  console.log(userId)
-  console.log(fetchOrderStatus)
+  console.log('status = 0の情報fetchOrderStatusの中身を確認', fetchOrderStatus)
   return fetchOrderStatus
 });
 
 
 export const deleteOrderAsync = createAsyncThunk('deleteOrder/deleteOrderAsync', async (deleteElements: DeleteOrder) => {
-  console.log('deleteOrderAsync')
-  console.log(deleteElements)
   const { userId, statusZeroId, updateFetchData } = deleteElements
-  console.log(userId, statusZeroId)
-  console.log(updateFetchData)
   if (updateFetchData.length !== 0) {
     await firebase
       .firestore()
@@ -57,7 +50,6 @@ export const deleteOrderAsync = createAsyncThunk('deleteOrder/deleteOrderAsync',
       .then(() => {
         console.log('アップデートに成功しました。')
       })
-    console.log('アップデートした値を返します')
     return updateFetchData
   } else {
     await firebase
@@ -68,8 +60,6 @@ export const deleteOrderAsync = createAsyncThunk('deleteOrder/deleteOrderAsync',
       .then(() => {
         console.log('全削除に成功しました。')
       })
-    console.log(updateFetchData)
-    console.log('空の配列を返します')
     return updateFetchData
   }
 });
@@ -81,11 +71,8 @@ export const fetchOrderSlice = createSlice({
 
   reducers: {
     deleteOrderItem: (state, action) => {
-      console.log('deleteOrderItem')
-      console.log(state, action)
       const updateItem = [...state]
       updateItem.splice(action.payload, 1)
-      console.log(updateItem)
       return updateItem
     },
   },
@@ -95,15 +82,10 @@ export const fetchOrderSlice = createSlice({
     console.log(builder)
     // fetchOrderAsyncの非同期通信だった時
     builder.addCase(fetchOrderAsync.fulfilled, (state, action: PayloadAction<Array<FetchOrder>>) => {
-      console.log('fetchOrderAsync')
-      console.log(state)
-      console.log(action)
+      console.log('fetchOrderAsyncのstateとpayload', state, action)
       return action.payload
     })
     builder.addCase(deleteOrderAsync.fulfilled, (state, action: PayloadAction<Array<FetchOrder>> | PayloadAction<[]>) => {
-      console.log('deleteOrderAsync')
-      console.log(state)
-      console.log(action)
       return action.payload
     })
   },

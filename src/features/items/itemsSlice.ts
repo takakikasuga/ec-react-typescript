@@ -16,10 +16,8 @@ export const fetchItemsAsync = createAsyncThunk('items/fetchItemsAsync', async (
     .get()
     .then((snapshot: any) => {
       snapshot.forEach((element: any) => {
-        console.log('loginUserAsync')
         fetchItemsData.push(element.data())
       });
-      console.log(fetchItemsData)
     })
 
   // アイテムidを昇順へと並び替える
@@ -30,7 +28,6 @@ export const fetchItemsAsync = createAsyncThunk('items/fetchItemsAsync', async (
       return 1;
     }
   });
-  console.log(fetchItemsData)
   return fetchItemsData
 });
 
@@ -61,8 +58,6 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     // loginUserAsyncの非同期通信だった時
     builder.addCase(fetchItemsAsync.fulfilled, (state, action: PayloadAction<Array<fetchItems>>) => {
-      console.log(state)
-      console.log(action)
       console.log('fetchItemsAsync')
       return action.payload
     })

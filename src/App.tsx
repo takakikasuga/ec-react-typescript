@@ -11,7 +11,7 @@ import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
 import { Home } from './components/pages/Home'
-import { Deatail } from './components/pages/Deatail'
+import { Deatail } from './components/pages/Detail'
 import { Admin } from './components/pages/Admin'
 import { CartList } from './components/pages/CartList'
 
@@ -30,7 +30,6 @@ function App() {
   }, [dispach])
 
   useEffect(() => {
-    console.log(userId)
     if (userId) {
       dispach(fetchOrderAsync(userId))
       dispach(statusZeroIdAsync(userId))

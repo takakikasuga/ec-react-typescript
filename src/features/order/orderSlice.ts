@@ -16,7 +16,7 @@ const initialState: any = [
 ]
 
 export const addOrderAsync = createAsyncThunk('addOrder/addOrderAsync', async (addOrder: any) => {
-  console.log(addOrder)
+  console.log('addOrderAsyncが発火します')
   // 注文情報の商品に一意のIDを作成
   const ordersRef =
     firebase
@@ -25,12 +25,13 @@ export const addOrderAsync = createAsyncThunk('addOrder/addOrderAsync', async (a
       .doc(addOrder.userId)
       .collection('orders');
   const ref = ordersRef.doc();
+  // addOrderを展開してコピー
+  const newAddOreder = { ...addOrder }
   // 商品情報の配列0番目にユニークなIDを付与
-  addOrder.orderInfo.orderItems[0].uniqueItemId = ref.id;
-  console.log(addOrder)
-
-  // status = 0を追加
-  addOrder.orderInfo.status = 0
+  newAddOreder.orderInfo.orderItems[0].uniqueItemId = ref.id;
+  // 未購入状態であるstatus = 0を追加
+  newAddOreder.orderInfo.status = 0
+  console.log('newAddOrederの中身を確認', newAddOreder)
   // 実際に注文情報を追加（新規注文）
   await firebase
     .firestore()
@@ -42,12 +43,8 @@ export const addOrderAsync = createAsyncThunk('addOrder/addOrderAsync', async (a
     .catch((error) => {
       console.log(error)
     })
-
-  console.log(addOrder)
-  console.log(addOrder.orderInfo)
-
-  console.log(addOrder.orderInfo)
-  return addOrder.orderInfo.orderItems
+  console.log('newAddOreder.orderInfo.orderItemsの中身を確認', newAddOreder.orderInfo.orderItems)
+  return newAddOreder.orderInfo.orderItems
 });
 
 export const addOrderSlice = createSlice({
@@ -71,9 +68,6 @@ export const addOrderSlice = createSlice({
   extraReducers: (builder) => {
     // addOrderAsyncの非同期通信だった時
     builder.addCase(addOrderAsync.fulfilled, (state, action: PayloadAction<Array<FetchOrder>>) => {
-      console.log('addOrderAsync')
-      console.log(state)
-      console.log(action)
       return action.payload
     })
   },

@@ -53,11 +53,11 @@ export const Deatail = () => {
   const itemPrice: number = useSelector(selectItemPrice)
   const itemCount: number = useSelector(selectItemCount)
   const userId: string | null = useSelector(selectUserId)
-  const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
+  const fetchData: any = useSelector(selectFetchOrder)
   const { id }: Params = useParams()
 
+  // 詳細画面に一致する商品を抽出する
   const itemDetail = items.filter((item: fetchItems) => {
-    console.log(item)
     return item.id === Number(id)
   })
 
@@ -74,9 +74,10 @@ export const Deatail = () => {
       },
       status: 0
     }
-    console.log(userId)
-    console.log(fetchData.length)
     // statusが0のものが存在するか否かでの場合わけ（新規or追加）
+    console.log(fetchData)
+    console.log(fetchData.length, '=== 0', '新規追加')
+    console.log(fetchData.length, '!== 0', '更新')
     if (!fetchData.length) {
       dispatch(addOrderAsync(addOrder))
     } else {

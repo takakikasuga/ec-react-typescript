@@ -43,19 +43,20 @@ export const CartList = () => {
       // カートリストの中でstatusが0の注文情報をとってくる
       dipatch(fetchOrderAsync(userId))
       // 注文情報の固有のIDを取得する
-      dipatch(statusZeroIdAsync(userId))
-      console.log('useEffectでfetchOrderAsyncが発火します')
     }
     // orderUpdateの配列状況が変更されるたびに発火して最新のカート情報をFirebaseから取得するようにする。
   }, [orderUpdate.length])
 
+  useEffect(() => {
+    if (typeof userId === 'string') {
+      // 現在のstatus0の注文情報IDを取得
+      dipatch(statusZeroIdAsync(userId))
+    }
+    // 一回だけ発火して現在のstatus0注文情報を取得する
+  }, [])
+
   const deleteCart = (index: number) => {
-    console.log('deleteCartが発火')
-    console.log(index)
-    console.log(fetchData)
     dipatch(deleteOrderItem(index))
-    console.log(statusZeroId)
-    console.log(fetchData)
     // 直接参照しているstoreのデータを削除することができないのでコピー
     const updateFetchData = [...fetchData]
     // string型であることを保証する
@@ -64,7 +65,6 @@ export const CartList = () => {
       dipatch(deleteOrderAsync({ userId, statusZeroId, updateFetchData }))
     }
   }
-  console.log('fetchOrder.length', fetchData.length)
 
   return (
     <>
@@ -86,7 +86,6 @@ export const CartList = () => {
             <TableBody>
               {fetchData.map((row: FetchOrder, index: number) => (
                 <TableRow key={index}>
-                  {console.log('発火しています')}
                   <TableCell component="th" scope="row">
                     {/* {row.name} */}
                   </TableCell>

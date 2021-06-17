@@ -10,6 +10,10 @@ import { ItemdetailPrice } from '../../molecules/itemPrice/ItemdetailPrice'
 import { FavoriteIconHeart } from '../../atoms/icons/FavoriteIconHeart'
 import { StarIcon } from '../../atoms/icons/StarIcon'
 import { PrimaryButton } from '../../atoms/button/PrimaryButton'
+
+// 型のインポート
+import { fetchItems } from '../../../types/items/items'
+
 // マテリアルUI
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -30,7 +34,7 @@ const useStyles = makeStyles({
   },
 });
 export const Items = () => {
-  const items = useSelector(selectItems)
+  const items: fetchItems[] = useSelector(selectItems)
   const dispach = useDispatch()
   const history = useHistory()
 
@@ -43,8 +47,7 @@ export const Items = () => {
   return (
     <div>
       {items.map((item: any, index: number) => (
-        <Card className={classes.root}>
-          {console.log(item.id)}
+        <Card className={classes.root} key={index}>
           <CardActionArea key={index}>
             <CardMedia
               className={classes.media}

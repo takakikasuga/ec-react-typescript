@@ -18,16 +18,13 @@ export const statusZeroIdAsync = createAsyncThunk('statusZero/statusZeroIdAsync'
     .where('status', '==', 0)
     .get()
     .then((querySnapshot) => {
-      console.log(querySnapshot)
       querySnapshot.forEach((doc) => {
-        console.log(doc.id)
         uniqueId = doc.id
       })
     })
     .catch((error) => {
       console.log(error)
     });
-  console.log(uniqueId)
   return uniqueId
 });
 
@@ -52,9 +49,6 @@ export const statusZeroIdSlice = createSlice({
   extraReducers: (builder) => {
     // loginUserAsyncの非同期通信だった時
     builder.addCase(statusZeroIdAsync.fulfilled, (state, action: any) => {
-      console.log(state)
-      console.log(action)
-      console.log('statusZeroIdAsync')
       return action.payload
     })
   },

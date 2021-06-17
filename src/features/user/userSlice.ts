@@ -29,7 +29,6 @@ export const registerUserInfoAsync = createAsyncThunk('register/registerUserInfo
   function auth() {
     return new Promise(resolve => {
       firebase.auth().onAuthStateChanged((user) => {
-        console.log('firebaseの通信を行っています。')
         if (user) {
           userStatus.userId = user.uid
           userStatus.userName = user.displayName
@@ -40,7 +39,6 @@ export const registerUserInfoAsync = createAsyncThunk('register/registerUserInfo
     })
   }
   await auth()
-  console.log('registerUserInfoAsync')
   return userStatus
 });
 
@@ -70,16 +68,11 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     // loginUserAsyncの非同期通信だった時
     builder.addCase(loginUserAsync.fulfilled, (state, action) => {
-      console.log(state)
-      console.log(action)
-      console.log('loginUserAsync')
       return initialState
     })
 
     // registerUserInfoAsyncの非同期通信だった時
     builder.addCase(registerUserInfoAsync.fulfilled, (state, action) => {
-      console.log(state)
-      console.log(action)
       return {
         ...state,
         userId: action.payload.userId,
@@ -88,9 +81,6 @@ export const userSlice = createSlice({
     })
     // signOutUserInfoAsyncの非同期通信だった時
     builder.addCase(signOutUserInfoAsync.fulfilled, (state, action) => {
-      console.log(state)
-      console.log(action)
-      console.log('signOutUserInfoAsync')
       return {
         ...state,
         userId: action.payload.userId,

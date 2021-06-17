@@ -12,10 +12,8 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
 export const RadioButton = (props: RadioProps) => {
-  console.log(props)
   const { detail } = props
   const dispatch = useDispatch()
-  console.log(detail)
   // ラジオボタンはstring型の時に動作する
   const [value, setValue] = useState<string>('');
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

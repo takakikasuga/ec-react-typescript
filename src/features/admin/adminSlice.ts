@@ -29,8 +29,6 @@ export const uploadItemData = createAsyncThunk('uploadData/uploadItemDataAsync',
   itemObject.price.m = object.price.m
   itemObject.price.l = object.price.l
 
-  console.log('uploadItemDataAsync')
-  console.log(object)
   function auth() {
     const uploadTask = strage.ref(`images/${object.image.name}`).put(object.image);
     return new Promise(resolve => {
@@ -41,13 +39,11 @@ export const uploadItemData = createAsyncThunk('uploadData/uploadItemDataAsync',
           console.log(error)
         },
         () => {
-          console.log('第二引数が発火')
           strage
             .ref("images")
             .child(object.image.name)
             .getDownloadURL()
             .then((url) => {
-              console.log(url)
               itemObject.imagePath = url
               // Promiseで成功を返却する
               resolve('')
@@ -55,7 +51,6 @@ export const uploadItemData = createAsyncThunk('uploadData/uploadItemDataAsync',
         })
     })
   }
-  console.log('await直前')
   await auth()
   await firebase
     .firestore()
@@ -67,7 +62,6 @@ export const uploadItemData = createAsyncThunk('uploadData/uploadItemDataAsync',
     .catch((error) => {
       console.log(error)
     })
-  console.log('await直後')
   return itemObject
 });
 
@@ -92,9 +86,6 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     // loginUserAsyncの非同期通信だった時
     builder.addCase(uploadItemData.fulfilled, (state, action: any) => {
-      console.log(state)
-      console.log(action)
-      console.log('fetchItemsAsync')
       return action.payload
     })
   },
