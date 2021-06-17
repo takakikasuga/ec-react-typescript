@@ -5,9 +5,7 @@ import firebase from 'firebase'
 
 
 
-const initialState: Array<fetchItems> = [
-
-]
+const initialState: Array<fetchItems> = []
 
 let fetchItemsData: Array<fetchItems> = []
 
@@ -62,7 +60,7 @@ export const userSlice = createSlice({
 
   extraReducers: (builder) => {
     // loginUserAsyncの非同期通信だった時
-    builder.addCase(fetchItemsAsync.fulfilled, (state, action: any) => {
+    builder.addCase(fetchItemsAsync.fulfilled, (state, action: PayloadAction<Array<fetchItems>>) => {
       console.log(state)
       console.log(action)
       console.log('fetchItemsAsync')
@@ -71,20 +69,6 @@ export const userSlice = createSlice({
   },
 });
 
-// export const { increment, decrement, incrementByAmount } = counterSlice.actions;
-
-
 export const selectItems = (state: RootState) => state.items
-
-
-// export const incrementIfOdd = (amount: number): AppThunk => (
-//   dispatch,
-//   getState
-// ) => {
-//   const currentValue = selectCount(getState());
-//   if (currentValue % 2 === 1) {
-//     dispatch(incrementByAmount(amount));
-//   }
-// };
 
 export default userSlice.reducer;

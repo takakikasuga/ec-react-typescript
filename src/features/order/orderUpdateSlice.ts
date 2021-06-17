@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import firebase from 'firebase'
-// ユーザーIDの参照
+// 型のインポート
+import { OrderUpdate } from '../../types/order/order'
 
 
 const initialState: any = ''
@@ -17,10 +18,11 @@ export const orderUpdateAsync = createAsyncThunk('orderUpdate/orderUpdateAsync',
       .collection('orders');
   const ref = ordersRef.doc();
   // 商品情報の配列0番目にユニークなIDを付与
-  addOrder.orderInfo.orderItems[0].uniqueItemId = ref.id;
-  console.log(addOrder)
+  let newAddOrder = { ...addOrder }
+  newAddOrder.orderInfo.orderItems[0].uniqueItemId = ref.id;
+  console.log(newAddOrder)
   // 実際に注文情報を追加（追加注文）
-  let status0Id: any = [];
+  let status0Id: Array<string> = [];
   await ordersRef
     .where('status', '==', 0)
     .get()

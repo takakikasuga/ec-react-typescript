@@ -5,12 +5,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Header } from '../organisums/header/Header'
 import { DeleteButton } from '../atoms/button/DeleteButton'
 
+// 型のインポート
+import { FetchOrder } from '../../types/order/order'
+
 import { selectOrderUpdate } from '../../features/order/orderUpdateSlice'
-import { selectItems } from '../../features/items/itemsSlice'
-import { setCartList, selectCartLists } from '../../features/cartLists/cartLists'
-import { deleteOrderItem, deleteOrderAsync, fetchOrderAsync, selectFetchOrder } from '../../features/order/fetchOrder'
+import { selectCartLists } from '../../features/cartLists/cartListsSlice'
+import { deleteOrderItem, deleteOrderAsync, fetchOrderAsync, selectFetchOrder } from '../../features/order/fetchOrderSlice'
 import { selectUserId } from '../../features/user/userSlice'
-import { selectStatusZoroId, statusZoroIdAsync } from '../../features/statusZoroId/statusZoroIdSlice'
+import { selectStatusZeroId, statusZeroIdAsync } from '../../features/statusZeroId/statusZeroIdSlice'
 
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -30,20 +32,20 @@ const useStyles = makeStyles({
 export const CartList = () => {
   const classes = useStyles();
   const dipatch = useDispatch()
-  const fetchData: [] = useSelector(selectFetchOrder)
-  const items = useSelector(selectItems)
-  const cartLists = useSelector(selectCartLists)
+  const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
   const orderUpdate = useSelector(selectOrderUpdate)
-  const fetchOrder = useSelector(selectFetchOrder)
-  const StatusZoroId = useSelector(selectStatusZoroId)
-  const userId: any = useSelector(selectUserId)
+  const statusZeroId = useSelector(selectStatusZeroId)
+  const userId: string | null = useSelector(selectUserId)
 
   useEffect(() => {
-    // カートリストの中でstatusが0の注文情報をとってくる
-    dipatch(fetchOrderAsync(userId))
-    // 注文情報の固有のIDを取得する
-    dipatch(statusZoroIdAsync(userId))
-    console.log('useEffectでfetchOrderAsyncが発火します')
+    // string型であることを保証する
+    if (typeof userId === 'string') {
+      // カートリストの中でstatusが0の注文情報をとってくる
+      dipatch(fetchOrderAsync(userId))
+      // 注文情報の固有のIDを取得する
+      dipatch(statusZeroIdAsync(userId))
+      console.log('useEffectでfetchOrderAsyncが発火します')
+    }
     // orderUpdateの配列状況が変更されるたびに発火して最新のカート情報をFirebaseから取得するようにする。
   }, [orderUpdate.length])
 
@@ -52,18 +54,22 @@ export const CartList = () => {
     console.log(index)
     console.log(fetchData)
     dipatch(deleteOrderItem(index))
-    console.log(StatusZoroId)
+    console.log(statusZeroId)
     console.log(fetchData)
+    // 直接参照しているstoreのデータを削除することができないのでコピー
     const updateFetchData = [...fetchData]
-    updateFetchData.splice(index, 1)
-    dipatch(deleteOrderAsync({ userId, StatusZoroId, updateFetchData }))
+    // string型であることを保証する
+    if (typeof userId === 'string') {
+      updateFetchData.splice(index, 1)
+      dipatch(deleteOrderAsync({ userId, statusZeroId, updateFetchData }))
+    }
   }
-  console.log('fetchOrder.length', fetchOrder.length)
+  console.log('fetchOrder.length', fetchData.length)
 
   return (
     <>
       <Header></Header>
-      {!fetchOrder.length ? <h2>カートに商品情報はありません</h2> :
+      {!fetchData.length ? <h2>カートに商品情報はありません</h2> :
         <TableContainer component={Paper}>
           <Table className={classes.table} size="small" aria-label="a dense table">
             <TableHead>
@@ -78,11 +84,11 @@ export const CartList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {fetchData.map((row: any, index: number) => (
+              {fetchData.map((row: FetchOrder, index: number) => (
                 <TableRow key={index}>
                   {console.log('発火しています')}
                   <TableCell component="th" scope="row">
-                    {row.name}
+                    {/* {row.name} */}
                   </TableCell>
                   <TableCell align="right">{row.itemPrice}</TableCell>
                   <TableCell align="right">{row.itemCount}</TableCell>

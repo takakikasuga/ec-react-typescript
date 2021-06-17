@@ -1,9 +1,9 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import firebase from 'firebase'
 
 // 型のインポート
-import { OrderInfo, AddOrder } from '../../types/order/order'
+import { OrderInfo, AddOrder, FetchOrder } from '../../types/order/order'
 
 
 const initialState: any = [
@@ -70,7 +70,7 @@ export const addOrderSlice = createSlice({
 
   extraReducers: (builder) => {
     // addOrderAsyncの非同期通信だった時
-    builder.addCase(addOrderAsync.fulfilled, (state, action: any) => {
+    builder.addCase(addOrderAsync.fulfilled, (state, action: PayloadAction<Array<FetchOrder>>) => {
       console.log('addOrderAsync')
       console.log(state)
       console.log(action)
@@ -80,7 +80,6 @@ export const addOrderSlice = createSlice({
 });
 
 // export const { increment, decrement, incrementByAmount } = counterSlice.actions;
-
 
 export const selectAddOrder = (state: RootState) => state.addOrder
 

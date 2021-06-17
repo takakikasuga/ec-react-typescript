@@ -2,13 +2,13 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
 import userReducer from '../features/user/userSlice'
 import itemsReducer from '../features/items/itemsSlice'
-import itemsCountReducer from '../features/itemCount/itemCount'
-import itemPriceReducer from '../features/itemPrice/itemPrice'
+import itemsCountReducer from '../features/itemCount/itemCountSlice'
+import itemPriceReducer from '../features/itemPrice/itemPriceSlice'
 import addOrderReducer from '../features/order/orderSlice'
 import orderUpdateReducer from '../features/order/orderUpdateSlice'
-import fetchOrderReducer from '../features/order/fetchOrder'
-import cartListsReducer from '../features/cartLists/cartLists'
-import statusZoroIdReducer from '../features/statusZoroId/statusZoroIdSlice'
+import fetchOrderReducer from '../features/order/fetchOrderSlice'
+import cartListsReducer from '../features/cartLists/cartListsSlice'
+import statusZeroIdReducer from '../features/statusZeroId/statusZeroIdSlice'
 
 
 export const store = configureStore({
@@ -22,7 +22,7 @@ export const store = configureStore({
     orderUpdate: orderUpdateReducer,
     fetchOrder: fetchOrderReducer,
     cartLists: cartListsReducer,
-    statusZoroId: statusZoroIdReducer,
+    statusZeroId: statusZeroIdReducer,
   },
 });
 

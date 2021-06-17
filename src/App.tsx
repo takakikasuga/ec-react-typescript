@@ -17,8 +17,8 @@ import { CartList } from './components/pages/CartList'
 
 import { registerUserInfoAsync } from './features/user/userSlice'
 import { fetchItemsAsync } from './features/items/itemsSlice'
-import { statusZoroIdAsync } from './features/statusZoroId/statusZoroIdSlice'
-import { fetchOrderAsync } from './features/order/fetchOrder'
+import { statusZeroIdAsync } from './features/statusZeroId/statusZeroIdSlice'
+import { fetchOrderAsync } from './features/order/fetchOrderSlice'
 
 function App() {
   const dispach = useDispatch()
@@ -33,7 +33,7 @@ function App() {
     console.log(userId)
     if (userId) {
       dispach(fetchOrderAsync(userId))
-      dispach(statusZoroIdAsync(userId))
+      dispach(statusZeroIdAsync(userId))
     }
   }, [userId])
 

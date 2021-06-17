@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { setItemCount } from '../../../features/itemCount/itemCount'
+import { setItemCount } from '../../../features/itemCount/itemCountSlice'
 // マテリアルUI
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';

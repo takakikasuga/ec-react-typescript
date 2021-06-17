@@ -4,11 +4,11 @@ import { useParams, useHistory } from 'react-router-dom'
 
 // スライサーよりアイテムデータを取得
 import { selectItems } from '../../features/items/itemsSlice'
-import { selectItemPrice } from '../../features/itemPrice/itemPrice'
-import { selectItemCount } from '../../features/itemCount/itemCount'
+import { selectItemPrice } from '../../features/itemPrice/itemPriceSlice'
+import { selectItemCount } from '../../features/itemCount/itemCountSlice'
 import { addOrderAsync, selectAddOrder } from '../../features/order/orderSlice'
 import { selectUserId } from '../../features/user/userSlice'
-import { selectFetchOrder } from '../../features/order/fetchOrder'
+import { selectFetchOrder } from '../../features/order/fetchOrderSlice'
 import { orderUpdateAsync } from '../../features/order/orderUpdateSlice'
 
 
@@ -21,7 +21,8 @@ import { Header } from '../organisums/header/Header'
 // 型のインポート
 import { Params } from '../../types/params/parameter'
 import { fetchItems } from '../../types/items/items'
-import { AddOrder } from '../../types/order/order'
+import { AddOrder, OrderUpdate } from '../../types/order/order'
+import { FetchOrder } from '../../types/order/order'
 
 // マテリアルUI
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -51,9 +52,8 @@ export const Deatail = () => {
   const items: Array<fetchItems> = useSelector(selectItems)
   const itemPrice: number = useSelector(selectItemPrice)
   const itemCount: number = useSelector(selectItemCount)
-  const addOrderStatus: any = useSelector(selectAddOrder)
-  const userId = useSelector(selectUserId)
-  const fetchOrder: any = useSelector(selectFetchOrder)
+  const userId: string | null = useSelector(selectUserId)
+  const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
   const { id }: Params = useParams()
 
   const itemDetail = items.filter((item: fetchItems) => {
@@ -62,7 +62,7 @@ export const Deatail = () => {
   })
 
   const addOrder = (path: string) => {
-    let addOrder: AddOrder = {
+    let addOrder: any = {
       userId: userId,
       orderInfo: {
         orderItems: [{
@@ -75,9 +75,9 @@ export const Deatail = () => {
       status: 0
     }
     console.log(userId)
-    console.log(fetchOrder.length)
+    console.log(fetchData.length)
     // statusが0のものが存在するか否かでの場合わけ（新規or追加）
-    if (!fetchOrder.length) {
+    if (!fetchData.length) {
       dispatch(addOrderAsync(addOrder))
     } else {
       dispatch(orderUpdateAsync(addOrder))

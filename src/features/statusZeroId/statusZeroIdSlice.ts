@@ -5,7 +5,7 @@ import firebase from 'firebase'
 
 const initialState: string = ''
 
-export const statusZoroIdAsync = createAsyncThunk('statusZoro/statusZoroIdAsync', async (userId: string) => {
+export const statusZeroIdAsync = createAsyncThunk('statusZero/statusZeroIdAsync', async (userId: string) => {
   let uniqueId = ''
   const ordersRef =
     firebase
@@ -31,7 +31,7 @@ export const statusZoroIdAsync = createAsyncThunk('statusZoro/statusZoroIdAsync'
   return uniqueId
 });
 
-export const statusZoroIdSlice = createSlice({
+export const statusZeroIdSlice = createSlice({
   name: 'items',
   initialState,
 
@@ -51,16 +51,16 @@ export const statusZoroIdSlice = createSlice({
 
   extraReducers: (builder) => {
     // loginUserAsyncの非同期通信だった時
-    builder.addCase(statusZoroIdAsync.fulfilled, (state, action: any) => {
+    builder.addCase(statusZeroIdAsync.fulfilled, (state, action: any) => {
       console.log(state)
       console.log(action)
-      console.log('statusZoroIdAsync')
+      console.log('statusZeroIdAsync')
       return action.payload
     })
   },
 });
 
 
-export const selectStatusZoroId = (state: RootState) => state.statusZoroId
+export const selectStatusZeroId = (state: RootState) => state.statusZeroId
 
-export default statusZoroIdSlice.reducer;
+export default statusZeroIdSlice.reducer;

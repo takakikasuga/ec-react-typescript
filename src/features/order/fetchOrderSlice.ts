@@ -1,14 +1,18 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import firebase from 'firebase'
 
+// 型のインポート
+import { FetchOrder } from '../../types/order/order'
+import { DeleteOrder } from '../../types/order/order'
 
 
-const initialState: any = []
+
+const initialState: Array<FetchOrder> = []
 
 export const fetchOrderAsync = createAsyncThunk('fetchOrder/fetchOrderAsync', async (userId: string) => {
   // stateで管理するための配列を用意
-  let fetchOrderStatus: any = []
+  let fetchOrderStatus: Array<FetchOrder> = []
   const ordersRef =
     firebase
       .firestore()
@@ -24,6 +28,7 @@ export const fetchOrderAsync = createAsyncThunk('fetchOrder/fetchOrderAsync', as
       querySnapshot.forEach((doc) => {
         console.log(doc.data(), doc.id)
         fetchOrderStatus = doc.data().orderItems
+        console.log(fetchOrderStatus)
       })
     })
     .catch((error) => {
@@ -31,22 +36,21 @@ export const fetchOrderAsync = createAsyncThunk('fetchOrder/fetchOrderAsync', as
     });
   console.log(userId)
   console.log(fetchOrderStatus)
-  // return addOrder.orderInfo
   return fetchOrderStatus
 });
 
 
-export const deleteOrderAsync = createAsyncThunk('deleteOrder/deleteOrderAsync', async (deleteElements: any) => {
+export const deleteOrderAsync = createAsyncThunk('deleteOrder/deleteOrderAsync', async (deleteElements: DeleteOrder) => {
   console.log('deleteOrderAsync')
   console.log(deleteElements)
-  const { userId, StatusZoroId, updateFetchData } = deleteElements
-  console.log(userId, StatusZoroId)
+  const { userId, statusZeroId, updateFetchData } = deleteElements
+  console.log(userId, statusZeroId)
   console.log(updateFetchData)
   if (updateFetchData.length !== 0) {
     await firebase
       .firestore()
       .collection(`users/${userId}/orders`)
-      .doc(StatusZoroId)
+      .doc(statusZeroId)
       .update({
         orderItems: updateFetchData,
       })
@@ -59,7 +63,7 @@ export const deleteOrderAsync = createAsyncThunk('deleteOrder/deleteOrderAsync',
     await firebase
       .firestore()
       .collection(`users/${userId}/orders`)
-      .doc(StatusZoroId)
+      .doc(statusZeroId)
       .delete()
       .then(() => {
         console.log('全削除に成功しました。')
@@ -84,26 +88,19 @@ export const fetchOrderSlice = createSlice({
       console.log(updateItem)
       return updateItem
     },
-    // setUserName: (state) => {
-    //   state.value -= 1;
-    // },
-
-    // defaultUserStatus: (state, action: PayloadAction<number>) => {
-    //   state.value += action.payload;
-    // },
   },
 
   extraReducers: (builder) => {
 
     console.log(builder)
     // fetchOrderAsyncの非同期通信だった時
-    builder.addCase(fetchOrderAsync.fulfilled, (state, action: any) => {
+    builder.addCase(fetchOrderAsync.fulfilled, (state, action: PayloadAction<Array<FetchOrder>>) => {
       console.log('fetchOrderAsync')
       console.log(state)
       console.log(action)
       return action.payload
     })
-    builder.addCase(deleteOrderAsync.fulfilled, (state, action: any) => {
+    builder.addCase(deleteOrderAsync.fulfilled, (state, action: PayloadAction<Array<FetchOrder>> | PayloadAction<[]>) => {
       console.log('deleteOrderAsync')
       console.log(state)
       console.log(action)

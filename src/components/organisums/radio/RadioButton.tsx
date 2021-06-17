@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { setItemPrice } from '../../../features/itemPrice/itemPrice'
+import { setItemPrice } from '../../../features/itemPrice/itemPriceSlice'
 // 型のインポート
 import { RadioProps } from '../../../types/radio/radio'
 
