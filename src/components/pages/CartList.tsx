@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 // コンポーネント
 import { Header } from '../organisums/header/Header'
 import { DeleteButton } from '../atoms/button/DeleteButton'
+import { PrimaryButton } from '../atoms/button/PrimaryButton'
 
 // 型のインポート
 import { FetchOrder } from '../../types/order/order'
 
+// 各種機能のインポート
 import { selectOrderUpdate } from '../../features/order/orderUpdateSlice'
-import { selectCartLists } from '../../features/cartLists/cartListsSlice'
 import { deleteOrderItem, deleteOrderAsync, fetchOrderAsync, selectFetchOrder } from '../../features/order/fetchOrderSlice'
 import { selectUserId } from '../../features/user/userSlice'
 import { selectStatusZeroId, statusZeroIdAsync } from '../../features/statusZeroId/statusZeroIdSlice'
@@ -32,10 +34,12 @@ const useStyles = makeStyles({
 export const CartList = () => {
   const classes = useStyles();
   const dipatch = useDispatch()
+  const history = useHistory()
   const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
   const orderUpdate = useSelector(selectOrderUpdate)
   const statusZeroId = useSelector(selectStatusZeroId)
-  const userId: string | null = useSelector(selectUserId)
+  // nullを「!」で明示的になくす
+  const userId: string = useSelector(selectUserId)!
 
   useEffect(() => {
     // string型であることを保証する
@@ -55,6 +59,7 @@ export const CartList = () => {
     // 一回だけ発火して現在のstatus0注文情報を取得する
   }, [])
 
+  // 注文情報の削除
   const deleteCart = (index: number) => {
     dipatch(deleteOrderItem(index))
     // 直接参照しているstoreのデータを削除することができないのでコピー
@@ -66,42 +71,51 @@ export const CartList = () => {
     }
   }
 
+  const orderConfirm = () => {
+    history.push('/orderConfirm')
+  }
+
   return (
     <>
       <Header></Header>
       {!fetchData.length ? <h2>カートに商品情報はありません</h2> :
-        <TableContainer component={Paper}>
-          <Table className={classes.table} size="small" aria-label="a dense table">
-            <TableHead>
-              <TableRow>
-                <TableCell>商品名</TableCell>
-                <TableCell align="right">値段（税込）</TableCell>
-                <TableCell align="right">個数</TableCell>
-                <TableCell align="right">合計金額（税込）</TableCell>
-                <TableCell align="right">
-                  削除
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {fetchData.map((row: FetchOrder, index: number) => (
-                <TableRow key={index}>
-                  <TableCell component="th" scope="row">
-                    {row.itemName}
-                  </TableCell>
-                  <TableCell align="right">{row.itemPrice}</TableCell>
-                  <TableCell align="right">{row.itemCount}</TableCell>
-                  <TableCell align="right">{((row.itemPrice) * (row.itemCount)).toLocaleString()}</TableCell>
+        <>
+          <TableContainer component={Paper}>
+            <Table className={classes.table} size="small" aria-label="a dense table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>商品名</TableCell>
+                  <TableCell align="right">値段（税込）</TableCell>
+                  <TableCell align="right">個数</TableCell>
+                  <TableCell align="right">合計金額（税込）</TableCell>
                   <TableCell align="right">
-                    <span onClick={() => { deleteCart(index) }}>
-                      <DeleteButton></DeleteButton>
-                    </span>
+                    削除
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {fetchData.map((row: FetchOrder, index: number) => (
+                  <TableRow key={index}>
+                    <TableCell component="th" scope="row">
+                      {row.itemName}
+                    </TableCell>
+                    <TableCell align="right">{row.itemPrice}</TableCell>
+                    <TableCell align="right">{row.itemCount}</TableCell>
+                    <TableCell align="right">{((row.itemPrice) * (row.itemCount)).toLocaleString()}</TableCell>
+                    <TableCell align="right">
+                      <span onClick={() => { deleteCart(index) }}>
+                        <DeleteButton></DeleteButton>
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <span onClick={() => { orderConfirm() }}>
+            <PrimaryButton>注文確認画面へ</PrimaryButton>
+          </span>
+        </>
       }
     </>
   );

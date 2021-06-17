@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import firebase from 'firebase'
 // 型のインポート
-import { OrderUpdate } from '../../types/order/order'
 import { firebaseOrderInfo } from '../../types/order/firebaseOrderInfo'
 
 // 型を当てはめてもエラーが出る（一旦保留）

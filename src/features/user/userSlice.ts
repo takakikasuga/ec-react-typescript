@@ -20,7 +20,7 @@ let userStatus: UserStatus = {
 
 export const loginUserAsync = createAsyncThunk('login/loginUserAsync', async () => {
   await firebase.auth().signInWithRedirect(providerGoogle);
-  await firebase.auth().getRedirectResult();
+  // await firebase.auth().getRedirectResult();
   return initialState
 });
 
@@ -81,6 +81,8 @@ export const userSlice = createSlice({
     })
     // signOutUserInfoAsyncの非同期通信だった時
     builder.addCase(signOutUserInfoAsync.fulfilled, (state, action) => {
+      console.log('signOutUserInfoAsync', signOutUserInfoAsync)
+      console.log('signOutUserInfoAsync', state, action)
       return {
         ...state,
         userId: action.payload.userId,

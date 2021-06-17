@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import { useDispatch } from 'react-redux'
 import { setItemPrice } from '../../../features/itemPrice/itemPriceSlice'
 // 型のインポート
@@ -11,7 +11,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
-export const RadioButton = (props: RadioProps) => {
+export const RadioButton = memo((props: RadioProps) => {
   const { detail } = props
   const dispatch = useDispatch()
   // ラジオボタンはstring型の時に動作する
@@ -35,4 +35,4 @@ export const RadioButton = (props: RadioProps) => {
       </FormControl>
     </>
   )
-}
+})

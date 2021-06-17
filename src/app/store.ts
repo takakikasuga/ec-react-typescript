@@ -9,6 +9,7 @@ import orderUpdateReducer from '../features/order/orderUpdateSlice'
 import fetchOrderReducer from '../features/order/fetchOrderSlice'
 import cartListsReducer from '../features/cartLists/cartListsSlice'
 import statusZeroIdReducer from '../features/statusZeroId/statusZeroIdSlice'
+import updateOrderStatusReducer from '../features/order/updateOrderStatusSlice'
 
 
 export const store = configureStore({
@@ -23,6 +24,7 @@ export const store = configureStore({
     fetchOrder: fetchOrderReducer,
     cartLists: cartListsReducer,
     statusZeroId: statusZeroIdReducer,
+    updateOrderStatus: updateOrderStatusReducer,
   },
 });
 

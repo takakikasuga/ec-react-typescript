@@ -7,13 +7,14 @@ import {
 } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUserId } from './features/user/userSlice'
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+
+// コンポーネントのインポート
 import './App.css';
 import { Home } from './components/pages/Home'
 import { Deatail } from './components/pages/Detail'
-import { Admin } from './components/pages/Admin'
+// import { Admin } from './components/pages/Admin'
 import { CartList } from './components/pages/CartList'
+import { OrderConfirm } from './components/pages/OrderConfirm'
 
 import { registerUserInfoAsync } from './features/user/userSlice'
 import { fetchItemsAsync } from './features/items/itemsSlice'
@@ -40,10 +41,12 @@ function App() {
     <div className="App">
       <Router>
         <Link to='/cartlist'>ショッピングカート</Link><br />
+        <Link to='/orderConfirm'>注文確認画面</Link><br />
         <Link to='/'>トップページ</Link><br />
         <Switch>
           <Route exact path="/detail/:id" component={Deatail} />
           <Route exact path="/cartList" component={CartList} />
+          <Route exact path="/orderConfirm" component={OrderConfirm} />
           <Route exact path="/" component={Home} />
         </Switch>
       </Router>
