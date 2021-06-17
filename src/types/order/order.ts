@@ -25,7 +25,7 @@ export interface FetchOrder {
   itemCount: number;
   itemId: number;
   itemPrice: number;
-  uniqueItemId: string;
+  uniqueItemId?: string;
   itemName?: string;
 }
 export interface DeleteOrder {

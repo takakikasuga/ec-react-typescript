@@ -87,7 +87,7 @@ export const CartList = () => {
               {fetchData.map((row: FetchOrder, index: number) => (
                 <TableRow key={index}>
                   <TableCell component="th" scope="row">
-                    {/* {row.name} */}
+                    {row.itemName}
                   </TableCell>
                   <TableCell align="right">{row.itemPrice}</TableCell>
                   <TableCell align="right">{row.itemCount}</TableCell>

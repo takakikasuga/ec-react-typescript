@@ -23,6 +23,7 @@ import { Params } from '../../types/params/parameter'
 import { fetchItems } from '../../types/items/items'
 import { AddOrder, OrderUpdate } from '../../types/order/order'
 import { FetchOrder } from '../../types/order/order'
+import { firebaseOrderInfo } from '../../types/order/firebaseOrderInfo'
 
 // マテリアルUI
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -61,18 +62,20 @@ export const Deatail = () => {
     return item.id === Number(id)
   })
 
+  console.log('商品idに紐づく商品オブジェクトの取得', itemDetail)
   const addOrder = (path: string) => {
-    let addOrder: any = {
-      userId: userId,
+    let addOrder: firebaseOrderInfo = {
+      userId: userId!,
       orderInfo: {
         orderItems: [{
+          itemId: itemDetail[0].id!,
           itemCount: itemCount,
-          itemId: itemDetail[0].id,
+          itemName: itemDetail[0].name!,
           itemPrice: itemPrice,
           uniqueItemId: ''
         }],
+        status: 0
       },
-      status: 0
     }
     // statusが0のものが存在するか否かでの場合わけ（新規or追加）
     console.log(fetchData)
