@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useHistory } from 'react-router-dom'
+import styled from 'styled-components'
+
 
 // スライサーよりアイテムデータを取得
 import { selectItems } from '../../features/items/itemsSlice'
@@ -113,9 +115,14 @@ export const Deatail = () => {
           </Grid>
         </Grid>
       ))}
-      <span onClick={() => { addOrder(`/cartList`) }}>
+      <WrapperButton onClick={() => { addOrder(`/cartList`) }}>
         <PrimaryButton>カートに追加</PrimaryButton>
-      </span>
+      </WrapperButton>
     </>
   )
 }
+
+
+const WrapperButton = styled.span`
+  text-align: center;
+`

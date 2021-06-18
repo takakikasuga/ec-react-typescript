@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import styled from 'styled-components'
 
 // スライサーより取得
 import { selectItems } from '../../../features/items/itemsSlice'
@@ -27,7 +28,8 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
+    width: "30%",
+    margin: "20px"
   },
   media: {
     height: 140,
@@ -45,7 +47,7 @@ export const Items = () => {
 
   const classes = useStyles();
   return (
-    <div>
+    <FlecItems>
       {items.map((item: any, index: number) => (
         <Card className={classes.root} key={index}>
           <CardActionArea key={index}>
@@ -70,6 +72,14 @@ export const Items = () => {
           </div>
         </Card>
       ))}
-    </div>
+    </FlecItems>
   );
 }
+
+// スタイルコンポーネント
+const FlecItems = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+`
