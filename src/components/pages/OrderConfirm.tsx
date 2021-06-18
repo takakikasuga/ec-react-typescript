@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import styled from 'styled-components'
 
 // コンポーネント
@@ -47,6 +47,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
+import Button from '@material-ui/core/Button';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -65,6 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+// react-hook-formで扱う各種プロパティ
 type Inputs = {
   name: string,
   zipcode: number,
@@ -72,9 +74,8 @@ type Inputs = {
   phoneNumber: number,
   email: string,
   creditNumber?: number,
-  status?: number
+  status?: string | number
   orderDate?: string
-  radio: string
 };
 
 export const OrderConfirm = () => {
@@ -83,17 +84,17 @@ export const OrderConfirm = () => {
   const statusZeroId = useSelector(selectStatusZeroId)
 
   // React-Hook-Form
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
+  // defaultValuesでラジオボタンの初期値を設定
+  const { register, handleSubmit, watch, formState: { errors }, control } = useForm<Inputs>({ defaultValues: { status: "1" } });
   // nullを「!」で明示的になくす
   const userId: string = useSelector(selectUserId)!
   const orderUpdate = useSelector(selectOrderUpdate)
   const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
+  const [flag, setFlag] = useState<boolean>(false)
 
-  // 支払い方法の場合分け
-  const [payWay, setPayWay] = useState<null | string>(null);
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPayWay((event.target as HTMLInputElement).value);
-  };
+  const changeFlag = () => {
+    setFlag(!flag)
+  }
 
   useEffect(() => {
     // string型であることを保証する
@@ -126,11 +127,13 @@ export const OrderConfirm = () => {
     // オブジェクトをコピー
     const update = { ...data }
     // 代引きでcreditNumbernのプロパティを保持している時は削除
-    if (payWay === '1' && update.hasOwnProperty('creditNumber')) {
+    if (update.status === '1' && update.hasOwnProperty('creditNumber')) {
       delete update.creditNumber
     }
-    // クレジットか代引きかで場合分け代引き=1/クレジット=2
-    update.status = Number(payWay)
+    update.status = update.status as number
+    console.log(typeof update.status)
+    // // クレジットか代引きかで場合分け代引き=1/クレジット=2
+    // update.status = Number(payWay)
     const updateObject = {
       statusZeroId,
       userId,
@@ -139,7 +142,9 @@ export const OrderConfirm = () => {
     dipatch(updateOrderStatusAsync(updateObject))
   }
   console.log('watchメソッド', watch())
+  console.log('watchメソッド', watch().orderDate)
   console.log('register', register)
+  console.log(control)
   console.log(errors)
 
   return (
@@ -174,196 +179,214 @@ export const OrderConfirm = () => {
               </Table>
             </TableContainer>
             <TotalPrice totoalPrice={totoalPrice}></TotalPrice>
-            <BorderLine></BorderLine>
-            <div>
-              <form onSubmit={handleSubmit(onSubmit)}>
+            <Button disabled={flag} onClick={() => { changeFlag() }} variant="contained">お届け先情報を入力する</Button>
+            {!flag ? '' :
+              <>
+                <BorderLine></BorderLine>
                 <div>
-                  <TextField
-                    {...register("orderDate", { required: '配達希望日を入力してください' })}
-                    id="date"
-                    label="配達希望日"
-                    type="date"
-                    defaultValue="2020-05-24"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                </div>
-                {/* 名前の入力 */}
-                <div>
-                  <TextField
-                    {...register("name", { required: 'ここに名前を入力してください' })}
-                    className={classes.margin}
-                    id="input-with-icon-textfield"
-                    label="名前"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <AccountCircle />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  {errors.name &&
-                    <FontColorRed>
-                      {errors.name.message}
-                    </FontColorRed>}
-                </div>
-                {/* 郵便番号入力 */}
-                <div>
-                  <TextField
-                    {...register("zipcode", {
-                      // 空白の時
-                      required: '郵便番号を入力してください。',
-                      // ８桁以上の時
-                      maxLength: {
-                        value: 8,
-                        message: '数字８桁以内で入力してください。'
-                      },
-                      // 正規表現ではないとき
-                      pattern: {
-                        value: /^\d{3}-\d{4}$/,
-                        message: '正しい郵便番号を入力してください。'
-                      }
-                    })}
-                    className={classes.margin}
-                    id="input-with-icon-textfield"
-                    label="郵便番号"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <ChatBubbleIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  {errors.zipcode &&
-                    <FontColorRed>
-                      {errors.zipcode.message}
-                    </FontColorRed>}
-                </div>
-                {/* 住所入力蘭 */}
-                <div>
-                  <TextField
-                    {...register("address", { required: '住所を入力してください。', })}
-                    id="address"
-                    label="住所"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <HomeIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  {errors.address &&
-                    <FontColorRed>
-                      {errors.address.message}
-                    </FontColorRed>}
-                </div>
-                {/* 電話番号入力 */}
-                <div>
-                  <TextField
-                    {...register("phoneNumber", {
-                      required: '電話番号を入力してください。',
-                      // ８桁以上の時
-                      maxLength: {
-                        value: 13,
-                        message: 'ハイフン「-」含めた13桁で入力してください。'
-                      },
-                      // 正規表現ではないとき
-                      pattern: {
-                        value: /^(070|080|090)-\d{4}-\d{4}$/,
-                        message: '070 or 080 or 090から始まる携帯電話を入力してください。'
-                      }
-                    })}
-                    id="phoneNumber"
-                    label="携帯電話番号"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <PhoneAndroidIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  {errors.phoneNumber &&
-                    <FontColorRed>
-                      {errors.phoneNumber.message}
-                    </FontColorRed>}
-                </div>
-                {/* Email入力 */}
-                <div>
-                  <TextField
-                    {...register("email", {
-                      required: 'メールアドレスを入力してください。',
-                      // 正規表現ではないとき
-                      pattern: {
-                        value: /^[a-zA-Z0-9-_\.]+@[a-zA-Z0-9-_\.]+$/,
-                        message: 'アットマーク「@」を含むメールアドレスを入力してください。'
-                      }
-                    })}
-                    id="email"
-                    label="メールアドレス"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <MailOutlineIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  {errors.email &&
-                    <FontColorRed>
-                      {errors.email.message}
-                    </FontColorRed>}
-                </div>
-                {/* ラジオボタン */}
-                <div>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend">支払い方法</FormLabel>
-                    <RadioGroup
-                      aria-label="gender"
-                      name="gender1"
-                      value={payWay}
-                      onChange={handleChange}>
-                      <FormControlLabel value="1" control={<Radio />} label="cash" />
-                      <FormControlLabel value="2" control={<Radio />} label="credit" />
-                    </RadioGroup>
-                  </FormControl>
-                </div>
-                {/* クレジットカード */}
-                {payWay === null || payWay === '1' ? '' :
-                  <div>
-                    <TextField
-                      {...register("creditNumber", {
-                        required: 'クレジットカード番号を入力してください。',
-                      })}
-                      id="creditNumber"
-                      label="クレジットカード"
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <RecentActorsIcon />
-                          </InputAdornment>
-                        ),
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <div>
+                      <TextField
+                        {...register("orderDate", { required: '配達希望日を入力してください' })}
+                        id="date"
+                        label="配達希望日"
+                        type="date"
+                        defaultValue="2020-05-24"
+                        className={classes.textField}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                    </div>
+                    {/* 名前の入力 */}
+                    <div>
+                      <TextField
+                        {...register("name", { required: 'ここに名前を入力してください' })}
+                        className={classes.margin}
+                        id="input-with-icon-textfield"
+                        label="名前"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <AccountCircle />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      {errors.name &&
+                        <FontColorRed>
+                          {errors.name.message}
+                        </FontColorRed>}
+                    </div>
+                    {/* 郵便番号入力 */}
+                    <div>
+                      <TextField
+                        {...register("zipcode", {
+                          // 空白の時
+                          required: '郵便番号を入力してください。',
+                          // ８桁以上の時
+                          maxLength: {
+                            value: 8,
+                            message: '数字８桁以内で入力してください。'
+                          },
+                          // 正規表現ではないとき
+                          pattern: {
+                            value: /^\d{3}-\d{4}$/,
+                            message: '正しい郵便番号を入力してください。'
+                          }
+                        })}
+                        className={classes.margin}
+                        id="input-with-icon-textfield"
+                        label="郵便番号"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <ChatBubbleIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      {errors.zipcode &&
+                        <FontColorRed>
+                          {errors.zipcode.message}
+                        </FontColorRed>}
+                    </div>
+                    {/* 住所入力蘭 */}
+                    <div>
+                      <TextField
+                        {...register("address", { required: '住所を入力してください。', })}
+                        id="address"
+                        label="住所"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <HomeIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      {errors.address &&
+                        <FontColorRed>
+                          {errors.address.message}
+                        </FontColorRed>}
+                    </div>
+                    {/* 電話番号入力 */}
+                    <div>
+                      <TextField
+                        {...register("phoneNumber", {
+                          required: '電話番号を入力してください。',
+                          // ８桁以上の時
+                          maxLength: {
+                            value: 13,
+                            message: 'ハイフン「-」含めた13桁で入力してください。'
+                          },
+                          // 正規表現ではないとき
+                          pattern: {
+                            value: /^(070|080|090)-\d{4}-\d{4}$/,
+                            message: '070 or 080 or 090から始まる携帯電話を入力してください。'
+                          }
+                        })}
+                        id="phoneNumber"
+                        label="携帯電話番号"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <PhoneAndroidIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      {errors.phoneNumber &&
+                        <FontColorRed>
+                          {errors.phoneNumber.message}
+                        </FontColorRed>}
+                    </div>
+                    {/* Email入力 */}
+                    <div>
+                      <TextField
+                        {...register("email", {
+                          required: 'メールアドレスを入力してください。',
+                          // 正規表現ではないとき
+                          pattern: {
+                            value: /^[a-zA-Z0-9-_\.]+@[a-zA-Z0-9-_\.]+$/,
+                            message: 'アットマーク「@」を含むメールアドレスを入力してください。'
+                          }
+                        })}
+                        id="email"
+                        label="メールアドレス"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <MailOutlineIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      {errors.email &&
+                        <FontColorRed>
+                          {errors.email.message}
+                        </FontColorRed>}
+                    </div>
+                    {/* ラジオボタン */}
+
+                    <Controller
+                      name="status"
+                      control={control}
+                      render={({ field }) => {
+                        console.log(field)
+                        return (
+                          <RadioGroup aria-label="pay" {...field} name="payMethod">
+                            <FormControlLabel
+                              style={{ justifyContent: 'center' }}
+                              value="1"
+                              control={<Radio />}
+                              label="代引き"
+                            />
+                            <FormControlLabel
+                              style={{ justifyContent: 'center' }}
+                              value="2"
+                              control={<Radio />}
+                              label="クレジットカード"
+                            />
+                          </RadioGroup>
+                        )
                       }}
+                      rules={{ required: '支払い方法を選択して下さい' }}
                     />
-                    {errors.creditNumber &&
+
+                    {/* 何も入力がない場合に出すエラーメッセージ */}
+                    {errors.status &&
                       <FontColorRed>
-                        {errors.creditNumber.message}
+                        {errors.status.message}
                       </FontColorRed>}
-                  </div>
-                }
-                <p>
-                  <input type="submit"></input>
-                </p>
-              </form>
-            </div>
-            <span>
-              <PrimaryButton>注文完了</PrimaryButton>
-            </span>
+                    {/* status = 2、つまりクレジットカードを選択している場合 */}
+                    {watch().status === "2" &&
+                      <div>
+                        <TextField
+                          {...register("creditNumber", {
+                            required: 'クレジットカード番号を入力してください。',
+                          })}
+                          id="creditNumber"
+                          label="クレジットカード"
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <RecentActorsIcon />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                        {errors.creditNumber &&
+                          <FontColorRed>
+                            {errors.creditNumber.message}
+                          </FontColorRed>}
+                      </div>}
+                    <p>
+                      <SubmitButton type="submit"></SubmitButton>
+                    </p>
+                  </form>
+                </div>
+              </>}
           </>
         }
       </ContainerPadding>
@@ -380,4 +403,27 @@ const BorderLine = styled.div`
 `
 const FontColorRed = styled.p`
   color:red
+`
+
+const AlignCenter = styled.div`
+  text-align: center;
+`
+const SubmitButton = styled.input`
+  display       : inline-block;
+  border-radius : 5%;          /* 角丸       */
+  font-size     : 18pt;        /* 文字サイズ */
+  text-align    : center;      /* 文字位置   */
+  cursor        : pointer;     /* カーソル   */
+  padding       : 12px 12px;   /* 余白       */
+  background    : #000066;     /* 背景色     */
+  color         : #ffffff;     /* 文字色     */
+  line-height   : 1em;         /* 1行の高さ  */
+  transition    : .3s;         /* なめらか変化 */
+  box-shadow    : 6px 6px 3px #666666;  /* 影の設定 */
+  border        : 2px solid #000066;    /* 枠の指定 */
+  &:hover {
+     box-shadow    : none;        /* カーソル時の影消去 */
+     color         : #000066;     /* 背景色     */
+     background    : #ffffff;     /* 文字色     */
+  }
 `
