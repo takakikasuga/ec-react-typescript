@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 // コンポーネント
 import { Header } from '../organisums/header/Header'
-import { PrimaryButton } from '../atoms/button/PrimaryButton'
 
 // 機能
 import { orderHistoryAsync, selectOrderHistory, cancelOrderHistoryAsync, cancelOrderStatus } from '../../features/order/orderHistorySlice'
@@ -61,7 +60,7 @@ export const OrderHistory = () => {
       <Header></Header>
       <h1>注文履歴画面です</h1>
       <TableContainer component={Paper}>
-        {!orderHistory.length ? "" : orderHistory.map((order: any, index: number): any => {
+        {!orderHistory.length ? "" : orderHistory.map((order: any, index: number) => {
           return (
             <Table className={classes.table} size="small" aria-label="a dense table" style={{ marginTop: "30px" }} key={order.orderUniqueId}>
               <TableHead >

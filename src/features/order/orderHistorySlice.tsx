@@ -1,16 +1,17 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import firebase from 'firebase'
-// 型のインポート
-import { firebaseOrderInfo } from '../../types/order/firebaseOrderInfo'
 
-// 型を当てはめてもエラーが出る（一旦保留）
-const initialState: any = ''
+// 型のインポート
+import { FetchHistory, FetchObject } from '../../types/history/orderHistory'
+import { CancelOrder, UpdateCancelOrder, CancelObject } from '../../types/history/cancelOrder'
+
+const initialState: FetchHistory = []
 
 export const orderHistoryAsync = createAsyncThunk('orderHistor/orderHistoryAsync', async (userId: string) => {
   console.log('orderHistoryAsyncが発火します')
   console.log('orderHistoryAsyncの中身を確認', userId)
-  let orderHistory: any = []
+  let orderHistory: FetchHistory = []
   if (userId) {
     // 注文情報の商品に一意のIDを作成
     const ordersRef =
@@ -21,12 +22,13 @@ export const orderHistoryAsync = createAsyncThunk('orderHistor/orderHistoryAsync
         .collection('orders');
     console.log('firebase通信手前')
     await ordersRef
+      // statusが0以外の注文情報を拾ってくる
       .where('status', '!=', 0)
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           console.log(doc.id)
-          let object = doc.data()
+          let object = doc.data() as FetchObject
           // 注文情報のIDをオブジェクトに持たせる
           object.orderUniqueId = doc.id
           console.log(object)
@@ -38,7 +40,7 @@ export const orderHistoryAsync = createAsyncThunk('orderHistor/orderHistoryAsync
   return orderHistory
 });
 
-export const cancelOrderHistoryAsync = createAsyncThunk('cancelOrderHistory/cancelOrderHistoryAsync', async (cancelStatus: any) => {
+export const cancelOrderHistoryAsync = createAsyncThunk('cancelOrderHistory/cancelOrderHistoryAsync', async (cancelStatus: CancelOrder) => {
   let { userId, uniqueOrderId, copyOrderHistory } = cancelStatus
   let newObject = { uniqueOrderId, copyOrderHistory }
   console.log('cancelOrderHistoryが発火します')
@@ -73,7 +75,7 @@ export const orderHistorySlice = createSlice({
   initialState,
 
   reducers: {
-    cancelOrderStatus: (state: any, action: any) => {
+    cancelOrderStatus: (state, action: any) => {
       console.log('cancelOrderStatusが発火', state, action)
 
       return state
@@ -89,25 +91,25 @@ export const orderHistorySlice = createSlice({
 
   extraReducers: (builder) => {
     // addOrderAsyncの非同期通信だった時
-    builder.addCase(orderHistoryAsync.fulfilled, (state: any, action: any) => {
+    builder.addCase(orderHistoryAsync.fulfilled, (state, action: PayloadAction<FetchHistory>) => {
       console.log('orderHistoryAsyncのactionとstate', state, action.payload)
 
       return action.payload
     })
-    builder.addCase(cancelOrderHistoryAsync.fulfilled, (state: any, action: any) => {
+    builder.addCase(cancelOrderHistoryAsync.fulfilled, (state, action: PayloadAction<UpdateCancelOrder>) => {
       console.log('ocancelOrderHistoryAsyncのactionとstate', state, action.payload)
       const { copyOrderHistory, uniqueOrderId } = action.payload
-      let changeStatus: any = []
-      copyOrderHistory.forEach((element: any) => {
-        console.log(element)
-        if (uniqueOrderId === element.orderUniqueId) {
-          delete element.status
-          element.status = 9
-        }
-        changeStatus.push(element)
-      });
-      console.log(changeStatus)
-      return changeStatus
+      // let changeStatus: any = []
+      // let cloneOrderHistory = [...copyOrderHistory]
+      // cloneOrderHistory.forEach((element: CancelObject) => {
+      //   if (uniqueOrderId === element.orderUniqueId) {
+      //     console.log(element)
+      //     element.status = 9
+      //   }
+      //   changeStatus = [...changeStatus, element]
+      // });
+      console.log(copyOrderHistory)
+      return copyOrderHistory
     })
   },
 });
