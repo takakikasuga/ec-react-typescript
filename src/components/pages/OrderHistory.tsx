@@ -4,8 +4,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Header } from '../organisums/header/Header'
 
 // 機能
-import { orderHistoryAsync, selectOrderHistory, cancelOrderHistoryAsync, cancelOrderStatus } from '../../features/order/orderHistorySlice'
+import { orderHistoryAsync, selectOrderHistory, cancelOrderHistoryAsync } from '../../features/order/orderHistorySlice'
 import { selectUserId } from '../../features/user/userSlice'
+
+// 型のインポート
+import { FetchHistory, FetchObject, OrderItems } from '../../types/history/orderHistory'
 
 // マテリアルUI
 import { makeStyles } from '@material-ui/core/styles';
@@ -29,12 +32,7 @@ export const OrderHistory = () => {
   const dispatch = useDispatch()
   // nullを「!」で明示的になくす
   const userId: string = useSelector(selectUserId)!
-  const orderHistory: any = useSelector(selectOrderHistory)!
-  console.log(orderHistory)
-  // const [flag, setFlag] = useState<boolean>(false)
-  // const changeFlag = () => {
-  //   setFlag(!flag)
-  // }
+  const orderHistory: FetchHistory = useSelector(selectOrderHistory)!
 
   useEffect(() => {
     // userIdを取得している場合に非同期通信を行う
@@ -45,14 +43,14 @@ export const OrderHistory = () => {
     // stateのuserIdが変化するたびに取得する
   }, [userId])
 
-  const cancelOrder = (uniqueOrderId: string) => {
-    if (window.confirm('本当にキャンセルしますか？')) {
-
-      // storeのstateをコピーしていく
-      let copyOrderHistory = [...orderHistory]
-
-      dispatch(cancelOrderHistoryAsync({ userId, uniqueOrderId, copyOrderHistory }))
+  const cancelOrder = (uniqueOrderId: string | undefined) => {
+    // string型の保証
+    if (typeof uniqueOrderId === "string") {
+      if (window.confirm('本当にキャンセルしますか？')) {
+        dispatch(cancelOrderHistoryAsync({ userId, uniqueOrderId }))
+      }
     }
+
   }
 
   return (
@@ -60,7 +58,7 @@ export const OrderHistory = () => {
       <Header></Header>
       <h1>注文履歴画面です</h1>
       <TableContainer component={Paper}>
-        {!orderHistory.length ? "" : orderHistory.map((order: any, index: number) => {
+        {!orderHistory.length ? "" : orderHistory.map((order: FetchObject, index: number) => {
           return (
             <Table className={classes.table} size="small" aria-label="a dense table" style={{ marginTop: "30px" }} key={order.orderUniqueId}>
               <TableHead >
@@ -75,7 +73,7 @@ export const OrderHistory = () => {
               </TableHead>
               <TableBody key={index} style={{ padding: "30px" }}>
                 {console.log(order)}
-                {order.orderItems.map((orderList: any, index: number) => (
+                {order.orderItems.map((orderList: OrderItems, index: number) => (
                   <TableRow key={orderList.uniqueItemId} >
                     <TableCell component="th" scope="row">
                       {orderList.itemName}

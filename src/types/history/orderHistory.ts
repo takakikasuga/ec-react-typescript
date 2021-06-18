@@ -1,4 +1,4 @@
-interface OrderItems {
+export interface OrderItems {
   itemCount: number;
   itemId: number;
   itemName: string;

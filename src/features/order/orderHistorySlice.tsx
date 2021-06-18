@@ -41,12 +41,12 @@ export const orderHistoryAsync = createAsyncThunk('orderHistor/orderHistoryAsync
 });
 
 export const cancelOrderHistoryAsync = createAsyncThunk('cancelOrderHistory/cancelOrderHistoryAsync', async (cancelStatus: CancelOrder) => {
-  let { userId, uniqueOrderId, copyOrderHistory } = cancelStatus
-  let newObject = { uniqueOrderId, copyOrderHistory }
+  let { userId, uniqueOrderId, } = cancelStatus
   console.log('cancelOrderHistoryが発火します')
   console.log('cancelOrderHistoryAsyncの中身を確認', cancelStatus)
-  console.log(userId, uniqueOrderId, copyOrderHistory)
+  console.log(userId, uniqueOrderId,)
 
+  let orderHistory: any = []
   if (userId) {
     // 注文情報の商品に一意のIDを作成
     const ordersRef =
@@ -65,9 +65,24 @@ export const cancelOrderHistoryAsync = createAsyncThunk('cancelOrderHistory/canc
       .then(() => {
         console.log('キャンセルへstatusを変更しました。')
       })
+    // 解決方法が見つからず、連続で非同期通信を行い最新のFirebaseのstatusが0以外の情報を取得する
+    await ordersRef
+      // statusが0以外の注文情報を拾ってくる
+      .where('status', '!=', 0)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id)
+          let object = doc.data() as FetchObject
+          // 注文情報のIDをオブジェクトに持たせる
+          object.orderUniqueId = doc.id
+          console.log(object)
+          orderHistory.push(object)
+        });
+      });
   }
 
-  return newObject
+  return orderHistory
 });
 
 export const orderHistorySlice = createSlice({
@@ -96,9 +111,8 @@ export const orderHistorySlice = createSlice({
 
       return action.payload
     })
-    builder.addCase(cancelOrderHistoryAsync.fulfilled, (state, action: PayloadAction<UpdateCancelOrder>) => {
+    builder.addCase(cancelOrderHistoryAsync.fulfilled, (state, action: PayloadAction<FetchHistory>) => {
       console.log('ocancelOrderHistoryAsyncのactionとstate', state, action.payload)
-      const { copyOrderHistory, uniqueOrderId } = action.payload
       // let changeStatus: any = []
       // let cloneOrderHistory = [...copyOrderHistory]
       // cloneOrderHistory.forEach((element: CancelObject) => {
@@ -108,8 +122,7 @@ export const orderHistorySlice = createSlice({
       //   }
       //   changeStatus = [...changeStatus, element]
       // });
-      console.log(copyOrderHistory)
-      return copyOrderHistory
+      return action.payload
     })
   },
 });
