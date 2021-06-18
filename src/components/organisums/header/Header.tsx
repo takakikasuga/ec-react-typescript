@@ -15,6 +15,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import StarIcon from '@material-ui/icons/Star';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
+import ViewListIcon from '@material-ui/icons/ViewList';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -85,10 +86,7 @@ export const Header = () => {
               </span>
               :
               <>
-                <span className={classes.flexColum + " " + classes.margin}>
-                  <AccountCircleIcon></AccountCircleIcon>
-                  <span className={classes.fontHeaderSize}>アカウント</span>
-                </span>
+
                 <span className={classes.flexColum + " " + classes.margin}>
                   <ShoppingCartIcon></ShoppingCartIcon>
                   <span className={classes.fontHeaderSize}>カート</span>
@@ -96,6 +94,10 @@ export const Header = () => {
                 <span className={classes.flexColum + " " + classes.margin}>
                   <StarIcon></StarIcon>
                   <span className={classes.fontHeaderSize}>お気に入り</span>
+                </span>
+                <span className={classes.flexColum + " " + classes.margin}>
+                  <ViewListIcon></ViewListIcon>
+                  <span className={classes.fontHeaderSize}>注文履歴</span>
                 </span>
                 <span onClick={logout} className={classes.flexColum}>
                   <NotInterestedIcon></NotInterestedIcon>

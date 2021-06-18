@@ -75,7 +75,8 @@ type Inputs = {
   email: string,
   creditNumber?: number,
   status?: string | number
-  orderDate?: string
+  orderDate?: string;
+  totoalPrice?: number
 };
 
 export const OrderConfirm = () => {
@@ -130,10 +131,11 @@ export const OrderConfirm = () => {
     if (update.status === '1' && update.hasOwnProperty('creditNumber')) {
       delete update.creditNumber
     }
+    // 入力したstatusをnumber型として代入する
     update.status = update.status as number
     console.log(typeof update.status)
-    // // クレジットか代引きかで場合分け代引き=1/クレジット=2
-    // update.status = Number(payWay)
+    // 注文情報の総合計金額をいれる
+    update.totoalPrice = Number(totoalPrice)
     const updateObject = {
       statusZeroId,
       userId,
@@ -180,6 +182,7 @@ export const OrderConfirm = () => {
             </TableContainer>
             <TotalPrice totoalPrice={totoalPrice}></TotalPrice>
             <Button disabled={flag} onClick={() => { changeFlag() }} variant="contained">お届け先情報を入力する</Button>
+            {/* 入力するを許可したときに入力フィールドが出力される */}
             {!flag ? '' :
               <>
                 <BorderLine></BorderLine>

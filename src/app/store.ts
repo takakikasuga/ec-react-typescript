@@ -10,6 +10,7 @@ import fetchOrderReducer from '../features/order/fetchOrderSlice'
 import cartListsReducer from '../features/cartLists/cartListsSlice'
 import statusZeroIdReducer from '../features/statusZeroId/statusZeroIdSlice'
 import updateOrderStatusReducer from '../features/order/updateOrderStatusSlice'
+import orderHistoryReducer from '../features/order/orderHistorySlice'
 
 
 export const store = configureStore({
@@ -25,6 +26,7 @@ export const store = configureStore({
     cartLists: cartListsReducer,
     statusZeroId: statusZeroIdReducer,
     updateOrderStatus: updateOrderStatusReducer,
+    orderHistory: orderHistoryReducer,
   },
 });
 

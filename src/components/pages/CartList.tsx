@@ -16,6 +16,7 @@ import { deleteOrderItem, deleteOrderAsync, fetchOrderAsync, selectFetchOrder } 
 import { selectUserId } from '../../features/user/userSlice'
 import { selectStatusZeroId, statusZeroIdAsync } from '../../features/statusZeroId/statusZeroIdSlice'
 
+// マテリアルUI
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -44,9 +45,8 @@ export const CartList = () => {
   useEffect(() => {
     // string型であることを保証する
     if (typeof userId === 'string') {
-      // カートリストの中でstatusが0の注文情報をとってくる
+      // カートリストの中でstatusが0以外のの注文済情報をとってくる
       dipatch(fetchOrderAsync(userId))
-      // 注文情報の固有のIDを取得する
     }
     // orderUpdateの配列状況が変更されるたびに発火して最新のカート情報をFirebaseから取得するようにする。
   }, [orderUpdate.length])
