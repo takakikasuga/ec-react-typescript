@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 // スライサーより取得
-import { selectItems } from '../../../features/items/itemsSlice'
+import { selectItems, fetchItemsAsync } from '../../../features/items/itemsSlice'
 
 // コンポーネント
 import { ItemdetailPrice } from '../../molecules/itemPrice/ItemdetailPrice'
@@ -36,6 +36,7 @@ const useStyles = makeStyles({
 });
 export const Items = () => {
   const items: fetchItems[] = useSelector(selectItems)
+  const dispatch = useDispatch()
   const history = useHistory()
 
 
@@ -43,35 +44,53 @@ export const Items = () => {
     history.push(path)
   }
 
+  // アイテム一覧を再表示する
+  const displayItems = () => {
+    dispatch(fetchItemsAsync())
+  }
+
   const classes = useStyles();
   return (
-    <FlecItems>
-      {items.map((item: any, index: number) => (
-        <Card className={classes.root} key={index}>
-          <CardActionArea key={index}>
-            <CardMedia
-              className={classes.media}
-              image={item.imagePath}
-              title={item.name}
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                {item.name}
-              </Typography>
-              <ItemdetailPrice item={item}></ItemdetailPrice>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <FavoriteIconHeart></FavoriteIconHeart>
-            <StarIcon></StarIcon>
-          </CardActions>
-          <div onClick={() => { changeToDetail(`/detail/${item.id}`) }}>
-            <PrimaryButton>詳細へ</PrimaryButton>
+    <>
+      {!items.length ?
+        <>
+          <h1>該当する商品がございません。</h1>
+          <div onClick={displayItems}>
+            <PrimaryButton>商品一覧へ</PrimaryButton>
           </div>
-        </Card>
-      ))}
-    </FlecItems>
+        </>
+        :
+        <FlecItems>
+          {items.map((item: any, index: number) => (
+            <Card className={classes.root} key={index}>
+              <CardActionArea key={index}>
+                <CardMedia
+                  className={classes.media}
+                  image={item.imagePath}
+                  title={item.name}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {item.name}
+                  </Typography>
+                  <ItemdetailPrice item={item}></ItemdetailPrice>
+                </CardContent>
+              </CardActionArea>
+              <CardActions>
+                <FavoriteIconHeart></FavoriteIconHeart>
+                <StarIcon></StarIcon>
+              </CardActions>
+              <div onClick={() => { changeToDetail(`/detail/${item.id}`) }}>
+                <PrimaryButton>詳細へ</PrimaryButton>
+              </div>
+            </Card>
+
+          ))}
+        </FlecItems>
+      }
+    </>
   );
+
 }
 
 // スタイルコンポーネント
@@ -81,3 +100,4 @@ const FlecItems = styled.div`
   justify-content: center;
   align-items: flex-start;
 `
+

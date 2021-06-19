@@ -7,11 +7,10 @@ import firebase from 'firebase'
 
 const initialState: Array<fetchItems> = []
 
-let fetchItemsData: Array<fetchItems> = []
 
 export const fetchItemsAsync = createAsyncThunk('items/fetchItemsAsync', async () => {
   // 通信ごとに配列の中身をか空にする
-  // fetchItemsData.length = 0
+  let fetchItemsData: Array<fetchItems> = []
   await firebase
     .firestore()
     .collection(`Items/`)

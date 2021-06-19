@@ -39,8 +39,8 @@ export const orderHistoryAsync = createAsyncThunk('orderHistor/orderHistoryAsync
   console.log(orderHistory)
   return orderHistory
 });
-
-export const cancelOrderHistoryAsync = createAsyncThunk('cancelOrderHistory/cancelOrderHistoryAsync', async (cancelStatus: CancelOrder) => {
+// CancelOrder型一時的にエラ〜
+export const cancelOrderHistoryAsync = createAsyncThunk('cancelOrderHistory/cancelOrderHistoryAsync', async (cancelStatus: any) => {
   let { userId, uniqueOrderId, } = cancelStatus
   console.log('cancelOrderHistoryが発火します')
   console.log('cancelOrderHistoryAsyncの中身を確認', cancelStatus)
