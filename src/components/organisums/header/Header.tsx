@@ -1,6 +1,4 @@
 import React from 'react'
-import Select from 'react-select';
-import 'react-select/dist/react-select.css';
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
@@ -8,6 +6,7 @@ import { useHistory } from 'react-router-dom'
 import { selectUserId, selectUserName, loginUserAsync, signOutUserInfoAsync } from '../../../features/user/userSlice'
 import { fetchItemsAsync } from '../../../features/items/itemsSlice'
 import { deleteOrderItem, fetchOrderAsync, selectFetchOrder } from '../../../features/order/fetchOrderSlice'
+import { selectItems } from '../../../features/items/itemsSlice'
 
 // コンポーネント
 import { SearchInput } from '../../atoms/search/SearchInput'
@@ -15,6 +14,7 @@ import { SearchInput } from '../../atoms/search/SearchInput'
 
 // 型のインポート
 import { FetchOrder } from '../../../types/order/order'
+import { fetchItems } from '../../../types/items/items'
 
 // マテリアルUI
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
@@ -28,6 +28,9 @@ import StarIcon from '@material-ui/icons/Star';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import ViewListIcon from '@material-ui/icons/ViewList';
+
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -79,6 +82,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+
 export const Header = () => {
   const classes = useStyles();
   const dispatch = useDispatch()
@@ -86,6 +90,7 @@ export const Header = () => {
   const userId = useSelector(selectUserId)
   const userName = useSelector(selectUserName)
   const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
+  const items: fetchItems[] = useSelector(selectItems)
 
   const login = () => {
     console.log('login')
@@ -104,7 +109,23 @@ export const Header = () => {
           <Typography onClick={() => { history.push('/') }} className={classes.title} variant="h6" noWrap>
             EC-Rakuraku-Rakuten
           </Typography>
-          <SearchInput></SearchInput>
+          {/* <SearchInput></SearchInput> */}
+          <Autocomplete
+            freeSolo
+            id="free-solo-2-demo"
+            disableClearable
+            options={items.map((option) => option.name)}
+            renderInput={(params) => (
+              <TextField
+                style={{ width: "300px", border: "1px solid #fff", borderRadius: "4px", background: "#fff" }}
+                {...params}
+                label="商品検索"
+                margin="normal"
+                variant="outlined"
+                InputProps={{ ...params.InputProps, type: 'search' }}
+              />
+            )}
+          />
           <div className={classes.flex}>
             {!userName ? <Typography className={classes.margin}>ようこそ ゲスト さん</Typography> : <Typography className={classes.margin}>ようこそ {userName} さん</Typography>}
             {!userId ?
