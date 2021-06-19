@@ -1,10 +1,22 @@
 import React from 'react'
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+
+// 機能のインポート
 import { selectUserId, selectUserName, loginUserAsync, signOutUserInfoAsync } from '../../../features/user/userSlice'
 import { fetchItemsAsync } from '../../../features/items/itemsSlice'
+import { deleteOrderItem, fetchOrderAsync, selectFetchOrder } from '../../../features/order/fetchOrderSlice'
 
+// コンポーネント
 import { SearchInput } from '../../atoms/search/SearchInput'
 
+
+// 型のインポート
+import { FetchOrder } from '../../../types/order/order'
+
+// マテリアルUI
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -49,6 +61,20 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     fontHeaderSize: {
       fontSize: '9px'
+    },
+    positionRelative: {
+      position: 'relative'
+    },
+    // カートに入れている商品数
+    cartCount: {
+      position: "absolute",
+      backgroundColor: "yellow",
+      width: "20px",
+      height: "20px",
+      borderRadius: "100%",
+      color: "#000",
+      left: "15px",
+      top: "-25px"
     }
   }),
 );
@@ -56,8 +82,10 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Header = () => {
   const classes = useStyles();
   const dispatch = useDispatch()
+  const history = useHistory()
   const userId = useSelector(selectUserId)
   const userName = useSelector(selectUserName)
+  const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
 
   const login = () => {
     console.log('login')
@@ -73,7 +101,7 @@ export const Header = () => {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar className={classes.flexSpace} >
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography onClick={() => { history.push('/') }} className={classes.title} variant="h6" noWrap>
             EC-Rakuraku-Rakuten
           </Typography>
           <SearchInput></SearchInput>
@@ -87,7 +115,8 @@ export const Header = () => {
               :
               <>
 
-                <span className={classes.flexColum + " " + classes.margin}>
+                <span onClick={() => { history.push('/cartlist') }} className={classes.flexColum + " " + classes.margin + " " + classes.positionRelative}>
+                  <p className={classes.cartCount}>{fetchData.length}</p>
                   <ShoppingCartIcon></ShoppingCartIcon>
                   <span className={classes.fontHeaderSize}>カート</span>
                 </span>
@@ -95,7 +124,7 @@ export const Header = () => {
                   <StarIcon></StarIcon>
                   <span className={classes.fontHeaderSize}>お気に入り</span>
                 </span>
-                <span className={classes.flexColum + " " + classes.margin}>
+                <span onClick={() => { history.push('/orderHistory') }} className={classes.flexColum + " " + classes.margin}>
                   <ViewListIcon></ViewListIcon>
                   <span className={classes.fontHeaderSize}>注文履歴</span>
                 </span>

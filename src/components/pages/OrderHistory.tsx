@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 // コンポーネント
 import { Header } from '../organisums/header/Header'
+import { TableHeaer } from '../organisums/tableHistory/TableHeader'
+import { TableRowContents } from '../organisums/tableHistory/TableRowContents'
 
 // 機能
 import { orderHistoryAsync, selectOrderHistory, cancelOrderHistoryAsync } from '../../features/order/orderHistorySlice'
 import { selectUserId } from '../../features/user/userSlice'
+import { selectItems } from '../../features/items/itemsSlice'
 
 // 型のインポート
 import { FetchHistory, FetchObject, OrderItems } from '../../types/history/orderHistory'
+import { fetchItems } from '../../types/items/items'
 
 // マテリアルUI
 import { makeStyles } from '@material-ui/core/styles';
@@ -33,6 +38,7 @@ export const OrderHistory = () => {
   // nullを「!」で明示的になくす
   const userId: string = useSelector(selectUserId)!
   const orderHistory: FetchHistory = useSelector(selectOrderHistory)!
+  const items: fetchItems[] = useSelector(selectItems)
 
   useEffect(() => {
     // userIdを取得している場合に非同期通信を行う
@@ -57,50 +63,36 @@ export const OrderHistory = () => {
     <>
       <Header></Header>
       <h1>注文履歴画面です</h1>
-      <TableContainer component={Paper}>
-        {!orderHistory.length ? "" : orderHistory.map((order: FetchObject, index: number) => {
-          return (
-            <Table className={classes.table} size="small" aria-label="a dense table" style={{ marginTop: "30px" }} key={order.orderUniqueId}>
-              <TableHead >
-                <TableRow>
-                  <TableCell style={{ fontWeight: "bold" }}>注文情報</TableCell>
-                  <TableCell align="right" style={{ fontWeight: "bold" }}>値段（税込）</TableCell>
-                  <TableCell align="right" style={{ fontWeight: "bold" }}>商品個数</TableCell>
-                  <TableCell align="right" style={{ fontWeight: "bold" }}>商品合計</TableCell>
-                  <TableCell align="right" style={{ fontWeight: "bold" }}>商品総合計</TableCell>
-                  <TableCell align="right" style={{ fontWeight: "bold" }}>注文キャンセル</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody key={index} style={{ padding: "30px" }}>
-                {console.log(order)}
-                {order.orderItems.map((orderList: OrderItems, index: number) => (
-                  <TableRow key={orderList.uniqueItemId} >
-                    <TableCell component="th" scope="row">
-                      {orderList.itemName}
-                    </TableCell>
-                    <TableCell align="right">{orderList.itemPrice}</TableCell>
-                    <TableCell align="right">{orderList.itemCount}</TableCell>
-                    <TableCell align="right">{(orderList.itemPrice * orderList.itemCount).toLocaleString()}円（税込）</TableCell>
-                    {order.orderItems.length === (index + 1)
-                      ? <TableCell align="right">{(order.totoalPrice).toLocaleString()}円（税込）</TableCell>
-                      : ""}
-                    {/* 発送済みまたはキャンセル済みまたはこの注文をキャンセルを場合分け */}
-                    <TableCell align="right">
-                      {order.orderItems.length === (index + 1) && order.status !== 9
-                        ? <Button onClick={() => { cancelOrder(order.orderUniqueId) }} variant="contained">この注文をキャンセル</Button>
-                        : order.orderItems.length === (index + 1) && order.status === 9
-                          ? <Button disabled={true} variant="contained">キャンセル済み</Button>
-                          : ""
-                      }
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )
-        })}
 
-      </TableContainer>
+      {!orderHistory.length ? <h2>注文履歴がございません。</h2> :
+        <ContainerPadding>
+          <TableContainer component={Paper}>
+            {
+              orderHistory.map((order: FetchObject, index: number) => {
+                return (
+                  <Table className={classes.table} size="small" aria-label="a dense table" style={{ marginTop: "30px" }} key={index}>
+                    <TableHeaer></TableHeaer>
+                    <TableBody key={index} style={{ padding: "30px" }}>
+                      {console.log(order)}
+                      {order.orderItems.map((orderList: OrderItems, index: number) => {
+                        let imageObject = items.find((element) => {
+                          return element.id === orderList.itemId
+                        })
+                        return (
+                          <TableRowContents order={order} orderList={orderList} indexNum={index} key={index} imagePath={imageObject!.imagePath}></TableRowContents>
+                        )
+                      })}
+                    </TableBody>
+                  </Table>
+                )
+              })}
+          </TableContainer>
+        </ContainerPadding>
+      }
     </>
   )
 }
+
+const ContainerPadding = styled.div`
+  padding:0 40px
+`

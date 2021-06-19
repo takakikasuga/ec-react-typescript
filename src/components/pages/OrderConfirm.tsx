@@ -8,9 +8,12 @@ import styled from 'styled-components'
 import { Header } from '../organisums/header/Header'
 import { PrimaryButton } from '../atoms/button/PrimaryButton'
 import { TotalPrice } from '../molecules/itemPrice/TotalPrice'
+import { TableHeaer } from '../organisums/tableConfirm/TableHeader'
+import { TableRowContents } from '../organisums/tableConfirm/TableRowContents'
 
 // 型のインポート
 import { FetchOrder } from '../../types/order/order'
+import { fetchItems } from '../../types/items/items'
 
 // 各種機能のインポート
 import { selectOrderUpdate } from '../../features/order/orderUpdateSlice'
@@ -18,6 +21,7 @@ import { fetchOrderAsync, selectFetchOrder } from '../../features/order/fetchOrd
 import { selectUserId } from '../../features/user/userSlice'
 import { updateOrderStatusAsync } from '../../features/order/updateOrderStatusSlice'
 import { statusZeroIdAsync, selectStatusZeroId } from '../../features/statusZeroId/statusZeroIdSlice'
+import { selectItems } from '../../features/items/itemsSlice'
 
 // マテリアルUI
 import { makeStyles, createStyles, Theme, } from '@material-ui/core/styles';
@@ -83,6 +87,7 @@ export const OrderConfirm = () => {
   const classes = useStyles();
   const dipatch = useDispatch()
   const statusZeroId = useSelector(selectStatusZeroId)
+  const items: fetchItems[] = useSelector(selectItems)
 
   // React-Hook-Form
   // defaultValuesでラジオボタンの初期値を設定
@@ -158,25 +163,17 @@ export const OrderConfirm = () => {
           <>
             <TableContainer component={Paper}>
               <Table className={classes.table} size="small" aria-label="a dense table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>商品名</TableCell>
-                    <TableCell align="right">値段（税込）</TableCell>
-                    <TableCell align="right">個数</TableCell>
-                    <TableCell align="right">合計金額（税込）</TableCell>
-                  </TableRow>
-                </TableHead>
+                <TableHeaer></TableHeaer>
                 <TableBody>
-                  {fetchData.map((row: FetchOrder, index: number) => (
-                    <TableRow key={index}>
-                      <TableCell component="th" scope="row">
-                        {row.itemName}
-                      </TableCell>
-                      <TableCell align="right">{row.itemPrice}</TableCell>
-                      <TableCell align="right">{row.itemCount}</TableCell>
-                      <TableCell align="right">{((row.itemPrice) * (row.itemCount)).toLocaleString()}</TableCell>
-                    </TableRow>
-                  ))}
+                  {/* アイテムid と一致するオブジェクトを返却する */}
+                  {fetchData.map((row: FetchOrder, index: number) => {
+                    let imageObject = items.find((element) => {
+                      return element.id === row.itemId
+                    })
+                    return (
+                      <TableRowContents row={row} indexNum={index} key={index} imagePath={imageObject!.imagePath}></TableRowContents>
+                    )
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>
