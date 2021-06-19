@@ -20,7 +20,7 @@ export interface CancelObject {
 }
 
 export type CancelOrder = {
-  // copyOrderHistory: Array<CancelObject>;
+  order: Array<CancelObject>;
   uniqueOrderId: string;
   userId: string;
 }
