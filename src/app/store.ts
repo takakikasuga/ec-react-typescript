@@ -11,6 +11,7 @@ import cartListsReducer from '../features/cartLists/cartListsSlice'
 import statusZeroIdReducer from '../features/statusZeroId/statusZeroIdSlice'
 import updateOrderStatusReducer from '../features/order/updateOrderStatusSlice'
 import orderHistoryReducer from '../features/order/orderHistorySlice'
+import suggestItemsReducer from '../features/suggest/suggestSlice'
 
 
 export const store = configureStore({
@@ -27,6 +28,7 @@ export const store = configureStore({
     statusZeroId: statusZeroIdReducer,
     updateOrderStatus: updateOrderStatusReducer,
     orderHistory: orderHistoryReducer,
+    suggestItems: suggestItemsReducer,
   },
 });
 

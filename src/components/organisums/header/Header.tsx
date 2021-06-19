@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 // 機能のインポート
 import { selectUserId, selectUserName, loginUserAsync, signOutUserInfoAsync } from '../../../features/user/userSlice'
-import { fetchItemsAsync } from '../../../features/items/itemsSlice'
+import { fetchItemsAsync, selectItems, searchItemsAsync } from '../../../features/items/itemsSlice'
 import { deleteOrderItem, fetchOrderAsync, selectFetchOrder } from '../../../features/order/fetchOrderSlice'
-import { selectItems } from '../../../features/items/itemsSlice'
+import { selectSuggestItems } from '../../../features/suggest/suggestSlice'
 
 // コンポーネント
 import { SearchInput } from '../../atoms/search/SearchInput'
@@ -78,6 +78,12 @@ const useStyles = makeStyles((theme: Theme) =>
       color: "#000",
       left: "15px",
       top: "-25px"
+    },
+    serchItems: {
+      width: "300px",
+      border: "1px solid #fff",
+      borderRadius: "4px",
+      background: "#fff"
     }
   }),
 );
@@ -90,7 +96,8 @@ export const Header = () => {
   const userId = useSelector(selectUserId)
   const userName = useSelector(selectUserName)
   const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
-  const items: fetchItems[] = useSelector(selectItems)
+  const suggestItems: fetchItems[] = useSelector(selectSuggestItems)
+  const [searchItem, setSearchItem] = useState<string>("")
 
   const login = () => {
     console.log('login')
@@ -101,6 +108,16 @@ export const Header = () => {
     dispatch(signOutUserInfoAsync())
   }
 
+  // オートコンプリートの値取得,商品を取得
+  const serchItems = (value: string) => {
+    setSearchItem(value)
+    setSearchItem((pre) => {
+      console.log(pre)
+      console.log('次で発火します')
+      dispatch(searchItemsAsync(pre))
+      return pre
+    })
+  }
 
   return (
     <div className={classes.root}>
@@ -111,13 +128,21 @@ export const Header = () => {
           </Typography>
           {/* <SearchInput></SearchInput> */}
           <Autocomplete
+            onChange={(event: any, value: string) => { serchItems(value) }}
             freeSolo
             id="free-solo-2-demo"
             disableClearable
-            options={items.map((option) => option.name)}
-            renderInput={(params) => (
+            options={suggestItems.map((option) => option.name)}
+            renderInput={(params: any): any => (
               <TextField
-                style={{ width: "300px", border: "1px solid #fff", borderRadius: "4px", background: "#fff" }}
+                onKeyPress={
+                  (e) => {
+                    if (e.key == 'Enter') {
+                      e.preventDefault();
+                    }
+                  }
+                }
+                className={classes.serchItems}
                 {...params}
                 label="商品検索"
                 margin="normal"

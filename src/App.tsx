@@ -17,10 +17,12 @@ import { CartList } from './components/pages/CartList'
 import { OrderConfirm } from './components/pages/OrderConfirm'
 import { OrderHistory } from './components/pages/OrderHistory'
 
+// 機能のインポート
 import { registerUserInfoAsync } from './features/user/userSlice'
 import { fetchItemsAsync } from './features/items/itemsSlice'
 import { statusZeroIdAsync } from './features/statusZeroId/statusZeroIdSlice'
 import { fetchOrderAsync } from './features/order/fetchOrderSlice'
+import { suggestItemsAsync } from './features/suggest/suggestSlice'
 
 function App() {
   const dispach = useDispatch()
@@ -28,7 +30,7 @@ function App() {
   useEffect(() => {
     dispach(registerUserInfoAsync())
     dispach(fetchItemsAsync())
-
+    dispach(suggestItemsAsync())
   }, [dispach])
 
   useEffect(() => {
