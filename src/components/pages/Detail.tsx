@@ -66,30 +66,36 @@ export const Deatail = () => {
 
   console.log('商品idに紐づく商品オブジェクトの取得', itemDetail)
   const addOrder = (path: string) => {
-    let addOrder: firebaseOrderInfo = {
-      userId: userId!,
-      orderInfo: {
-        orderItems: [{
-          itemId: itemDetail[0].id!,
-          itemCount: itemCount,
-          itemName: itemDetail[0].name!,
-          itemPrice: itemPrice,
-          uniqueItemId: ''
-        }],
-        status: 0
-      },
-    }
-    // statusが0のものが存在するか否かでの場合わけ（新規or追加）
-    console.log(fetchData)
-    console.log(fetchData.length, '=== 0', '新規追加')
-    console.log(fetchData.length, '!== 0', '更新')
-    if (!fetchData.length) {
-      dispatch(addOrderAsync(addOrder))
+    if (itemPrice === 0) {
+      alert(`${itemDetail[0].name}のサイズを選択してください。`)
+    } else if (itemCount === 0) {
+      alert(`${itemDetail[0].name}の数量を選択してください。`)
     } else {
-      dispatch(orderUpdateAsync(addOrder))
+      let addOrder: firebaseOrderInfo = {
+        userId: userId!,
+        orderInfo: {
+          orderItems: [{
+            itemId: itemDetail[0].id!,
+            itemCount: itemCount,
+            itemName: itemDetail[0].name!,
+            itemPrice: itemPrice,
+            uniqueItemId: ''
+          }],
+          status: 0
+        },
+      }
+      // statusが0のものが存在するか否かでの場合わけ（新規or追加）
+      console.log(fetchData)
+      console.log(fetchData.length, '=== 0', '新規追加')
+      console.log(fetchData.length, '!== 0', '更新')
+      if (!fetchData.length) {
+        dispatch(addOrderAsync(addOrder))
+      } else {
+        dispatch(orderUpdateAsync(addOrder))
+      }
+      // カートリストへ画面遷移
+      history.push(path)
     }
-    // カートリストへ画面遷移
-    history.push(path)
   }
 
   return (
