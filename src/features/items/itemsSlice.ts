@@ -103,9 +103,11 @@ export const userSlice = createSlice({
     // loginUserAsyncの非同期通信だった時
     builder.addCase(fetchItemsAsync.fulfilled, (state, action: PayloadAction<Array<fetchItems>>) => {
       console.log('fetchItemsAsync')
+      console.log([...state])
       return action.payload
     })
     builder.addCase(searchItemsAsync.fulfilled, (state, action: PayloadAction<Array<fetchItems>>) => {
+      console.log("完了")
       return action.payload
     })
   },
