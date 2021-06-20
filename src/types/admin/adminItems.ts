@@ -8,3 +8,8 @@ export interface AdminItems {
     l?: number | null;
   };
 }
+
+export interface FetchAdminItems {
+  uniqueId?: string;
+  adminItems?: AdminItems
+}

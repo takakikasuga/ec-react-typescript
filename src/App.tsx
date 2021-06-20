@@ -17,6 +17,7 @@ import { Admin } from './components/pages/Admin'
 import { CartList } from './components/pages/CartList'
 import { OrderConfirm } from './components/pages/OrderConfirm'
 import { OrderHistory } from './components/pages/OrderHistory'
+import { AdminItems } from './components/pages/AdminItems'
 
 // 機能のインポート
 import { registerUserInfoAsync } from './features/user/userSlice'
@@ -49,8 +50,10 @@ function App() {
         <Link to='/orderHistory'>注文履歴画面</Link><br />
         <Link to='/'>トップページ</Link><br />
         <Link to='/admin'>アドミン</Link><br />
+        <Link to='/adminItems'>アドミンアイテム</Link><br />
         <Switch>
           <Route exact path="/detail/:id" component={Deatail} />
+          <Route exact path="/adminItems" component={AdminItems} />
           <Route exact path="/admin" component={Admin} />
           <Route exact path="/orderHistory" component={OrderHistory} />
           <Route exact path="/cartList" component={CartList} />

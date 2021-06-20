@@ -12,7 +12,7 @@ let fetchItemsData: Array<fetchItems> = []
 export const suggestItemsAsync = createAsyncThunk('items/fetchItemsAsync', async () => {
   await firebase
     .firestore()
-    .collection(`Items/`)
+    .collection(`items/`)
     .get()
     .then((snapshot: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>) => {
       snapshot.forEach((element: firebase.firestore.DocumentData) => {

@@ -7,7 +7,7 @@ import { uploadItemDataAsync, fetchUploadItemData, selectAdmin } from '../../fea
 import { useDispatch, useSelector } from 'react-redux';
 
 // コンポーネント
-import { Header } from '../organisums/header/Header'
+import { AdminHeader } from '../organisums/header/AdminHeader'
 
 // マテリアルUI
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
@@ -71,11 +71,13 @@ export const Admin = () => {
     // 文字列である金額をparseIntメソッドで10進数の数値に変換
     const new_Price_m = parseInt(data.price_m as string, 10)
     const new_Price_l = parseInt(data.price_l as string, 10)
+    console.log(image.name)
+    console.log(image.name.slice(-3))
     // imageファイルがアップロードされていない場合
     if (!image) {
       alert("画像ファイルをアップロードしてください。")
       // 画像ファイルの拡張子を検証して問題なければFirebaseに登録する処理を走らせる
-    } else if ((image.name.slice(-3) === ("png" || "jpg")) || image.name.slice(-4) === "jpeg") {
+    } else if ((image.name.slice(-3) === "png") || (image.name.slice(-3) === "jpg") || image.name.slice(-4) === "jpeg") {
       let itemObject = {
         // 今Firebase上にある商品情報のlengthに1を足す（次に入る商品情報はid + 1なので）
         id: (adminArray.length + 1),
@@ -96,7 +98,7 @@ export const Admin = () => {
   }
   return (
     <div>
-      <Header></Header>
+      <AdminHeader></AdminHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
         <p>商品情報の追加</p>
         <p>画像は拡張子が「.png」「.jpg」や「.jpeg」にしてください。</p>
