@@ -106,6 +106,13 @@ export const adminSlice = createSlice({
       console.log(current(state))
       return state
     })
+    // 待機中の実装一時断念（pendingの理解を深める）
+    // builder.addCase(uploadItemDataAsync.pending, (state, action) => {
+    //   console.log("pending中")
+    //   state.splice(0)
+    //   console.log(state)
+    //   return state
+    // })
     // fetchUploadItemDataの非同期通信だった時
     builder.addCase(fetchUploadItemData.fulfilled, (state, action: any) => {
       console.log(state, action)

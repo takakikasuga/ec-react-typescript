@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { useHistory } from 'react-router-dom'
 
 import { uploadItemDataAsync, fetchUploadItemData, selectAdmin } from '../../features/admin/adminSlice'
 // import firebase from 'firebase'
@@ -23,6 +24,7 @@ import FastfoodIcon from '@material-ui/icons/Fastfood';
 import DescriptionIcon from '@material-ui/icons/Description';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import { display } from '@material-ui/system';
+import { truncate } from 'fs';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,8 +49,10 @@ type UploadState = {
 
 export const Admin = () => {
   const classes = useStyles();
+  const history = useHistory()
   const adminArray = useSelector(selectAdmin)
   const [image, setImage] = useState<null | any>(null)
+  const [flag, setFlag] = useState<boolean>(false)
   const dispatch = useDispatch()
   console.log("Admin確認")
 
@@ -97,6 +101,10 @@ export const Admin = () => {
       }
       // 非同期通信uploadItemDataAsyncへ処理を繋ぐ
       dispatch(uploadItemDataAsync(itemObject))
+      setFlag(true)
+      setTimeout(() => {
+        history.push("adminItems")
+      }, 5000)
     } else {
       // 拡張子が指定のもの以外の時のアラート
       alert("拡張子を「.png」「.jpg」「.jpeg」のいずれかにしてください。")
@@ -105,131 +113,136 @@ export const Admin = () => {
   return (
     <div>
       <AdminHeader></AdminHeader>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <p>商品情報の追加</p>
-        <p>画像は拡張子が「.png」「.jpg」や「.jpeg」にしてください。</p>
-        <Button
-          variant="contained" component="label">
-          {image ?
-            <p>以下のファイルが選択されています。</p>
-            : <p>商品画像を選択</p>}
-          <input type="file" hidden onChange={handleChange} />
-        </Button>
-        {errors.image &&
-          <FontColorRed>
-            {errors.image.message}
-          </FontColorRed>
-        }
-        {!image ?
-          <p>商品画像の選択が未完了です。</p>
-          : <p>ファイル名：{image.name}</p>}
-        <FlexColunm>
+      {!adminArray.length ? "ローディング中" :
+        <>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <p>商品情報の追加</p>
+            <p>画像は拡張子が「.png」「.jpg」や「.jpeg」にしてください。</p>
+            <Button
+              variant="contained" component="label">
+              {image ?
+                <p>以下のファイルが選択されています。</p>
+                : <p>商品画像を選択</p>}
+              <input type="file" hidden onChange={handleChange} />
+            </Button>
+            {errors.image &&
+              <FontColorRed>
+                {errors.image.message}
+              </FontColorRed>
+            }
+            {!image ?
+              <p>商品画像の選択が未完了です。</p>
+              : <p>ファイル名：{image.name}</p>}
+            <FlexColunm>
 
-          {/* 商品名入力エリア */}
-          <TextField
-            {...register("name", {
-              required: '商品名を入力してください。',
-            })}
-            className={classes.margin}
-            id="input-with-icon-textfield"
-            label="商品名"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <FastfoodIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          {errors.name &&
-            <FontColorRed>
-              {errors.name.message}
-            </FontColorRed>
-          }
+              {/* 商品名入力エリア */}
+              <TextField
+                {...register("name", {
+                  required: '商品名を入力してください。',
+                })}
+                className={classes.margin}
+                id="input-with-icon-textfield"
+                label="商品名"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <FastfoodIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              {errors.name &&
+                <FontColorRed>
+                  {errors.name.message}
+                </FontColorRed>
+              }
 
-          {/* 商品詳細入力エリア */}
-          <TextField
-            {...register("description", {
-              required: '商品詳細を入力してください。',
-            })}
-            className={classes.margin}
-            id="input-with-icon-textfield"
-            label="商品詳細"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <DescriptionIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          {errors.description &&
-            <FontColorRed>
-              {errors.description.message}
-            </FontColorRed>
-          }
+              {/* 商品詳細入力エリア */}
+              <TextField
+                {...register("description", {
+                  required: '商品詳細を入力してください。',
+                })}
+                className={classes.margin}
+                id="input-with-icon-textfield"
+                label="商品詳細"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <DescriptionIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              {errors.description &&
+                <FontColorRed>
+                  {errors.description.message}
+                </FontColorRed>
+              }
 
-          {/* Mサイズの金額入力エリア */}
-          <TextField
-            {...register("price_m", {
-              required: 'Mサイズの金額を入力してください。',
-              pattern: {
-                value: numberRegExp,
-                message: "整数値（１〜９）で入力してください。"
-              },
-            })}
-            className={classes.margin}
-            id="input-with-icon-textfield"
-            label="Mサイズ"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <MonetizationOnIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          {errors.price_m &&
-            <FontColorRed>
-              {errors.price_m.message}
-            </FontColorRed>
-          }
+              {/* Mサイズの金額入力エリア */}
+              <TextField
+                {...register("price_m", {
+                  required: 'Mサイズの金額を入力してください。',
+                  pattern: {
+                    value: numberRegExp,
+                    message: "整数値（１〜９）で入力してください。"
+                  },
+                })}
+                className={classes.margin}
+                id="input-with-icon-textfield"
+                label="Mサイズ"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <MonetizationOnIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              {errors.price_m &&
+                <FontColorRed>
+                  {errors.price_m.message}
+                </FontColorRed>
+              }
 
-          {/* Lサイズの金額入力エリア */}
-          <TextField
-            {...register("price_l", {
-              required: 'Lサイズの金額を入力してください。',
-              pattern: {
-                value: numberRegExp,
-                message: "整数値（１〜９）で入力してください。"
-              },
-            })}
-            className={classes.margin}
-            id="input-with-icon-textfield"
-            label="Lサイズ"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <MonetizationOnIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          {errors.price_l &&
-            <FontColorRed>
-              {errors.price_l.message}
-            </FontColorRed>
-          }
-        </FlexColunm>
-        <Button
-          component="label"
-          color="primary"
-          style={{ border: "1px solid #3F51B5" }}
-        >
-          <button type="submit" hidden>送信</button>
-          アップロード
-        </Button>
-      </form>
+              {/* Lサイズの金額入力エリア */}
+              <TextField
+                {...register("price_l", {
+                  required: 'Lサイズの金額を入力してください。',
+                  pattern: {
+                    value: numberRegExp,
+                    message: "整数値（１〜９）で入力してください。"
+                  },
+                })}
+                className={classes.margin}
+                id="input-with-icon-textfield"
+                label="Lサイズ"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <MonetizationOnIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              {errors.price_l &&
+                <FontColorRed>
+                  {errors.price_l.message}
+                </FontColorRed>
+              }
+            </FlexColunm>
+            <Button
+              component="label"
+              color="primary"
+              style={{ border: "1px solid #3F51B5" }}
+            >
+              <button type="submit" hidden>送信</button>
+              アップロード
+            </Button>
+          </form>
+          {flag && <p>5秒後に商品一覧画面に遷移します。</p>}
+        </>
+      }
     </div>
   )
 }
