@@ -1,38 +1,33 @@
 import { createAsyncThunk, createSlice, PayloadAction, current } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
-import { fetchItems } from '../../types/items/items'
-// import { fetchCount } from './counterAPI';
+
+// 型のインポート
+import { AdminItems } from "../../types/admin/adminItems"
+
+// Firebase関連
 import firebase from 'firebase'
 import { strage } from '../../firebase/firebase.js'
-import { providerGoogle } from '../../firebase/firebase'
-
-import axios from 'axios'
 
 
-
-const initialState: any = null
+const initialState: Array<AdminItems> = []
 
 
 export const fetchUploadItemData = createAsyncThunk('fetchUploadItemData/fetchUploadItemDataAsync', async () => {
-  let fetchUploadItemData: any = []
+  let fetchUploadItemData: Array<AdminItems> = []
   await firebase
     .firestore()
     .collection(`items`)
     .get()
     .then((snapshot) => {
       snapshot.forEach((doc) => {
-        console.log(doc.data())
-        console.log(doc.id)
         fetchUploadItemData.push(doc.data())
       })
     })
-  console.log(fetchUploadItemData)
   return fetchUploadItemData
 });
 
-
-export const uploadItemData = createAsyncThunk('uploadData/uploadItemDataAsync', async (object: any) => {
-  let itemObject: any = {
+export const uploadItemDataAsync = createAsyncThunk('uploadData/uploadItemDataAsync', async (object: any) => {
+  let itemObject: AdminItems = {
     id: null,
     imagePath: null,
     name: null,
@@ -46,8 +41,8 @@ export const uploadItemData = createAsyncThunk('uploadData/uploadItemDataAsync',
   itemObject.id = object.id
   itemObject.name = object.name
   itemObject.description = object.description
-  itemObject.price.m = Number(object.price.m)
-  itemObject.price.l = Number(object.price.l)
+  itemObject.price!.m = Number(object.price.m)
+  itemObject.price!.l = Number(object.price.l)
 
   function auth() {
     const uploadTask = strage.ref(`images/${object.image.name}`).put(object.image);
@@ -71,6 +66,7 @@ export const uploadItemData = createAsyncThunk('uploadData/uploadItemDataAsync',
         })
     })
   }
+  // uploadTaskはPromiseを返却しないので、明示的に返却されるようPromiseを使用する
   await auth()
   await firebase
     .firestore()
@@ -89,26 +85,13 @@ export const adminSlice = createSlice({
   name: 'admin',
   initialState,
 
-  reducers: {
-    // setUserId: (state) => {
-
-    //   state.value += 1;
-    // },
-    // setUserName: (state) => {
-    //   state.value -= 1;
-    // },
-
-    // defaultUserStatus: (state, action: PayloadAction<number>) => {
-    //   state.value += action.payload;
-    // },
-  },
+  reducers: {},
 
   extraReducers: (builder) => {
     // loginUserAsyncの非同期通信だった時
-    builder.addCase(uploadItemData.fulfilled, (state, action: any) => {
-      console.log("uploadItemData", state, action)
-      console.log(state)
+    builder.addCase(uploadItemDataAsync.fulfilled, (state, action: PayloadAction<AdminItems>) => {
       console.log(state.length)
+      // 既存のstateにpushして配列の中身の情報をローカルで更新する
       state.push(action.payload)
       console.log(current(state))
       return state
@@ -124,18 +107,6 @@ export const adminSlice = createSlice({
 
 // export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
-
 export const selectAdmin = (state: RootState) => state.admin
-
-
-// export const incrementIfOdd = (amount: number): AppThunk => (
-//   dispatch,
-//   getState
-// ) => {
-//   const currentValue = selectCount(getState());
-//   if (currentValue % 2 === 1) {
-//     dispatch(incrementByAmount(amount));
-//   }
-// };
 
 export default adminSlice.reducer;

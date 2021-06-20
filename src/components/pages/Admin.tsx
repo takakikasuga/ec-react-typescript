@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
-import { uploadItemData, fetchUploadItemData, selectAdmin } from '../../features/admin/adminSlice'
+import { uploadItemDataAsync, fetchUploadItemData, selectAdmin } from '../../features/admin/adminSlice'
 // import firebase from 'firebase'
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -34,12 +34,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 
-// 0〜9の整数
+//0〜9の正数（正規表現）
 const numberRegExp = /^([1-9]\d*|0)$/
 
 type UploadState = {
-  price_m: number;
-  price_l: number;
+  price_m: number | string;
+  price_l: number | string;
   description: string;
   name: string;
   image: any
@@ -49,10 +49,6 @@ export const Admin = () => {
   const classes = useStyles();
   const adminArray = useSelector(selectAdmin)
   const [image, setImage] = useState<null | any>(null)
-  const [name, setName] = useState(null)
-  const [description, setDescription] = useState(null)
-  const [price_m, setPrice_m] = useState(null)
-  const [price_l, setPrice_l] = useState(null)
   const dispatch = useDispatch()
   console.log("Admin確認")
 
@@ -68,60 +64,20 @@ export const Admin = () => {
       setImage(e.target.files[0])
     }
   }
-  // const handleName = (e: any) => {
-  //   e.preventDefault()
-  //   setName(e.target.value)
-  // }
-  // const handleDescription = (e: any) => {
-  //   setDescription(e.target.value)
-  // }
-  // const handlePrice_m = (e: any) => {
-  //   e.preventDefault()
-  //   setPrice_m(e.target.value)
-  // }
-  // const handlePrice_l = (e: any) => {
-  //   e.preventDefault()
-  //   setPrice_l(e.target.value)
-  // }
 
-  const handleUpload = () => {
+  // Firebaseにアップロードできるとき
+  const onSubmit: SubmitHandler<UploadState> = (data: UploadState) => {
 
-    console.log(typeof price_m)
-    console.log(typeof price_l)
-    if ((image.name.slice(-3) === ("png" || "jpg")) || image.name.slice(-4) === "jpeg") {
-      // console.log("adminArray.length", adminArray.length)
-      // let itemObject = {
-      //   id: (adminArray.length + 1),
-      //   image: image,
-      //   name: name,
-      //   description: description,
-      //   price: {
-      //     m: price_m,
-      //     l: price_l,
-      //   }
-      // }
-      // dispatch(uploadItemData(itemObject))
-    } else {
-      alert("拡張子を「.png」「.jpg」「.jpeg」のいずれかにしてください。")
-    }
-    // 初期化
-    // setImage(null)
-    // setName(null)
-    // setDescription(null)
-    // setPrice_m(null)
-    // setPrice_l(null)
-  }
-  console.log("image", image)
-  console.log('watchメソッド', watch())
-  const onSubmit: SubmitHandler<UploadState> = (data: any) => {
     // 文字列である金額をparseIntメソッドで10進数の数値に変換
-    const new_Price_m = parseInt(data.price_m, 10)
-    const new_Price_l = parseInt(data.price_l, 10)
-
-    // 画像ファイルの拡張子を検証して問題なければFirebaseに登録する処理を走らせる
-    if ((image.name.slice(-3) === ("png" || "jpg")) || image.name.slice(-4) === "jpeg") {
-      console.log("adminArray.length", adminArray.length)
+    const new_Price_m = parseInt(data.price_m as string, 10)
+    const new_Price_l = parseInt(data.price_l as string, 10)
+    // imageファイルがアップロードされていない場合
+    if (!image) {
+      alert("画像ファイルをアップロードしてください。")
+      // 画像ファイルの拡張子を検証して問題なければFirebaseに登録する処理を走らせる
+    } else if ((image.name.slice(-3) === ("png" || "jpg")) || image.name.slice(-4) === "jpeg") {
       let itemObject = {
+        // 今Firebase上にある商品情報のlengthに1を足す（次に入る商品情報はid + 1なので）
         id: (adminArray.length + 1),
         image: image,
         name: data.name,
@@ -131,14 +87,13 @@ export const Admin = () => {
           l: new_Price_l,
         }
       }
-      dispatch(uploadItemData(itemObject))
+      // 非同期通信uploadItemDataAsyncへ処理を繋ぐ
+      dispatch(uploadItemDataAsync(itemObject))
     } else {
+      // 拡張子が指定のもの以外の時のアラート
       alert("拡張子を「.png」「.jpg」「.jpeg」のいずれかにしてください。")
     }
   }
-  console.log("watch", watch())
-  console.log("watch", watch().price_l)
-  console.log("watch", watch().price_m)
   return (
     <div>
       <Header></Header>
@@ -259,7 +214,6 @@ export const Admin = () => {
           }
         </FlexColunm>
         <Button
-          // 全項目の入力が完了した場合入力できる状態にする
           component="label"
           color="primary"
           style={{ border: "1px solid #3F51B5" }}
@@ -267,7 +221,6 @@ export const Admin = () => {
           <button type="submit" hidden>送信</button>
           アップロード
         </Button>
-
       </form>
     </div>
   )
