@@ -49,15 +49,6 @@ export const OrderHistory = () => {
     // stateのuserIdが変化するたびに取得する
   }, [userId])
 
-  const cancelOrder = (uniqueOrderId: string | undefined) => {
-    // string型の保証
-    if (typeof uniqueOrderId === "string") {
-      if (window.confirm('本当にキャンセルしますか？')) {
-        dispatch(cancelOrderHistoryAsync({ userId, uniqueOrderId }))
-      }
-    }
-
-  }
 
   return (
     <>
@@ -72,7 +63,7 @@ export const OrderHistory = () => {
                 return (
                   <Table className={classes.table} size="small" aria-label="a dense table" style={{ marginTop: "30px" }} key={index}>
                     <TableHeaer></TableHeaer>
-                    <TableBody key={index} style={{ padding: "30px" }}>
+                    <TableBody style={{ padding: "30px" }}>
                       {console.log(order)}
                       {order.orderItems.map((orderList: OrderItems, index: number) => {
                         let imageObject = items.find((element) => {

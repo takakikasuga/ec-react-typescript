@@ -12,6 +12,7 @@ import { selectUserId } from './features/user/userSlice'
 import './App.css';
 import { Home } from './components/pages/Home'
 import { Deatail } from './components/pages/Detail'
+import { Admin } from './components/pages/Admin'
 // import { Admin } from './components/pages/Admin'
 import { CartList } from './components/pages/CartList'
 import { OrderConfirm } from './components/pages/OrderConfirm'
@@ -47,8 +48,10 @@ function App() {
         <Link to='/orderConfirm'>注文確認画面</Link><br />
         <Link to='/orderHistory'>注文履歴画面</Link><br />
         <Link to='/'>トップページ</Link><br />
+        <Link to='/admin'>アドミン</Link><br />
         <Switch>
           <Route exact path="/detail/:id" component={Deatail} />
+          <Route exact path="/admin" component={Admin} />
           <Route exact path="/orderHistory" component={OrderHistory} />
           <Route exact path="/cartList" component={CartList} />
           <Route exact path="/orderConfirm" component={OrderConfirm} />

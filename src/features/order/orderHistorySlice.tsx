@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction, current } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import firebase from 'firebase'
 
@@ -41,7 +41,7 @@ export const orderHistoryAsync = createAsyncThunk('orderHistor/orderHistoryAsync
 });
 // CancelOrder型一時的にエラ〜
 export const cancelOrderHistoryAsync = createAsyncThunk('cancelOrderHistory/cancelOrderHistoryAsync', async (cancelStatus: any) => {
-  let { userId, uniqueOrderId, } = cancelStatus
+  let { userId, uniqueOrderId } = cancelStatus
   console.log('cancelOrderHistoryが発火します')
   console.log('cancelOrderHistoryAsyncの中身を確認', cancelStatus)
   console.log(userId, uniqueOrderId,)
@@ -66,23 +66,23 @@ export const cancelOrderHistoryAsync = createAsyncThunk('cancelOrderHistory/canc
         console.log('キャンセルへstatusを変更しました。')
       })
     // 解決方法が見つからず、連続で非同期通信を行い最新のFirebaseのstatusが0以外の情報を取得する
-    await ordersRef
-      // statusが0以外の注文情報を拾ってくる
-      .where('status', '!=', 0)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          console.log(doc.id)
-          let object = doc.data() as FetchObject
-          // 注文情報のIDをオブジェクトに持たせる
-          object.orderUniqueId = doc.id
-          console.log(object)
-          orderHistory.push(object)
-        });
-      });
+    // await ordersRef
+    //   // statusが0以外の注文情報を拾ってくる
+    //   .where('status', '!=', 0)
+    //   .get()
+    //   .then((querySnapshot) => {
+    //     querySnapshot.forEach((doc) => {
+    //       console.log(doc.id)
+    //       let object = doc.data() as FetchObject
+    //       // 注文情報のIDをオブジェクトに持たせる
+    //       object.orderUniqueId = doc.id
+    //       console.log(object)
+    //       orderHistory.push(object)
+    //     });
+    //   });
   }
 
-  return orderHistory
+  return uniqueOrderId
 });
 
 export const orderHistorySlice = createSlice({
@@ -111,18 +111,26 @@ export const orderHistorySlice = createSlice({
 
       return action.payload
     })
-    builder.addCase(cancelOrderHistoryAsync.fulfilled, (state, action: PayloadAction<FetchHistory>) => {
+    builder.addCase(cancelOrderHistoryAsync.fulfilled, (state, action) => {
       console.log('ocancelOrderHistoryAsyncのactionとstate', state, action.payload)
-      // let changeStatus: any = []
-      // let cloneOrderHistory = [...copyOrderHistory]
-      // cloneOrderHistory.forEach((element: CancelObject) => {
-      //   if (uniqueOrderId === element.orderUniqueId) {
-      //     console.log(element)
-      //     element.status = 9
-      //   }
-      //   changeStatus = [...changeStatus, element]
-      // });
-      return action.payload
+
+      // 変更したいstatusのオブジェクトを取得
+      const newObject = state.filter((element: FetchObject) => {
+        return action.payload === element.orderUniqueId
+      })
+
+      // 変更したいstatusのオブジェクトのインデックス番号を取得
+      const indexNum = state.findIndex((element: FetchObject) => {
+        return action.payload === element.orderUniqueId
+      })
+
+      // statusを9に変更
+      newObject[0].status = 9
+
+      // 変更したいオブジェクトを丸ごと入れ替える
+      state.splice(indexNum, 1, newObject[0])
+      console.log(current(state))
+      return state
     })
   },
 });

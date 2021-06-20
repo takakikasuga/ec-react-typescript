@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction, current } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
 import { fetchItems } from '../../types/items/items'
 // import { fetchCount } from './counterAPI';
@@ -12,18 +12,38 @@ import axios from 'axios'
 
 const initialState: any = null
 
-let itemObject: any = {
-  imagePath: null,
-  name: null,
-  description: null,
-  price: {
-    m: null,
-    l: null,
-  }
-}
+
+export const fetchUploadItemData = createAsyncThunk('fetchUploadItemData/fetchUploadItemDataAsync', async () => {
+  let fetchUploadItemData: any = []
+  await firebase
+    .firestore()
+    .collection(`items`)
+    .get()
+    .then((snapshot) => {
+      snapshot.forEach((doc) => {
+        console.log(doc.data())
+        console.log(doc.id)
+        fetchUploadItemData.push(doc.data())
+      })
+    })
+  console.log(fetchUploadItemData)
+  return fetchUploadItemData
+});
+
 
 export const uploadItemData = createAsyncThunk('uploadData/uploadItemDataAsync', async (object: any) => {
+  let itemObject: any = {
+    id: null,
+    imagePath: null,
+    name: null,
+    description: null,
+    price: {
+      m: null,
+      l: null,
+    }
+  }
   // 上記変数オブジェクトに代入
+  itemObject.id = object.id
   itemObject.name = object.name
   itemObject.description = object.description
   itemObject.price.m = object.price.m
@@ -65,8 +85,8 @@ export const uploadItemData = createAsyncThunk('uploadData/uploadItemDataAsync',
   return itemObject
 });
 
-export const userSlice = createSlice({
-  name: 'userStatus',
+export const adminSlice = createSlice({
+  name: 'admin',
   initialState,
 
   reducers: {
@@ -86,6 +106,17 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     // loginUserAsyncの非同期通信だった時
     builder.addCase(uploadItemData.fulfilled, (state, action: any) => {
+      console.log("uploadItemData", state, action)
+      console.log(state)
+      console.log(state.length)
+      state.push(action.payload)
+      console.log(current(state))
+      return state
+    })
+    // fetchUploadItemDataの非同期通信だった時
+    builder.addCase(fetchUploadItemData.fulfilled, (state, action: any) => {
+      console.log(state, action)
+      console.log("fetchUploadItemData", state, action.payload)
       return action.payload
     })
   },
@@ -94,7 +125,7 @@ export const userSlice = createSlice({
 // export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
 
-export const selectItems = (state: RootState) => state.items
+export const selectAdmin = (state: RootState) => state.admin
 
 
 // export const incrementIfOdd = (amount: number): AppThunk => (
@@ -107,4 +138,4 @@ export const selectItems = (state: RootState) => state.items
 //   }
 // };
 
-export default userSlice.reducer;
+export default adminSlice.reducer;
