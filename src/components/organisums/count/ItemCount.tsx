@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(1),
       minWidth: 120,
     },
+    borderLine: {
+      border: "1px solid #000"
+    }
   }),
 );
 export const ItemCount = (props: any) => {
@@ -52,7 +55,7 @@ export const ItemCount = (props: any) => {
 
   return (
     <div>
-      <Button onClick={handleClickOpen}>{children}</Button>
+      <Button className={classes.borderLine} onClick={handleClickOpen}>{children}</Button>
       <span>：{Number(count)}個</span>
       <Dialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
         <DialogTitle>個数を選択してください。</DialogTitle>

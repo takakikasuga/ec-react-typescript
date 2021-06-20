@@ -123,7 +123,7 @@ export const AdminHeader = () => {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar className={classes.flexSpace} >
-          <Typography onClick={() => { history.push('/') }} className={classes.title} variant="h6" noWrap>
+          <Typography onClick={() => { history.push('/admin') }} className={classes.title} variant="h6" noWrap>
             EC-Rakuraku-Rakuten
           </Typography>
 
@@ -136,8 +136,7 @@ export const AdminHeader = () => {
               </span>
               :
               <>
-
-                <span onClick={() => { history.push('/orderHistory') }} className={classes.flexColum + " " + classes.margin}>
+                <span onClick={() => { history.push('/adminItems') }} className={classes.flexColum + " " + classes.margin}>
                   <ViewListIcon></ViewListIcon>
                   <span className={classes.fontHeaderSize}>商品一覧</span>
                 </span>

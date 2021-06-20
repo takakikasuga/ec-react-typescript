@@ -31,6 +31,8 @@ import { firebaseOrderInfo } from '../../types/order/firebaseOrderInfo'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import { display } from '@material-ui/system';
+
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -43,6 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(2),
       textAlign: 'center',
+      marginBottom: "32px",
       color: theme.palette.text.secondary,
     },
   }),
@@ -107,13 +110,13 @@ export const Deatail = () => {
           <Grid item xs={12}>
             <Paper className={classes.paper}>
               <h3>{detail.name}</h3>
-              <img src={detail!.imagePath!} alt="" />
+              <ImageWrapper src={detail!.imagePath!} alt="" />
               <p>{detail.description}</p>
             </Paper>
-            <div>
+            <FlexItems>
               <RadioButton detail={detail}></RadioButton>
               <ItemCount>数量を選択</ItemCount>
-            </div>
+            </FlexItems>
             <div>
               <h4>合計金額</h4>
               <p>{(itemPrice * itemCount).toLocaleString()}円（税込）</p>
@@ -132,3 +135,16 @@ export const Deatail = () => {
 const WrapperButton = styled.span`
   text-align: center;
 `
+const ImageWrapper = styled.img`
+  display: block;
+  object-fit: cover;
+  width: 80%;
+  margin:0 auto;
+`
+const FlexItems = styled.div`
+  display: flex;
+  align-items:center;
+  justify-content: center;
+`
+
+

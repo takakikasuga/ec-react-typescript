@@ -13,6 +13,7 @@ import updateOrderStatusReducer from '../features/order/updateOrderStatusSlice'
 import orderHistoryReducer from '../features/order/orderHistorySlice'
 import suggestItemsReducer from '../features/suggest/suggestSlice'
 import adminReducer from '../features/admin/adminSlice'
+import adminItemsReducer from '../features/items/adminItemsSlice'
 
 
 export const store = configureStore({
@@ -31,6 +32,7 @@ export const store = configureStore({
     orderHistory: orderHistoryReducer,
     suggestItems: suggestItemsReducer,
     admin: adminReducer,
+    adminItems: adminItemsReducer,
   },
 });
 

@@ -23,6 +23,16 @@ export const fetchUploadItemData = createAsyncThunk('fetchUploadItemData/fetchUp
         fetchUploadItemData.push(doc.data())
       })
     })
+
+  // アイテムidを昇順へと並び替える
+  fetchUploadItemData!.sort(function (first: AdminItems, second: AdminItems) {
+    if (first.id! < second.id!) {
+      return -1;
+    } else {
+      return 1;
+    }
+  });
+
   return fetchUploadItemData
 });
 

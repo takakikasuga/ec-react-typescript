@@ -70,7 +70,7 @@ export const OrderHistory = () => {
                           return element.id === orderList.itemId
                         })
                         return (
-                          <TableRowContents order={order} orderList={orderList} indexNum={index} key={index} imagePath={imageObject!.imagePath}></TableRowContents>
+                          <TableRowContents order={order} orderList={orderList} indexNum={index} key={index} imagePath={imageObject?.imagePath}></TableRowContents>
                         )
                       })}
                     </TableBody>

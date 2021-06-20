@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 // コンポーネント
 import { DeleteButton } from '../../atoms/button/DeleteButton'
+import noImage from "../../../noImage/noImage.png"
 
 // 型のインポート
 import { FetchOrder } from "../../../types/order/order"
@@ -55,7 +56,8 @@ export const TableRowContents = React.memo((props: any) => {
         {row.itemName}
         <CardMedia
           className={classes.media}
-          image={imagePath}
+          // 商品情報が削除されていた場合のnoImage
+          image={imagePath ? imagePath : noImage}
           title="Contemplative Reptile"
         />
       </TableCell>

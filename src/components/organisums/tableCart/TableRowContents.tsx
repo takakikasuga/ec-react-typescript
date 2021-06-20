@@ -12,6 +12,9 @@ import { deleteOrderItem, deleteOrderAsync, selectFetchOrder } from '../../../fe
 import { selectUserId } from '../../../features/user/userSlice'
 import { selectStatusZeroId } from '../../../features/statusZeroId/statusZeroIdSlice'
 
+// NoImageのインポート
+import noImage from "../../../noImage/noImage.png"
+
 // マテリアルUI
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
@@ -55,11 +58,12 @@ export const TableRowContents = React.memo((props: any) => {
         {row.itemName}
         <CardMedia
           className={classes.media}
-          image={imagePath}
+          // 管理者が消してしまった商品についてはnoImageを採用
+          image={imagePath ? imagePath : noImage}
           title="Contemplative Reptile"
         />
       </TableCell>
-      <TableCell align="right">{row.itemPrice}</TableCell>
+      <TableCell align="right">{(row.itemPrice).toLocaleString()}</TableCell>
       <TableCell align="right">{row.itemCount}</TableCell>
       <TableCell align="right">{((row.itemPrice) * (row.itemCount)).toLocaleString()}</TableCell>
       <TableCell align="right">

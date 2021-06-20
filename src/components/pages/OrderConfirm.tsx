@@ -171,7 +171,7 @@ export const OrderConfirm = () => {
                       return element.id === row.itemId
                     })
                     return (
-                      <TableRowContents row={row} indexNum={index} key={index} imagePath={imageObject!.imagePath}></TableRowContents>
+                      <TableRowContents row={row} indexNum={index} key={index} imagePath={imageObject?.imagePath}></TableRowContents>
                     )
                   })}
                 </TableBody>

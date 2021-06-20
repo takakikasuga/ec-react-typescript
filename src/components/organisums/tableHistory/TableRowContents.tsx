@@ -1,6 +1,9 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+// コンポーネント
+import noImage from "../../../noImage/noImage.png"
+
 // 型のインポート
 import { FetchOrder } from "../../../types/order/order"
 
@@ -51,7 +54,7 @@ export const TableRowContents = React.memo((props: any) => {
         {orderList.itemName}
         <CardMedia
           className={classes.media}
-          image={imagePath}
+          image={imagePath ? imagePath : noImage}
           title="Contemplative Reptile"
         />
       </TableCell>
