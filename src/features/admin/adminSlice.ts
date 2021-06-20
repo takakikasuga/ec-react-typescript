@@ -46,8 +46,8 @@ export const uploadItemData = createAsyncThunk('uploadData/uploadItemDataAsync',
   itemObject.id = object.id
   itemObject.name = object.name
   itemObject.description = object.description
-  itemObject.price.m = object.price.m
-  itemObject.price.l = object.price.l
+  itemObject.price.m = Number(object.price.m)
+  itemObject.price.l = Number(object.price.l)
 
   function auth() {
     const uploadTask = strage.ref(`images/${object.image.name}`).put(object.image);
