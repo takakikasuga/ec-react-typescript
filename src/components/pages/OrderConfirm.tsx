@@ -193,24 +193,12 @@ export const OrderConfirm = () => {
                           required: '配達希望日を入力してください',
                           validate: {
                             overYear: (data: any): any => {
-                              // console.log("data", data)
-                              // console.log("Number(data?.slice(0, 4))", Number(data?.slice(0, 4)))
-                              // console.log("new Date().getFullYear()", new Date().getFullYear())
-                              console.log(Number(data?.slice(0, 4)) >= new Date().getFullYear())
                               return Number(data?.slice(0, 4)) >= new Date().getFullYear()
                             },
                             overMonth: (data: any): any => {
-                              console.log("data", data)
-                              console.log(" Number(data?.slice(5, 7))", Number(data?.slice(5, 7)))
-                              console.log(" new Date().getMonth()", new Date().getMonth() + 1)
-                              console.log(Number(data?.slice(5, 7)) >= new Date().getMonth() + 1)
                               return (Number(data?.slice(5, 7)) >= new Date().getMonth() + 1)
                             },
                             justOverDate: (data: any): any => {
-                              console.log("data", data)
-                              console.log("Number(data?.slice(8, 10))", Number(data?.slice(8, 10)))
-                              console.log(" new Date().getDate()", new Date().getDate())
-                              console.log(Number(data?.slice(8, 10)) >= new Date().getDate())
                               if ((Number(data?.slice(0, 4)) === new Date().getFullYear()) && (Number(data?.slice(5, 7)) === new Date().getMonth() + 1) && !(Number(data?.slice(8, 10)) >= new Date().getDate())) {
                                 return false
                               }
@@ -220,7 +208,6 @@ export const OrderConfirm = () => {
                               if ((Number(data?.slice(0, 4)) === new Date().getFullYear()) && (Number(data?.slice(5, 7)) === new Date().getMonth() + 1) && (Number(data?.slice(8, 10)) === new Date().getDate())) {
                                 return false
                               }
-                              // return !(Number(data?.slice(8, 10)) === new Date().getDate())
                             }
                           }
                         })}
