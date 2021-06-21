@@ -5,9 +5,12 @@ import {
   Route,
   Link,
 } from 'react-router-dom';
+import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUserId } from './features/user/userSlice'
 
+// 管理者IDのインポート
+import { AdminIdTest } from "./admin/admin"
 // / 型のインポート
 import { FetchOrder } from "./types/order/order"
 
@@ -32,25 +35,40 @@ import { selectFetchOrder } from "./features/order/fetchOrderSlice"
 
 function App() {
   const dispach = useDispatch()
+  const history = useHistory()
   const userId = useSelector(selectUserId)
   const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
+
   useEffect(() => {
     dispach(registerUserInfoAsync())
-    dispach(fetchItemsAsync())
-    dispach(suggestItemsAsync())
-    // 画面リロード時にユーザーローカルストレージのアイテム情報を削除
-    // localStorage.removeItem("LOCAL_CART_LISTS")
-  }, [dispach])
+  }, [])
+
 
   useEffect(() => {
     if (userId) {
-      dispach(fetchOrderAsync(userId))
+      // 管理者IDと一致しない場合
+      if (userId !== AdminIdTest) {
+        dispach(fetchItemsAsync())
+        dispach(suggestItemsAsync())
+      }
+    }
+  }, [dispach, userId])
+
+  useEffect(() => {
+    if (userId) {
+      // 管理者IDと一致しない場合
+      if (userId !== AdminIdTest) {
+        dispach(fetchOrderAsync(userId))
+      }
     }
   }, [userId])
 
   useEffect(() => {
     if (userId) {
-      dispach(statusZeroIdAsync(userId))
+      // 管理者IDと一致しない場合
+      if (userId !== AdminIdTest) {
+        dispach(statusZeroIdAsync(userId))
+      }
     }
   }, [userId, fetchData.length])
 
