@@ -63,7 +63,7 @@ export const TableRowContents = React.memo((props: any) => {
       </TableCell>
       <TableCell align="right">{row.itemPrice}</TableCell>
       <TableCell align="right">{row.itemCount}</TableCell>
-      <TableCell align="right">{((row.itemPrice) * (row.itemCount)).toLocaleString()}</TableCell>
+      <TableCell align="right">{((row.itemPrice) * (row.itemCount))}</TableCell>
     </TableRow>
   )
 })

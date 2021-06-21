@@ -60,9 +60,9 @@ export const TableRowContents = React.memo((props: any) => {
       </TableCell>
       <TableCell align="right">{orderList.itemPrice}</TableCell>
       <TableCell align="right">{orderList.itemCount}</TableCell>
-      <TableCell align="right">{(orderList.itemPrice * orderList.itemCount).toLocaleString()}円（税込）</TableCell>
+      <TableCell align="right">{(orderList.itemPrice * orderList.itemCount)}円（税込）</TableCell>
       {order.orderItems.length === (indexNum + 1)
-        ? <TableCell align="right">{(order.totoalPrice).toLocaleString()}円（税込）</TableCell>
+        ? <TableCell align="right">{(order.totoalPrice)}円（税込）</TableCell>
         : ""}
       {/* 発送済みまたはキャンセル済みまたはこの注文をキャンセルを場合分け */}
       <TableCell align="right">

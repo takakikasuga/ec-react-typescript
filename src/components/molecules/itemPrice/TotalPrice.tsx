@@ -6,7 +6,7 @@ export const TotalPrice = memo((props: { totoalPrice: number }) => {
   return (
     <Container>
       <h4>総合計金額（税込）</h4>
-      <p>{totoalPrice.toLocaleString()}円(税込）</p>
+      <p>{totoalPrice}円(税込）</p>
     </Container>
   )
 })

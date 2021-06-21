@@ -47,6 +47,14 @@ export const CartList = () => {
   const userId: string | null = useSelector(selectUserId)
 
   useEffect(() => {
+    if (typeof userId === 'string') {
+      // 現在のstatus0の注文情報IDを取得
+      dipatch(statusZeroIdAsync(userId))
+    }
+    // 一回だけ発火して現在のstatus0注文情報を取得する
+  }, [])
+
+  useEffect(() => {
     // string型であることを保証する
     if (typeof userId === 'string') {
       // カートリストの中でstatusが0以外のの注文済情報をとってくる
@@ -55,13 +63,6 @@ export const CartList = () => {
     // orderUpdateの配列状況が変更されるたびに発火して最新のカート情報をFirebaseから取得するようにする。
   }, [orderUpdate.length])
 
-  useEffect(() => {
-    if (typeof userId === 'string') {
-      // 現在のstatus0の注文情報IDを取得
-      dipatch(statusZeroIdAsync(userId))
-    }
-    // 一回だけ発火して現在のstatus0注文情報を取得する
-  }, [])
 
   const orderConfirm = () => {
     if (userId) {

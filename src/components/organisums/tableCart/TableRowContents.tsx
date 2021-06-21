@@ -30,7 +30,7 @@ const useStyles = makeStyles({
 });
 
 // 現状propsの型定義方法の理解ができていない
-export const TableRowContents = React.memo((props: any) => {
+export const TableRowContents = (props: any) => {
   const classes = useStyles();
   console.log(props)
   const { row, indexNum, imagePath } = props
@@ -41,7 +41,7 @@ export const TableRowContents = React.memo((props: any) => {
   const userId: string = useSelector(selectUserId)!
   const statusZeroId = useSelector(selectStatusZeroId)
 
-
+  console.log("statusZeroId", statusZeroId)
   // 注文情報の削除
   const deleteCart = (indexNum: number) => {
     if (window.confirm("本当に削除しますか？？")) {
@@ -73,9 +73,9 @@ export const TableRowContents = React.memo((props: any) => {
           title="Contemplative Reptile"
         />
       </TableCell>
-      <TableCell align="right">{(row.itemPrice).toLocaleString()}</TableCell>
+      <TableCell align="right">{(row.itemPrice)}</TableCell>
       <TableCell align="right">{row.itemCount}</TableCell>
-      <TableCell align="right">{((row.itemPrice) * (row.itemCount)).toLocaleString()}</TableCell>
+      <TableCell align="right">{((row.itemPrice) * (row.itemCount))}</TableCell>
       <TableCell align="right">
         <span onClick={() => { deleteCart(indexNum) }}>
           <DeleteButton></DeleteButton>
@@ -83,4 +83,4 @@ export const TableRowContents = React.memo((props: any) => {
       </TableCell>
     </TableRow>
   )
-})
+}

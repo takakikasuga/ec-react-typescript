@@ -8,6 +8,9 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUserId } from './features/user/userSlice'
 
+// / 型のインポート
+import { FetchOrder } from "./types/order/order"
+
 // コンポーネントのインポート
 import './App.css';
 import { Home } from './components/pages/Home'
@@ -25,10 +28,12 @@ import { fetchItemsAsync } from './features/items/itemsSlice'
 import { statusZeroIdAsync } from './features/statusZeroId/statusZeroIdSlice'
 import { fetchOrderAsync } from './features/order/fetchOrderSlice'
 import { suggestItemsAsync } from './features/suggest/suggestSlice'
+import { selectFetchOrder } from "./features/order/fetchOrderSlice"
 
 function App() {
   const dispach = useDispatch()
   const userId = useSelector(selectUserId)
+  const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
   useEffect(() => {
     dispach(registerUserInfoAsync())
     dispach(fetchItemsAsync())
@@ -40,9 +45,14 @@ function App() {
   useEffect(() => {
     if (userId) {
       dispach(fetchOrderAsync(userId))
-      dispach(statusZeroIdAsync(userId))
     }
   }, [userId])
+
+  useEffect(() => {
+    if (userId) {
+      dispach(statusZeroIdAsync(userId))
+    }
+  }, [userId, fetchData.length])
 
   return (
     <div className="App">
