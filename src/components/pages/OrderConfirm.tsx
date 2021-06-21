@@ -52,6 +52,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 import Button from '@material-ui/core/Button';
+import { createFalse } from 'typescript';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -205,16 +206,21 @@ export const OrderConfirm = () => {
                               console.log(Number(data?.slice(5, 7)) >= new Date().getMonth() + 1)
                               return (Number(data?.slice(5, 7)) >= new Date().getMonth() + 1)
                             },
-                            overDate: (data: any): any => {
+                            justOverDate: (data: any): any => {
                               console.log("data", data)
                               console.log("Number(data?.slice(8, 10))", Number(data?.slice(8, 10)))
                               console.log(" new Date().getDate()", new Date().getDate())
                               console.log(Number(data?.slice(8, 10)) >= new Date().getDate())
-                              return (Number(data?.slice(8, 10)) >= new Date().getDate())
+                              if ((Number(data?.slice(0, 4)) === new Date().getFullYear()) && (Number(data?.slice(5, 7)) === new Date().getMonth() + 1) && !(Number(data?.slice(8, 10)) >= new Date().getDate())) {
+                                return false
+                              }
                             },
                             justDate: (data: any): any => {
                               console.log(!(Number(data?.slice(8, 10)) === new Date().getDate()))
-                              return !(Number(data?.slice(8, 10)) === new Date().getDate())
+                              if ((Number(data?.slice(0, 4)) === new Date().getFullYear()) && (Number(data?.slice(5, 7)) === new Date().getMonth() + 1) && (Number(data?.slice(8, 10)) === new Date().getDate())) {
+                                return false
+                              }
+                              // return !(Number(data?.slice(8, 10)) === new Date().getDate())
                             }
                           }
                         })}
@@ -229,7 +235,7 @@ export const OrderConfirm = () => {
                       />
                       {errors.orderDate?.type === "overYear" && <FontColorRed>既に対象年はすぎています。</FontColorRed>}
                       {errors.orderDate?.type === "overMonth" && <FontColorRed>既に対象年月はすぎています。</FontColorRed>}
-                      {errors.orderDate?.type === "overDate" && <FontColorRed>既に対象年月日はすぎています。</FontColorRed>}
+                      {errors.orderDate?.type === "justOverDate" && <FontColorRed>既に対象年月日はすぎています。</FontColorRed>}
                       {errors.orderDate?.type === "justDate" && <FontColorRed>明日以降の日付を選択してください。</FontColorRed>}
                     </div>
                     {/* 名前の入力 */}
