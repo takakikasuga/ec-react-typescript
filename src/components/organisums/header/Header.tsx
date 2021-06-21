@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 
@@ -123,8 +123,6 @@ export const Header = () => {
 
   // オートコンプリートの値取得,商品を取得
   const serchItems = (value: string) => {
-    history.push("/")
-    console.log("発火しています。")
     setSearchItem(value)
     setSearchItem((pre) => {
       console.log(pre)

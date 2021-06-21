@@ -60,33 +60,37 @@ export const Items = () => {
           </div>
         </>
         :
-        <FlecItems>
-          {items.map((item: any, index: number) => (
-            <Card className={classes.root} key={index}>
-              <CardActionArea key={index}>
-                <CardMedia
-                  className={classes.media}
-                  image={item.imagePath}
-                  title={item.name}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    {item.name}
-                  </Typography>
-                  <ItemdetailPrice item={item}></ItemdetailPrice>
-                </CardContent>
-              </CardActionArea>
-              <CardActions>
-                <FavoriteIconHeart></FavoriteIconHeart>
-                <StarIcon></StarIcon>
-              </CardActions>
-              <div onClick={() => { changeToDetail(`/detail/${item.id}`) }}>
-                <PrimaryButton>詳細へ</PrimaryButton>
-              </div>
-            </Card>
-
-          ))}
-        </FlecItems>
+        <>
+          <FlecItems>
+            {items.map((item: any, index: number) => (
+              <Card className={classes.root} key={index}>
+                <CardActionArea key={index}>
+                  <CardMedia
+                    className={classes.media}
+                    image={item.imagePath}
+                    title={item.name}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {item.name}
+                    </Typography>
+                    <ItemdetailPrice item={item}></ItemdetailPrice>
+                  </CardContent>
+                </CardActionArea>
+                <CardActions>
+                  <FavoriteIconHeart></FavoriteIconHeart>
+                  <StarIcon></StarIcon>
+                </CardActions>
+                <div onClick={() => { changeToDetail(`/detail/${item.id}`) }}>
+                  <PrimaryButton>詳細へ</PrimaryButton>
+                </div>
+              </Card>
+            ))}
+          </FlecItems>
+          <div onClick={displayItems}>
+            <PrimaryButton>商品一覧へ</PrimaryButton>
+          </div>
+        </>
       }
     </>
   );
