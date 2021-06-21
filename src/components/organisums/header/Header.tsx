@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 
 // 機能のインポート
 import { selectUserId, selectUserName, loginUserAsync, signOutUserInfoAsync } from '../../../features/user/userSlice'
@@ -101,6 +101,7 @@ export const Header = () => {
   const suggestItems: fetchItems[] = useSelector(selectSuggestItems)
   const [searchItem, setSearchItem] = useState<string>("")
   const localCartStrage = useSelector(selectLocalCartStrage)
+  const location = useLocation();
 
   const login = () => {
     console.log('login')
@@ -122,6 +123,8 @@ export const Header = () => {
 
   // オートコンプリートの値取得,商品を取得
   const serchItems = (value: string) => {
+    history.push("/")
+    console.log("発火しています。")
     setSearchItem(value)
     setSearchItem((pre) => {
       console.log(pre)
@@ -131,6 +134,9 @@ export const Header = () => {
       return pre
     })
   }
+  console.log("location", location.pathname)
+  console.log("location", typeof location.pathname)
+  console.log(location.pathname as unknown as string === "/")
 
   return (
     <div className={classes.root}>
@@ -139,30 +145,32 @@ export const Header = () => {
           <Typography onClick={() => { history.push('/') }} className={classes.title} variant="h6" noWrap>
             EC-Rakuraku-Rakuten
           </Typography>
-          <Autocomplete
-            onChange={(event: any, value: string) => { serchItems(value) }}
-            freeSolo
-            id="free-solo-2-demo"
-            disableClearable
-            options={suggestItems.map((option) => option.name)}
-            renderInput={(params: any): React.ReactNode => (
-              <TextField
-                onKeyPress={
-                  (e) => {
-                    if (e.key == 'Enter') {
-                      e.preventDefault();
+
+          {!(location.pathname as unknown as string === "/") ? "" :
+            <Autocomplete
+              onChange={(event: any, value: string) => { serchItems(value) }}
+              freeSolo
+              id="free-solo-2-demo"
+              disableClearable
+              options={suggestItems.map((option) => option.name)}
+              renderInput={(params: any): React.ReactNode => (
+                <TextField
+                  onKeyPress={
+                    (e) => {
+                      if (e.key == 'Enter') {
+                        e.preventDefault();
+                      }
                     }
                   }
-                }
-                className={classes.serchItems}
-                {...params}
-                label="商品検索"
-                margin="normal"
-                variant="outlined"
-                InputProps={{ ...params.InputProps, type: 'search' }}
-              />
-            )}
-          />
+                  className={classes.serchItems}
+                  {...params}
+                  label="商品検索"
+                  margin="normal"
+                  variant="outlined"
+                  InputProps={{ ...params.InputProps, type: 'search' }}
+                />
+              )}
+            />}
           <div className={classes.flex}>
             {!userName ? <Typography className={classes.margin}>ようこそ ゲスト さん</Typography> : <Typography className={classes.margin}>ようこそ {userName} さん</Typography>}
             {!userId ?
