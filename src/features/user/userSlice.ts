@@ -44,6 +44,8 @@ export const registerUserInfoAsync = createAsyncThunk('register/registerUserInfo
 
 export const signOutUserInfoAsync = createAsyncThunk('signOut/signOutUserInfo', async () => {
   await firebase.auth().signOut()
+  console.log(initialState)
+  // デフォルトに戻す
   return initialState
 });
 
@@ -81,7 +83,6 @@ export const userSlice = createSlice({
     })
     // signOutUserInfoAsyncの非同期通信だった時
     builder.addCase(signOutUserInfoAsync.fulfilled, (state, action) => {
-      console.log('signOutUserInfoAsync', signOutUserInfoAsync)
       console.log('signOutUserInfoAsync', state, action)
       return {
         ...state,

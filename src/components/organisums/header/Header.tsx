@@ -5,8 +5,9 @@ import { useHistory } from 'react-router-dom'
 // 機能のインポート
 import { selectUserId, selectUserName, loginUserAsync, signOutUserInfoAsync } from '../../../features/user/userSlice'
 import { fetchItemsAsync, selectItems, searchItemsAsync } from '../../../features/items/itemsSlice'
-import { deleteOrderItem, fetchOrderAsync, selectFetchOrder } from '../../../features/order/fetchOrderSlice'
+import { deleteOrderItem, fetchOrderAsync, selectFetchOrder, logoutUserItems } from '../../../features/order/fetchOrderSlice'
 import { selectSuggestItems } from '../../../features/suggest/suggestSlice'
+import { logoutUserHistoryItems } from "../../../features/order/orderHistorySlice"
 
 // コンポーネント
 import { SearchInput } from '../../atoms/search/SearchInput'
@@ -106,6 +107,15 @@ export const Header = () => {
   const logout = () => {
     console.log('logout')
     dispatch(signOutUserInfoAsync())
+
+    // ログアウト同時に、カートリスト/注文確認画面の中身を削除
+    dispatch(logoutUserItems())
+
+    // ログアウト同時に、注文履歴画面の中身を削除
+    dispatch(logoutUserHistoryItems())
+
+    // ログアウトしたらトップページに画面遷移
+    history.push("/")
   }
 
   // オートコンプリートの値取得,商品を取得
@@ -114,6 +124,7 @@ export const Header = () => {
     setSearchItem((pre) => {
       console.log(pre)
       console.log('次で発火します')
+      // useStateは値が変更されないため、関数型で取得する
       dispatch(searchItemsAsync(pre))
       return pre
     })
@@ -126,14 +137,13 @@ export const Header = () => {
           <Typography onClick={() => { history.push('/') }} className={classes.title} variant="h6" noWrap>
             EC-Rakuraku-Rakuten
           </Typography>
-          {/* <SearchInput></SearchInput> */}
           <Autocomplete
             onChange={(event: any, value: string) => { serchItems(value) }}
             freeSolo
             id="free-solo-2-demo"
             disableClearable
             options={suggestItems.map((option) => option.name)}
-            renderInput={(params: any): any => (
+            renderInput={(params: any): React.ReactNode => (
               <TextField
                 onKeyPress={
                   (e) => {

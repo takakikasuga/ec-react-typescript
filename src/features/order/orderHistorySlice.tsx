@@ -65,21 +65,6 @@ export const cancelOrderHistoryAsync = createAsyncThunk('cancelOrderHistory/canc
       .then(() => {
         console.log('キャンセルへstatusを変更しました。')
       })
-    // 解決方法が見つからず、連続で非同期通信を行い最新のFirebaseのstatusが0以外の情報を取得する
-    // await ordersRef
-    //   // statusが0以外の注文情報を拾ってくる
-    //   .where('status', '!=', 0)
-    //   .get()
-    //   .then((querySnapshot) => {
-    //     querySnapshot.forEach((doc) => {
-    //       console.log(doc.id)
-    //       let object = doc.data() as FetchObject
-    //       // 注文情報のIDをオブジェクトに持たせる
-    //       object.orderUniqueId = doc.id
-    //       console.log(object)
-    //       orderHistory.push(object)
-    //     });
-    //   });
   }
 
   return uniqueOrderId
@@ -90,15 +75,19 @@ export const orderHistorySlice = createSlice({
   initialState,
 
   reducers: {
-    cancelOrderStatus: (state, action: any) => {
+    cancelOrderStatus: (state, action) => {
       console.log('cancelOrderStatusが発火', state, action)
-
       return state
     },
-    // setUserName: (state) => {
-    //   state.value -= 1;
-    // },
+    // ログアウト同時に、注文履歴の中身を削除
+    logoutUserHistoryItems: (state) => {
+      console.log("logoutUserHistoryItemsが発火します。")
+      console.log(current(state))
+      state.splice(0)
+      console.log(current(state))
+      return state
 
+    },
     // defaultUserStatus: (state, action: PayloadAction<number>) => {
     //   state.value += action.payload;
     // },
@@ -135,7 +124,7 @@ export const orderHistorySlice = createSlice({
   },
 });
 
-export const { cancelOrderStatus } = orderHistorySlice.actions;
+export const { cancelOrderStatus, logoutUserHistoryItems } = orderHistorySlice.actions;
 
 
 export const selectOrderHistory = (state: RootState) => state.orderHistory

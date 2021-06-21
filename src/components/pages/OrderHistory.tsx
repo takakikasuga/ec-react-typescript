@@ -49,6 +49,7 @@ export const OrderHistory = () => {
     // stateのuserIdが変化するたびに取得する
   }, [userId])
 
+  console.log(orderHistory)
 
   return (
     <>

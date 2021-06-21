@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction, current } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import firebase from 'firebase'
 
@@ -75,7 +75,16 @@ export const fetchOrderSlice = createSlice({
       updateItem.splice(action.payload, 1)
       return updateItem
     },
+    // ログアウト同時に、カートリスト/注文確認画面の中身を削除
+    logoutUserItems: (state) => {
+      console.log("logoutOrderItemが発火します。")
+      console.log(current(state))
+      state.splice(0)
+      console.log(current(state))
+      return state
+    }
   },
+
 
   extraReducers: (builder) => {
 
@@ -91,7 +100,7 @@ export const fetchOrderSlice = createSlice({
   },
 });
 
-export const { deleteOrderItem } = fetchOrderSlice.actions;
+export const { deleteOrderItem, logoutUserItems } = fetchOrderSlice.actions;
 
 
 export const selectFetchOrder = (state: RootState) => state.fetchOrder

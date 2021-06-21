@@ -33,6 +33,8 @@ function App() {
     dispach(registerUserInfoAsync())
     dispach(fetchItemsAsync())
     dispach(suggestItemsAsync())
+    // 画面リロード時にユーザーローカルストレージのアイテム情報を削除
+    localStorage.removeItem("LOCAL_CART_LISTS")
   }, [dispach])
 
   useEffect(() => {

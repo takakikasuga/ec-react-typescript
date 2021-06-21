@@ -14,6 +14,7 @@ import orderHistoryReducer from '../features/order/orderHistorySlice'
 import suggestItemsReducer from '../features/suggest/suggestSlice'
 import adminReducer from '../features/admin/adminSlice'
 import adminItemsReducer from '../features/items/adminItemsSlice'
+import localCartStrageReducer from '../features/cartLists/localCartStrageSlice'
 
 
 export const store = configureStore({
@@ -33,6 +34,7 @@ export const store = configureStore({
     suggestItems: suggestItemsReducer,
     admin: adminReducer,
     adminItems: adminItemsReducer,
+    localCartStrage: localCartStrageReducer,
   },
 });
 

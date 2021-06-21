@@ -12,7 +12,7 @@ import { addOrderAsync, selectAddOrder } from '../../features/order/orderSlice'
 import { selectUserId } from '../../features/user/userSlice'
 import { selectFetchOrder } from '../../features/order/fetchOrderSlice'
 import { orderUpdateAsync } from '../../features/order/orderUpdateSlice'
-
+import { setLocalCartStrage, selectLocalCartStrage } from "../../features/cartLists/localCartStrageSlice"
 
 // コンポーネント
 import { PrimaryButton } from '../atoms/button/PrimaryButton'
@@ -32,6 +32,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { display } from '@material-ui/system';
+import { CollectionsOutlined } from '@material-ui/icons'
 
 
 
@@ -60,6 +61,7 @@ export const Deatail = () => {
   const itemCount: number = useSelector(selectItemCount)
   const userId: string | null = useSelector(selectUserId)
   const fetchData: any = useSelector(selectFetchOrder)
+  const localCartStrage: any = useSelector(selectLocalCartStrage)
   const { id }: Params = useParams()
 
   // 詳細画面に一致する商品を抽出する
@@ -87,15 +89,27 @@ export const Deatail = () => {
           status: 0
         },
       }
-      // statusが0のものが存在するか否かでの場合わけ（新規or追加）
-      console.log(fetchData)
-      console.log(fetchData.length, '=== 0', '新規追加')
-      console.log(fetchData.length, '!== 0', '更新')
-      if (!fetchData.length) {
-        dispatch(addOrderAsync(addOrder))
+      // ログインがされている状態であればFirebaseを用いた非同期通信を行い、カート情報を追加する
+      console.log("ログイン状態の確認", userId)
+      if (userId) {
+        // statusが0のものが存在するか否かでの場合わけ（新規or追加）
+        console.log(fetchData)
+        console.log(fetchData.length, '=== 0', '新規追加')
+        console.log(fetchData.length, '!== 0', '更新')
+        if (!fetchData.length) {
+          dispatch(addOrderAsync(addOrder))
+        } else {
+          dispatch(orderUpdateAsync(addOrder))
+        }
+        // ログインがされていない場合は、ローカルストレージに商品を保存する
       } else {
-        dispatch(orderUpdateAsync(addOrder))
+        const newStrageCartItems = [...localCartStrage]
+        newStrageCartItems.push(addOrder.orderInfo)
+        localStorage.setItem("LOCAL_CART_LISTS", JSON.stringify(newStrageCartItems))
+        dispatch(setLocalCartStrage(addOrder))
+        console.log("ローカルストレージを確認してください。")
       }
+
       // カートリストへ画面遷移
       history.push(path)
     }
