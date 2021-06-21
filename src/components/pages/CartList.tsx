@@ -9,6 +9,7 @@ import { DeleteButton } from '../atoms/button/DeleteButton'
 import { PrimaryButton } from '../atoms/button/PrimaryButton'
 import { TableHeaer } from "../organisums/tableCart/TableHeader"
 import { TableRowContents } from "../organisums/tableCart/TableRowContents"
+import { selectLocalCartStrage } from "../../features/cartLists/localCartStrageSlice"
 
 // 型のインポート
 import { FetchOrder } from '../../types/order/order'
@@ -41,8 +42,9 @@ export const CartList = () => {
   const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
   const items: fetchItems[] = useSelector(selectItems)
   const orderUpdate = useSelector(selectOrderUpdate)
+  const localCartStrage = useSelector(selectLocalCartStrage)
   // nullを「!」で明示的になくす
-  const userId: string = useSelector(selectUserId)!
+  const userId: string | null = useSelector(selectUserId)
 
   useEffect(() => {
     // string型であることを保証する
@@ -62,34 +64,81 @@ export const CartList = () => {
   }, [])
 
   const orderConfirm = () => {
-    history.push('/orderConfirm')
+    if (userId) {
+      history.push('/orderConfirm')
+    } else {
+      alert("ヘッダーのログインよりアカウントへログインしてください。")
+    }
+
   }
   console.log('アイテムリスト一覧', items)
   return (
     <>
       <Header></Header>
-      {!fetchData.length ? <h2>カートに商品情報はありません</h2> :
-        <ContainerPadding>
-          <TableContainer component={Paper}>
-            <Table className={classes.table} size="small" aria-label="a dense table">
-              <TableHeaer></TableHeaer>
-              <TableBody>
-                {/* 商品idとfetchDataのitemIDが一致するオブジェクトを返却する */}
-                {fetchData.map((row: FetchOrder, index: number) => {
-                  let imageObject = items.find((element) => {
-                    return element.id === row.itemId
-                  })
-                  return (
-                    <TableRowContents row={row} indexNum={index} key={index} imagePath={imageObject?.imagePath}></TableRowContents>
-                  )
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <span onClick={() => { orderConfirm() }}>
-            <PrimaryButton>注文確認画面へ</PrimaryButton>
-          </span>
-        </ContainerPadding>
+      {/* ログイン状態かつFirebaseのstatus0の商品がない場合 */}
+      {!fetchData.length && userId
+        ? <h2>カートに商品情報はありません（ログイン状態かつFirebaseのstatus0の商品がない場合）</h2>
+        // ログインしていない状態でカート情報がない場合
+        : !localCartStrage.length && !userId
+          ? <h2>カートに商品情報はありません（ ログインしていない状態でカート情報がない場合）</h2>
+          // ログインしていない状態でローカルストレージに商品情報がある場合
+          : localCartStrage.length && !userId
+            ?
+            <>
+              {console.log(localCartStrage, localCartStrage.orderItems)}
+              <h2>ログインしていない状態でローカルストレージに商品情報がある場合</h2>
+              <ContainerPadding>
+                <TableContainer component={Paper}>
+                  <Table className={classes.table} size="small" aria-label="a dense table">
+                    <TableHeaer></TableHeaer>
+                    {localCartStrage.map((array: any, index: number) => {
+                      return (
+                        <TableBody>
+                          {/* 商品idとfetchDataのitemIDが一致するオブジェクトを返却する */}
+                          {array.map((row: any, index: number) => {
+                            let imageObject = items.find((element) => {
+                              return element.id === row.itemId
+                            })
+                            return (
+                              <TableRowContents row={row} indexNum={index} key={index} imagePath={imageObject?.imagePath}></TableRowContents>
+                            )
+                          })}
+                        </TableBody>
+                      )
+                    })}
+                  </Table>
+                </TableContainer>
+                <span onClick={() => { orderConfirm() }}>
+                  <PrimaryButton>注文確認画面へ</PrimaryButton>
+                </span>
+              </ContainerPadding>
+            </>
+            /* ログイン状態かつFirebaseのstatus0の商品がある場合*/
+            :
+            <>
+              <h2>ログイン状態かつFirebaseのstatus0の商品がある場合</h2>
+              <ContainerPadding>
+                <TableContainer component={Paper}>
+                  <Table className={classes.table} size="small" aria-label="a dense table">
+                    <TableHeaer></TableHeaer>
+                    <TableBody>
+                      {/* 商品idとfetchDataのitemIDが一致するオブジェクトを返却する */}
+                      {fetchData.map((row: FetchOrder, index: number) => {
+                        let imageObject = items.find((element) => {
+                          return element.id === row.itemId
+                        })
+                        return (
+                          <TableRowContents row={row} indexNum={index} key={index} imagePath={imageObject?.imagePath}></TableRowContents>
+                        )
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <span onClick={() => { orderConfirm() }}>
+                  <PrimaryButton>注文確認画面へ</PrimaryButton>
+                </span>
+              </ContainerPadding>
+            </>
       }
     </>
   );

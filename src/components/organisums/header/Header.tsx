@@ -8,6 +8,7 @@ import { fetchItemsAsync, selectItems, searchItemsAsync } from '../../../feature
 import { deleteOrderItem, fetchOrderAsync, selectFetchOrder, logoutUserItems } from '../../../features/order/fetchOrderSlice'
 import { selectSuggestItems } from '../../../features/suggest/suggestSlice'
 import { logoutUserHistoryItems } from "../../../features/order/orderHistorySlice"
+import { selectLocalCartStrage } from "../../../features/cartLists/localCartStrageSlice"
 
 // コンポーネント
 import { SearchInput } from '../../atoms/search/SearchInput'
@@ -99,6 +100,7 @@ export const Header = () => {
   const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
   const suggestItems: fetchItems[] = useSelector(selectSuggestItems)
   const [searchItem, setSearchItem] = useState<string>("")
+  const localCartStrage = useSelector(selectLocalCartStrage)
 
   const login = () => {
     console.log('login')
@@ -164,10 +166,17 @@ export const Header = () => {
           <div className={classes.flex}>
             {!userName ? <Typography className={classes.margin}>ようこそ ゲスト さん</Typography> : <Typography className={classes.margin}>ようこそ {userName} さん</Typography>}
             {!userId ?
-              <span onClick={login} className={classes.flexColum}>
-                <ExitToAppIcon></ExitToAppIcon>
-                <span className={classes.fontHeaderSize}>ログイン</span>
-              </span>
+              <>
+                <span onClick={() => { history.push('/cartlist') }} className={classes.flexColum + " " + classes.margin + " " + classes.positionRelative}>
+                  <p className={classes.cartCount}>{localCartStrage.length}</p>
+                  <ShoppingCartIcon></ShoppingCartIcon>
+                  <span className={classes.fontHeaderSize}>カート</span>
+                </span>
+                <span onClick={login} className={classes.flexColum}>
+                  <ExitToAppIcon></ExitToAppIcon>
+                  <span className={classes.fontHeaderSize}>ログイン</span>
+                </span>
+              </>
               :
               <>
 

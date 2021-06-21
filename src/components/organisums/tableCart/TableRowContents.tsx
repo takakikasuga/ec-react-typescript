@@ -11,6 +11,7 @@ import { FetchOrder } from "../../../types/order/order"
 import { deleteOrderItem, deleteOrderAsync, selectFetchOrder } from '../../../features/order/fetchOrderSlice'
 import { selectUserId } from '../../../features/user/userSlice'
 import { selectStatusZeroId } from '../../../features/statusZeroId/statusZeroIdSlice'
+import { deleteLocalCartStrage } from "../../../features/cartLists/localCartStrageSlice"
 
 // NoImageのインポート
 import noImage from "../../../noImage/noImage.png"
@@ -43,13 +44,22 @@ export const TableRowContents = React.memo((props: any) => {
 
   // 注文情報の削除
   const deleteCart = (indexNum: number) => {
-    dipatch(deleteOrderItem(indexNum))
-    // 直接参照しているstoreのデータを削除することができないのでコピー
-    const updateFetchData = [...fetchData]
-    // string型であることを保証する
-    if (typeof userId === 'string') {
-      updateFetchData.splice(indexNum, 1)
-      dipatch(deleteOrderAsync({ userId, statusZeroId, updateFetchData }))
+    if (window.confirm("本当に削除しますか？？")) {
+      // ログインしている状態であれば以下の処理を行う
+      if (userId) {
+        dipatch(deleteOrderItem(indexNum))
+        // 直接参照しているstoreのデータを削除することができないのでコピー
+        const updateFetchData = [...fetchData]
+        // string型であることを保証する
+        if (typeof userId === 'string') {
+          updateFetchData.splice(indexNum, 1)
+          dipatch(deleteOrderAsync({ userId, statusZeroId, updateFetchData }))
+        }
+        // ログインしている状態でなければ以下の処理を行う
+      } else {
+        console.log("ログインしていない時のカートの削除を行う")
+        dipatch(deleteLocalCartStrage(indexNum))
+      }
     }
   }
   return (

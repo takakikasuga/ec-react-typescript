@@ -104,7 +104,7 @@ export const Deatail = () => {
         // ログインがされていない場合は、ローカルストレージに商品を保存する
       } else {
         const newStrageCartItems = [...localCartStrage]
-        newStrageCartItems.push(addOrder.orderInfo)
+        newStrageCartItems.push(addOrder.orderInfo.orderItems)
         localStorage.setItem("LOCAL_CART_LISTS", JSON.stringify(newStrageCartItems))
         dispatch(setLocalCartStrage(addOrder))
         console.log("ローカルストレージを確認してください。")
