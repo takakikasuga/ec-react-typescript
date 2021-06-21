@@ -9,6 +9,9 @@ import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUserId } from './features/user/userSlice'
 
+import { Provider } from 'react-redux';
+// import { store } from './store/reduxStore';
+
 // 管理者IDのインポート
 import { AdminIdTest } from "./admin/admin"
 // / 型のインポート
@@ -45,13 +48,14 @@ function App() {
 
 
   useEffect(() => {
-    if (userId) {
-      // 管理者IDと一致しない場合
-      if (userId !== AdminIdTest) {
-        dispach(fetchItemsAsync())
-        dispach(suggestItemsAsync())
-      }
-    }
+    dispach(fetchItemsAsync())
+    dispach(suggestItemsAsync())
+    // if (userId) {
+    //   // 管理者IDと一致しない場合
+    //   if (userId !== AdminIdTest) {
+
+    //   }
+    // }
   }, [dispach, userId])
 
   useEffect(() => {
@@ -73,6 +77,7 @@ function App() {
   }, [userId, fetchData.length])
 
   return (
+    // <Provider store={store}>
     <div className="App">
       <Router>
         <Link to='/cartlist'>ショッピングカート</Link><br />
@@ -92,6 +97,7 @@ function App() {
         </Switch>
       </Router>
     </div>
+    // </Provider>
   );
 }
 
