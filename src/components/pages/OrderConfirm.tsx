@@ -150,6 +150,7 @@ export const OrderConfirm = () => {
   }
   console.log('watchメソッド', watch())
   console.log('watchメソッド', watch().orderDate)
+  console.log('watchメソッド', Number(watch().orderDate?.slice(0, 4)), new Date().getFullYear())
   console.log('register', register)
   console.log(control)
   console.log(errors)
@@ -187,7 +188,36 @@ export const OrderConfirm = () => {
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div>
                       <TextField
-                        {...register("orderDate", { required: '配達希望日を入力してください' })}
+                        {...register("orderDate", {
+                          required: '配達希望日を入力してください',
+                          validate: {
+                            overYear: (data: any): any => {
+                              // console.log("data", data)
+                              // console.log("Number(data?.slice(0, 4))", Number(data?.slice(0, 4)))
+                              // console.log("new Date().getFullYear()", new Date().getFullYear())
+                              console.log(Number(data?.slice(0, 4)) >= new Date().getFullYear())
+                              return Number(data?.slice(0, 4)) >= new Date().getFullYear()
+                            },
+                            overMonth: (data: any): any => {
+                              console.log("data", data)
+                              console.log(" Number(data?.slice(5, 7))", Number(data?.slice(5, 7)))
+                              console.log(" new Date().getMonth()", new Date().getMonth() + 1)
+                              console.log(Number(data?.slice(5, 7)) >= new Date().getMonth() + 1)
+                              return (Number(data?.slice(5, 7)) >= new Date().getMonth() + 1)
+                            },
+                            overDate: (data: any): any => {
+                              console.log("data", data)
+                              console.log("Number(data?.slice(8, 10))", Number(data?.slice(8, 10)))
+                              console.log(" new Date().getDate()", new Date().getDate())
+                              console.log(Number(data?.slice(8, 10)) >= new Date().getDate())
+                              return (Number(data?.slice(8, 10)) >= new Date().getDate())
+                            },
+                            justDate: (data: any): any => {
+                              console.log(!(Number(data?.slice(8, 10)) === new Date().getDate()))
+                              return !(Number(data?.slice(8, 10)) === new Date().getDate())
+                            }
+                          }
+                        })}
                         id="date"
                         label="配達希望日"
                         type="date"
@@ -197,6 +227,10 @@ export const OrderConfirm = () => {
                           shrink: true,
                         }}
                       />
+                      {errors.orderDate?.type === "overYear" && <FontColorRed>既に対象年はすぎています。</FontColorRed>}
+                      {errors.orderDate?.type === "overMonth" && <FontColorRed>既に対象年月はすぎています。</FontColorRed>}
+                      {errors.orderDate?.type === "overDate" && <FontColorRed>既に対象年月日はすぎています。</FontColorRed>}
+                      {errors.orderDate?.type === "justDate" && <FontColorRed>明日以降の日付を選択してください。</FontColorRed>}
                     </div>
                     {/* 名前の入力 */}
                     <div>
