@@ -103,14 +103,14 @@ export const Deatail = () => {
         }
         // ログインがされていない場合は、ローカルストレージに商品を保存する
       } else {
-        const newStrageCartItems = [...localCartStrage]
-        newStrageCartItems.push(addOrder.orderInfo.orderItems)
-        localStorage.setItem("LOCAL_CART_LISTS", JSON.stringify(newStrageCartItems))
+        // Firebaseにおける一意のidを作成する代わりに今の日付で作成、追加する
+        let id = new Date().getTime().toString();
+        // 現状の情報に一意のId（uniqueItemId）を追加
+        addOrder.orderInfo.orderItems[0].uniqueItemId = id
         dispatch(setLocalCartStrage(addOrder))
-        console.log("ローカルストレージを確認してください。")
       }
 
-      // カートリストへ画面遷移
+      // カートリストへ画面遷移z
       history.push(path)
     }
   }

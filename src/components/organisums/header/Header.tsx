@@ -168,7 +168,7 @@ export const Header = () => {
             {!userId ?
               <>
                 <span onClick={() => { history.push('/cartlist') }} className={classes.flexColum + " " + classes.margin + " " + classes.positionRelative}>
-                  <p className={classes.cartCount}>{localCartStrage.length}</p>
+                  <p className={classes.cartCount}>{localCartStrage.orderItems.length}</p>
                   <ShoppingCartIcon></ShoppingCartIcon>
                   <span className={classes.fontHeaderSize}>カート</span>
                 </span>

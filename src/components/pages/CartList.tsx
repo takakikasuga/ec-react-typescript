@@ -69,9 +69,9 @@ export const CartList = () => {
     } else {
       alert("ヘッダーのログインよりアカウントへログインしてください。")
     }
-
   }
   console.log('アイテムリスト一覧', items)
+  console.log(JSON.parse(localStorage.getItem("LOCAL_CART_LISTS") as string))
   return (
     <>
       <Header></Header>
@@ -79,10 +79,10 @@ export const CartList = () => {
       {!fetchData.length && userId
         ? <h2>カートに商品情報はありません（ログイン状態かつFirebaseのstatus0の商品がない場合）</h2>
         // ログインしていない状態でカート情報がない場合
-        : !localCartStrage.length && !userId
+        : !localCartStrage.orderItems.length && !userId
           ? <h2>カートに商品情報はありません（ ログインしていない状態でカート情報がない場合）</h2>
           // ログインしていない状態でローカルストレージに商品情報がある場合
-          : localCartStrage.length && !userId
+          : localCartStrage.orderItems.length && !userId
             ?
             <>
               {console.log(localCartStrage, localCartStrage.orderItems)}
@@ -91,18 +91,13 @@ export const CartList = () => {
                 <TableContainer component={Paper}>
                   <Table className={classes.table} size="small" aria-label="a dense table">
                     <TableHeaer></TableHeaer>
-                    {localCartStrage.map((array: any, index: number) => {
+                    {localCartStrage.orderItems.map((row: any, index: number) => {
+                      let imageObject = items.find((element) => {
+                        return element.id === row.itemId
+                      })
                       return (
                         <TableBody>
-                          {/* 商品idとfetchDataのitemIDが一致するオブジェクトを返却する */}
-                          {array.map((row: any, index: number) => {
-                            let imageObject = items.find((element) => {
-                              return element.id === row.itemId
-                            })
-                            return (
-                              <TableRowContents row={row} indexNum={index} key={index} imagePath={imageObject?.imagePath}></TableRowContents>
-                            )
-                          })}
+                          <TableRowContents row={row} indexNum={index} key={index} imagePath={imageObject?.imagePath}></TableRowContents>
                         </TableBody>
                       )
                     })}

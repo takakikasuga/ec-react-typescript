@@ -20,7 +20,25 @@ export const fetchOrderAsync = createAsyncThunk('fetchOrder/fetchOrderAsync', as
       .collection('users')
       .doc(userId)
       .collection('orders');
-  // statusが0の注文情報をFirestoreから引っ張ってくる
+  // ローカルストレージの状況に応じて処理を分岐
+  // ローカルストレージに商品情報が存在する場合（status0に追加及び新規登録）
+  // if (localStorage.getItem("LOCAL_CART_LISTS")) {
+  //   console.log("ローカルストレージに値を保持しています。")
+  //   // ローカルストレージに値を保持していない場合
+  // } else {
+  //   // statusが0の注文情報をFirestoreから引っ張ってくる
+  //   await ordersRef
+  //     .where('status', '==', 0)
+  //     .get()
+  //     .then((querySnapshot) => {
+  //       querySnapshot.forEach((doc) => {
+  //         fetchOrderStatus = doc.data().orderItems
+  //       })
+  //     })
+  //     .catch((error) => {
+  //       console.log(error)
+  //     });
+  // }
   await ordersRef
     .where('status', '==', 0)
     .get()
@@ -32,6 +50,7 @@ export const fetchOrderAsync = createAsyncThunk('fetchOrder/fetchOrderAsync', as
     .catch((error) => {
       console.log(error)
     });
+
   console.log('status = 0の情報fetchOrderStatusの中身を確認', fetchOrderStatus)
   return fetchOrderStatus
 });
