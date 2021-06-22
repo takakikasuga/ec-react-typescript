@@ -33,9 +33,8 @@ const useStyles = makeStyles({
 export const TableRowContents = React.memo((props: any) => {
   const classes = useStyles();
   console.log(props)
-  const { description, imagePath, name, price, indexNum, uniqueId, id } = props
+  const { description, imagePath, name, price, uniqueId, id } = props
   const dipatch = useDispatch()
-  const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
   // nullを「!」で明示的になくす
   const userId: string = useSelector(selectUserId)!
   const statusZeroId = useSelector(selectStatusZeroId)
