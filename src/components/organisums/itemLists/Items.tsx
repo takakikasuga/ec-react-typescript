@@ -34,7 +34,7 @@ const useStyles = makeStyles({
     height: 300,
   },
 });
-export const Items = () => {
+export const Items = ({ outputConsole }: any) => {
   const items: fetchItems[] = useSelector(selectItems)
   const dispatch = useDispatch()
   const history = useHistory()
@@ -46,6 +46,7 @@ export const Items = () => {
 
   // アイテム一覧を再表示する
   const displayItems = () => {
+    outputConsole("テスト関数が発火しました。")
     dispatch(fetchItemsAsync())
   }
 
@@ -55,7 +56,8 @@ export const Items = () => {
       {!items.length ?
         <>
           <h1>該当する商品がございません。</h1>
-          <div onClick={displayItems}>
+
+          <div data-testid="発火テスト" onClick={displayItems} >
             <PrimaryButton>商品一覧へ</PrimaryButton>
           </div>
         </>
@@ -87,9 +89,10 @@ export const Items = () => {
               </Card>
             ))}
           </FlecItems>
-          <div onClick={displayItems}>
+          <div onClick={displayItems} >
             <PrimaryButton>商品一覧へ</PrimaryButton>
           </div>
+          <div data-testid="onClickEvent">0</div>
         </>
       }
     </>
@@ -104,4 +107,6 @@ const FlecItems = styled.div`
   justify-content: center;
   align-items: flex-start;
 `
+
+
 

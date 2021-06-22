@@ -63,14 +63,16 @@ export const ItemCount = (props: any) => {
 
   return (
     <div>
-      <Button className={classes.borderLine} onClick={handleClickOpen}>{children}</Button>
+      <Button data-testid="itemCountTest" className={classes.borderLine} onClick={handleClickOpen}>{children}</Button>
       <span>：{Number(count)}個</span>
       <Dialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
-        <DialogTitle>個数を選択してください。</DialogTitle>
+        <DialogTitle data-testid="itemCountTestSuprise"  >個数を選択してください。</DialogTitle>
         <DialogContent>
           <form className={classes.container}>
             <FormControl className={classes.formControl}>
-              <InputLabel id="demo-dialog-select-label">ItemCount</InputLabel>
+              <InputLabel
+                data-testid="itemCountTestNumber"
+                id="demo-dialog-select-label">ItemCount</InputLabel>
               <Select
                 labelId="demo-dialog-select-label"
                 id="demo-dialog-select"

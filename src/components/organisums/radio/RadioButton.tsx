@@ -35,8 +35,8 @@ export const RadioButton = memo((props: RadioProps) => {
     <FormControl component="fieldset" style={{ textAlign: "left" }}>
       <FormLabel component="legend">商品サイズ</FormLabel>
       <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-        <FormControlLabel value={String(Math.round((detail!.price!.m! * 1.1)))} control={<Radio />} label={`M-Size：${Number(Math.round((detail!.price!.m! * 1.1))).toLocaleString()}円（税込）`} />
-        <FormControlLabel value={String(Math.round((detail!.price!.l! * 1.1)))} control={<Radio />} label={`L-Size：${Number(Math.round((detail!.price!.l! * 1.1))).toLocaleString()}円（税込）`} />
+        <FormControlLabel value={String(Math.round((detail!.price!.m! * 1.1)))} control={<Radio data-testid="mPrice" />} label={`M-Size：${Number(Math.round((detail!.price!.m! * 1.1))).toLocaleString()}円（税込）`} />
+        <FormControlLabel value={String(Math.round((detail!.price!.l! * 1.1)))} control={<Radio data-testid="lPrice" />} label={`L-Size：${Number(Math.round((detail!.price!.l! * 1.1))).toLocaleString()}円（税込）`} />
       </RadioGroup>
     </FormControl>
   )

@@ -24,10 +24,15 @@ export const Home = () => {
     }
   }, [userId])
 
+  // テスト用
+  const output = (text: string) => {
+    console.log(text);
+  };
+
   return (
     <>
       <Header></Header>
-      <Items></Items>
+      <Items outputConsole={output}></Items>
     </>
   )
 }
