@@ -38,11 +38,16 @@ export const ItemCount = (props: any) => {
   const [count, setCount] = useState<number | string>('');
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setCount(Number(event.target.value) || '');
-    setCount((pre: number | string) => {
-      dispatch(setItemCount(Number(pre)))
-      return pre
-    })
+    // useState内部で扱うとエラーが起きるので、一度変数に入れてから対応
+    const selectedItemCount = Number(event.target.value)
+    setCount(Number(event.target.value))
+    dispatch(setItemCount(selectedItemCount))
+    // 下記を実行するとエラーが生じる
+    // setCount(Number(event.target.value) || '');
+    // setCount((pre: number | string) => {
+    //   dispatch(setItemCount(Number(pre)))
+    //   return pre
+    // })
   };
 
   const handleClickOpen = () => {

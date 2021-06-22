@@ -128,7 +128,7 @@ export const Deatail = () => {
             </FlexItems>
             <div>
               <h4>合計金額</h4>
-              <p>{(itemPrice * itemCount)}円（税込）</p>
+              <p>{Number(itemPrice * itemCount).toLocaleString()}円（税込）</p>
             </div>
           </Grid>
         </Grid>
