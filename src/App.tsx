@@ -74,12 +74,12 @@ function App() {
     // <Provider store={store}>
     <div className="App">
       <Router>
-        <Link to='/cartlist'>ショッピングカート</Link><br />
+        {/* <Link to='/cartlist'>ショッピングカート</Link><br />
         <Link to='/orderConfirm'>注文確認画面</Link><br />
-        <Link to='/orderHistory'>注文履歴画面</Link><br />
+        <Link to='/orderHistory'>注文履歴画面</Link><br /> */}
         <Link to='/'>トップページ</Link><br />
-        <Link to='/admin'>アドミン</Link><br />
-        <Link to='/adminItems'>アドミンアイテム</Link><br />
+        <Link to='/admin'>管理者ページ</Link><br />
+        <Link to='/adminItems'>追加済みアイテム</Link><br />
         <Switch>
           <Route exact path="/detail/:id" component={Deatail} />
           <Route exact path="/adminItems" component={AdminItems} />

@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { selectItems } from '../../features/items/itemsSlice'
 import { selectItemPrice } from '../../features/itemPrice/itemPriceSlice'
 import { selectItemCount } from '../../features/itemCount/itemCountSlice'
-import { addOrderAsync, selectAddOrder } from '../../features/order/orderSlice'
+import { addOrderAsync } from '../../features/order/orderSlice'
 import { selectUserId } from '../../features/user/userSlice'
 import { selectFetchOrder } from '../../features/order/fetchOrderSlice'
 import { orderUpdateAsync } from '../../features/order/orderUpdateSlice'
@@ -23,16 +23,12 @@ import { Header } from '../organisums/header/Header'
 // 型のインポート
 import { Params } from '../../types/params/parameter'
 import { fetchItems } from '../../types/items/items'
-import { AddOrder, OrderUpdate } from '../../types/order/order'
-import { FetchOrder } from '../../types/order/order'
 import { firebaseOrderInfo } from '../../types/order/firebaseOrderInfo'
 
 // マテリアルUI
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { display } from '@material-ui/system';
-import { CollectionsOutlined } from '@material-ui/icons'
 
 
 
@@ -61,7 +57,6 @@ export const Deatail = () => {
   const itemCount: number = useSelector(selectItemCount)
   const userId: string | null = useSelector(selectUserId)
   const fetchData: any = useSelector(selectFetchOrder)
-  const localCartStrage: any = useSelector(selectLocalCartStrage)
   const { id }: Params = useParams()
 
   // 詳細画面に一致する商品を抽出する
@@ -149,6 +144,7 @@ const ImageWrapper = styled.img`
   object-fit: cover;
   width: 80%;
   margin:0 auto;
+  max-height: 800px;
 `
 const FlexItems = styled.div`
   display: flex;
