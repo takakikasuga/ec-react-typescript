@@ -11,7 +11,6 @@ export const itemPrice = createSlice({
 
   reducers: {
     setItemPrice: (state, action: PayloadAction<number>) => {
-      console.log('setItemPriceが発火', state, action)
       return state = action.payload
     },
   },

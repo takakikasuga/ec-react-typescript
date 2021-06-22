@@ -100,23 +100,11 @@ export const adminSlice = createSlice({
   extraReducers: (builder) => {
     // loginUserAsyncの非同期通信だった時
     builder.addCase(uploadItemDataAsync.fulfilled, (state, action: PayloadAction<AdminItems>) => {
-      console.log(state.length)
       // 既存のstateにpushして配列の中身の情報をローカルで更新する
       state.push(action.payload)
-      console.log(current(state))
       return state
     })
-    // 待機中の実装一時断念（pendingの理解を深める）
-    // builder.addCase(uploadItemDataAsync.pending, (state, action) => {
-    //   console.log("pending中")
-    //   state.splice(0)
-    //   console.log(state)
-    //   return state
-    // })
-    // fetchUploadItemDataの非同期通信だった時
     builder.addCase(fetchUploadItemData.fulfilled, (state, action: any) => {
-      console.log(state, action)
-      console.log("fetchUploadItemData", state, action.payload)
       return action.payload
     })
   },

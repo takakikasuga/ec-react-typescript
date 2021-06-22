@@ -17,7 +17,6 @@ interface UpdateStatus {
 
 export const updateOrderStatusAsync = createAsyncThunk('updateOrderStatus/updateOrderStatusAsync', async (purchase: any) => {
   const { statusZeroId, userId, update } = purchase
-  console.log(purchase)
 
   // 注文情報のstatusの更新
   await firebase
@@ -35,31 +34,15 @@ export const updateOrderStatusSlice = createSlice({
   name: 'orderUpdate',
   initialState,
 
-  reducers: {
-    // setUserId: (state) => {
-
-    //   state.value += 1;
-    // },
-    // setUserName: (state) => {
-    //   state.value -= 1;
-    // },
-
-    // defaultUserStatus: (state, action: PayloadAction<number>) => {
-    //   state.value += action.payload;
-    // },
-  },
+  reducers: {},
 
   extraReducers: (builder) => {
     // addOrderAsyncの非同期通信だった時
     builder.addCase(updateOrderStatusAsync.fulfilled, (state: any, action: any) => {
-      console.log('updateOrderStatusAsync', state, action)
       return state
     })
   },
 });
-
-// export const { increment, decrement, incrementByAmount } = counterSlice.actions;
-
 
 export const selectUpdateOrderStatus = (state: RootState) => state.updateOrderStatus
 

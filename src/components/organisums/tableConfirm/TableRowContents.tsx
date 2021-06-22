@@ -29,9 +29,7 @@ const useStyles = makeStyles({
 // 現状propsの型定義方法の理解ができていない
 export const TableRowContents = React.memo((props: any) => {
   const classes = useStyles();
-  console.log(props)
   const { row, indexNum, imagePath } = props
-  console.log(row, indexNum)
   const dipatch = useDispatch()
   const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
   // nullを「!」で明示的になくす

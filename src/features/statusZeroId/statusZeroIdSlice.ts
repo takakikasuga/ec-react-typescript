@@ -32,19 +32,7 @@ export const statusZeroIdSlice = createSlice({
   name: 'items',
   initialState,
 
-  reducers: {
-    // setUserId: (state) => {
-
-    //   state.value += 1;
-    // },
-    // setUserName: (state) => {
-    //   state.value -= 1;
-    // },
-
-    // defaultUserStatus: (state, action: PayloadAction<number>) => {
-    //   state.value += action.payload;
-    // },
-  },
+  reducers: {},
 
   extraReducers: (builder) => {
     // loginUserAsyncの非同期通信だった時

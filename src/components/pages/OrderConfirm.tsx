@@ -129,8 +129,6 @@ export const OrderConfirm = () => {
 
   // 入力フォーム完了時
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log('onSubmitが発火しました。')
-    console.log(data)
     // オブジェクトをコピー
     const update = { ...data }
     // 代引きでcreditNumbernのプロパティを保持している時は削除
@@ -139,7 +137,6 @@ export const OrderConfirm = () => {
     }
     // 入力したstatusをnumber型として代入する
     update.status = update.status as number
-    console.log(typeof update.status)
     // 注文情報の総合計金額をいれる
     update.totoalPrice = Number(totoalPrice)
     const updateObject = {
@@ -149,12 +146,6 @@ export const OrderConfirm = () => {
     }
     dipatch(updateOrderStatusAsync(updateObject))
   }
-  console.log('watchメソッド', watch())
-  console.log('watchメソッド', watch().orderDate)
-  console.log('watchメソッド', Number(watch().orderDate?.slice(0, 4)), new Date().getFullYear())
-  console.log('register', register)
-  console.log(control)
-  console.log(errors)
 
   return (
     <>
@@ -204,7 +195,6 @@ export const OrderConfirm = () => {
                               }
                             },
                             justDate: (data: any): any => {
-                              console.log(!(Number(data?.slice(8, 10)) === new Date().getDate()))
                               if ((Number(data?.slice(0, 4)) === new Date().getFullYear()) && (Number(data?.slice(5, 7)) === new Date().getMonth() + 1) && (Number(data?.slice(8, 10)) === new Date().getDate())) {
                                 return false
                               }
@@ -360,7 +350,6 @@ export const OrderConfirm = () => {
                       name="status"
                       control={control}
                       render={({ field }) => {
-                        console.log(field)
                         return (
                           <RadioGroup aria-label="pay" {...field} name="payMethod">
                             <FormControlLabel

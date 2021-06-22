@@ -49,8 +49,6 @@ export const OrderHistory = () => {
     // stateのuserIdが変化するたびに取得する
   }, [userId])
 
-  console.log(orderHistory)
-
   return (
     <>
       <Header></Header>
@@ -65,7 +63,6 @@ export const OrderHistory = () => {
                   <Table className={classes.table} size="small" aria-label="a dense table" style={{ marginTop: "30px" }} key={index}>
                     <TableHeaer></TableHeaer>
                     <TableBody style={{ padding: "30px" }}>
-                      {console.log(order)}
                       {order.orderItems.map((orderList: OrderItems, index: number) => {
                         let imageObject = items.find((element) => {
                           return element.id === orderList.itemId

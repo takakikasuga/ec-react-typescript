@@ -36,9 +36,6 @@ export const AdminItems = () => {
   const dispatch = useDispatch()
   const adminItems: FetchAdminItems = useSelector(selectAdminItems)
 
-  console.log(adminItems)
-
-
   useEffect(() => {
     // 追加した商品一覧を取得する
     dispatch(fetchAdminItemsAsync())

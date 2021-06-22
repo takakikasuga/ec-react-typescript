@@ -32,16 +32,13 @@ const useStyles = makeStyles({
 // 現状propsの型定義方法の理解ができていない
 export const TableRowContents = (props: any) => {
   const classes = useStyles();
-  console.log(props)
   const { row, indexNum, imagePath } = props
-  console.log(row, indexNum)
   const dipatch = useDispatch()
   const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
   // nullを「!」で明示的になくす
   const userId: string = useSelector(selectUserId)!
   const statusZeroId = useSelector(selectStatusZeroId)
 
-  console.log("statusZeroId", statusZeroId)
   // 注文情報の削除
   const deleteCart = (indexNum: number) => {
     if (window.confirm("本当に削除しますか？？")) {
@@ -57,7 +54,6 @@ export const TableRowContents = (props: any) => {
         }
         // ログインしている状態でなければ以下の処理を行う
       } else {
-        console.log("ログインしていない時のカートの削除を行う")
         dipatch(deleteLocalCartStrage(indexNum))
       }
     }

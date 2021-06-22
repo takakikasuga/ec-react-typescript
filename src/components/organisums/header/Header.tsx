@@ -104,11 +104,9 @@ export const Header = () => {
   const location = useLocation();
 
   const login = () => {
-    console.log('login')
     dispatch(loginUserAsync())
   }
   const logout = () => {
-    console.log('logout')
     dispatch(signOutUserInfoAsync())
 
     // ログアウト同時に、カートリスト/注文確認画面の中身を削除
@@ -125,16 +123,11 @@ export const Header = () => {
   const serchItems = (value: string) => {
     setSearchItem(value)
     setSearchItem((pre) => {
-      console.log(pre)
-      console.log('次で発火します')
       // useStateは値が変更されないため、関数型で取得する
       dispatch(searchItemsAsync(pre))
       return pre
     })
   }
-  console.log("location", location.pathname)
-  console.log("location", typeof location.pathname)
-  console.log(location.pathname as unknown as string === "/")
 
   return (
     <div className={classes.root}>

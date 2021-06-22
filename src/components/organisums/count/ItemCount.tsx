@@ -39,7 +39,6 @@ export const ItemCount = (props: any) => {
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setCount(Number(event.target.value) || '');
     setCount((pre: number | string) => {
-      console.log(pre)
       dispatch(setItemCount(Number(pre)))
       return pre
     })

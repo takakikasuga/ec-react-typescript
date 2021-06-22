@@ -34,7 +34,6 @@ export const fetchAdminItemsAsync = createAsyncThunk('fetchAdminItems/fetchAdmin
       return 1;
     }
   });
-  console.log(fetchAdminItemsData)
   return fetchAdminItemsData
 });
 
@@ -61,17 +60,14 @@ export const adminItemsSlice = createSlice({
   extraReducers: (builder) => {
     // fetchAdminItemsAsyncの非同期通信だった時
     builder.addCase(fetchAdminItemsAsync.fulfilled, (state, action: PayloadAction<FetchAdminItems>) => {
-      console.log('fetchAdminItemsAsync', state, action)
       return action.payload
     })
     // updateAdminItemsの非同期通信だった時
     builder.addCase(updateAdminItemsAsync.fulfilled, (state, action: any) => {
-      console.log('updateAdminItemsAsync', state, action)
       // 削除対象の一意のインデックスを取得
       let deleteIndex: number | undefined = state.adminItems?.findIndex((element) => {
         return action.payload === element.uniqueId
       })
-      console.log("deleteIndex", deleteIndex)
       if (typeof deleteIndex === "number") {
         state.adminItems?.splice(deleteIndex, 1)
       }

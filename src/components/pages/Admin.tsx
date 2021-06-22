@@ -54,12 +54,10 @@ export const Admin = () => {
   const [image, setImage] = useState<null | any>(null)
   const [flag, setFlag] = useState<boolean>(false)
   const dispatch = useDispatch()
-  console.log("Admin確認")
 
   const { register, handleSubmit, watch, formState: { errors }, control } = useForm<UploadState>();
 
   useEffect(() => {
-    console.log("useEffectが発火")
     dispatch(fetchUploadItemData())
   }, [])
 
@@ -75,12 +73,8 @@ export const Admin = () => {
     // 文字列である金額をparseIntメソッドで10進数の数値に変換
     const new_Price_m = parseInt(data.price_m as string, 10)
     const new_Price_l = parseInt(data.price_l as string, 10)
-    console.log(image.name)
-    console.log(image.name.slice(-3))
-
 
     let newItemId = adminArray![adminArray.length - 1]!.id! + 1
-    console.log("アイテムIDの確認", newItemId)
 
     // imageファイルがアップロードされていない場合
     if (!image) {

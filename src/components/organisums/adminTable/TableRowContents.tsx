@@ -1,16 +1,10 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 // コンポーネント
 import { DeleteButton } from '../../atoms/button/DeleteButton'
 
-// 型のインポート
-import { FetchOrder } from "../../../types/order/order"
-
 // 各種機能のインポート
-import { deleteOrderItem, deleteOrderAsync, selectFetchOrder } from '../../../features/order/fetchOrderSlice'
-import { selectUserId } from '../../../features/user/userSlice'
-import { selectStatusZeroId } from '../../../features/statusZeroId/statusZeroIdSlice'
 import { updateAdminItemsAsync } from "../../../features/items/adminItemsSlice"
 
 // マテリアルUI
@@ -29,17 +23,11 @@ const useStyles = makeStyles({
   }
 });
 
-// 現状propsの型定義方法の理解ができていない
+// 現状propsの型定義方法が理解ができていない
 export const TableRowContents = React.memo((props: any) => {
   const classes = useStyles();
-  console.log(props)
   const { description, imagePath, name, price, uniqueId, id } = props
   const dipatch = useDispatch()
-  // nullを「!」で明示的になくす
-  const userId: string = useSelector(selectUserId)!
-  const statusZeroId = useSelector(selectStatusZeroId)
-
-  console.log("商品情報のユニークなID", uniqueId)
 
   // 注文情報の削除
   const deleteAdminItem = (uniqueId: string) => {

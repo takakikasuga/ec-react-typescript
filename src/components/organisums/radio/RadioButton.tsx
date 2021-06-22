@@ -19,7 +19,6 @@ export const RadioButton = memo((props: RadioProps) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue((event.target as HTMLInputElement).value);
     setValue((pre: string) => {
-      console.log(pre)
       dispatch(setItemPrice(Number(pre)))
       return pre
     })

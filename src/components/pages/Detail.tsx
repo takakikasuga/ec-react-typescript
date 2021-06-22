@@ -69,7 +69,6 @@ export const Deatail = () => {
     return item.id === Number(id)
   })
 
-  console.log('商品idに紐づく商品オブジェクトの取得', itemDetail)
   const addOrder = (path: string) => {
     if (itemPrice === 0) {
       alert(`${itemDetail[0].name}のサイズを選択してください。`)
@@ -90,12 +89,8 @@ export const Deatail = () => {
         },
       }
       // ログインがされている状態であればFirebaseを用いた非同期通信を行い、カート情報を追加する
-      console.log("ログイン状態の確認", userId)
       if (userId) {
         // statusが0のものが存在するか否かでの場合わけ（新規or追加）
-        console.log(fetchData)
-        console.log(fetchData.length, '=== 0', '新規追加')
-        console.log(fetchData.length, '!== 0', '更新')
         if (!fetchData.length) {
           dispatch(addOrderAsync(addOrder))
         } else {

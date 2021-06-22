@@ -8,8 +8,6 @@ import { firebaseOrderInfo } from '../../types/order/firebaseOrderInfo'
 const initialState: any = ''
 
 export const orderUpdateAsync = createAsyncThunk('orderUpdate/orderUpdateAsync', async (addOrder: firebaseOrderInfo) => {
-  console.log('orderUpdateAsyncが発火します')
-  console.log('UpdateAsyncのaddOrderの中身を確認', addOrder)
   // addOrderを展開してコピー
   let newAddOrder = { ...addOrder }
   // userIdの型をstring保証する
@@ -43,7 +41,6 @@ export const orderUpdateAsync = createAsyncThunk('orderUpdate/orderUpdateAsync',
           ),
         });
       });
-    console.log('orderUpdateAsyncのnewAddOrderの中身を確認', newAddOrder)
   }
   return newAddOrder.orderInfo.orderItems
 });
@@ -52,24 +49,11 @@ export const orderUpdateSlice = createSlice({
   name: 'orderUpdate',
   initialState,
 
-  reducers: {
-    // setUserId: (state) => {
-
-    //   state.value += 1;
-    // },
-    // setUserName: (state) => {
-    //   state.value -= 1;
-    // },
-
-    // defaultUserStatus: (state, action: PayloadAction<number>) => {
-    //   state.value += action.payload;
-    // },
-  },
+  reducers: {},
 
   extraReducers: (builder) => {
     // addOrderAsyncの非同期通信だった時
     builder.addCase(orderUpdateAsync.fulfilled, (state: any, action: any) => {
-      console.log('orderUpdateAsyncのactionとstate', state, action.payload)
       // useEffectの第二引数で監視するためにスプレッド演算子で展開
       let updateItems = [...state, action.payload]
       return updateItems

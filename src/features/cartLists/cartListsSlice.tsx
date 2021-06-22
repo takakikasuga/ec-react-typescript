@@ -9,7 +9,6 @@ export const cartLists = createSlice({
 
   reducers: {
     setCartList: (state, action: PayloadAction<number>) => {
-      console.log('cartListsが発火', state, action)
       return state = action.payload
     },
   },

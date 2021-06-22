@@ -100,11 +100,9 @@ export const AdminHeader = () => {
   const [searchItem, setSearchItem] = useState<string>("")
 
   const login = () => {
-    console.log('login')
     dispatch(loginUserAsync())
   }
   const logout = () => {
-    console.log('logout')
     dispatch(signOutUserInfoAsync())
   }
 
@@ -112,8 +110,6 @@ export const AdminHeader = () => {
   const serchItems = (value: string) => {
     setSearchItem(value)
     setSearchItem((pre) => {
-      console.log(pre)
-      console.log('次で発火します')
       dispatch(searchItemsAsync(pre))
       return pre
     })

@@ -71,8 +71,6 @@ export const CartList = () => {
       alert("ヘッダーのログインよりアカウントへログインしてください。")
     }
   }
-  console.log('アイテムリスト一覧', items)
-  console.log(JSON.parse(localStorage.getItem("LOCAL_CART_LISTS") as string))
   return (
     <>
       <Header></Header>
@@ -86,7 +84,6 @@ export const CartList = () => {
           : localCartStrage.orderItems.length && !userId
             ?
             <>
-              {console.log(localCartStrage, localCartStrage.orderItems)}
               <h2>ログインしていない状態でローカルストレージに商品情報がある場合</h2>
               <ContainerPadding>
                 <TableContainer component={Paper}>
@@ -97,7 +94,7 @@ export const CartList = () => {
                         return element.id === row.itemId
                       })
                       return (
-                        <TableBody>
+                        <TableBody key={index}>
                           <TableRowContents row={row} indexNum={index} key={index} imagePath={imageObject?.imagePath}></TableRowContents>
                         </TableBody>
                       )

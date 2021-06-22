@@ -9,7 +9,6 @@ export const itemCount = createSlice({
 
   reducers: {
     setItemCount: (state, action: PayloadAction<number>) => {
-      console.log('setItemCountが発火', state, action)
       return state = action.payload
     },
   },
