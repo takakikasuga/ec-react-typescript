@@ -36,18 +36,6 @@ export const TableRowContents = React.memo((props: any) => {
   const userId: string = useSelector(selectUserId)!
   const statusZeroId = useSelector(selectStatusZeroId)
 
-
-  // 注文情報の削除
-  const deleteCart = (indexNum: number) => {
-    dipatch(deleteOrderItem(indexNum))
-    // 直接参照しているstoreのデータを削除することができないのでコピー
-    const updateFetchData = [...fetchData]
-    // string型であることを保証する
-    if (typeof userId === 'string') {
-      updateFetchData.splice(indexNum, 1)
-      dipatch(deleteOrderAsync({ userId, statusZeroId, updateFetchData }))
-    }
-  }
   return (
     <TableRow>
       <TableCell component="th" scope="row" style={{ width: '240px' }}>
@@ -59,9 +47,9 @@ export const TableRowContents = React.memo((props: any) => {
           title="Contemplative Reptile"
         />
       </TableCell>
-      <TableCell align="right">{row.itemPrice}</TableCell>
-      <TableCell align="right">{row.itemCount}</TableCell>
-      <TableCell align="right">{((row.itemPrice) * (row.itemCount))}</TableCell>
+      <TableCell align="right">{Number(row.itemPrice).toLocaleString()}円</TableCell>
+      <TableCell align="right">{row.itemCount}個</TableCell>
+      <TableCell align="right">{Number(((row.itemPrice) * (row.itemCount))).toLocaleString()}円</TableCell>
     </TableRow>
   )
 })

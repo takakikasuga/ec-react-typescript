@@ -35,7 +35,6 @@ export const TableRowContents = React.memo((props: any) => {
   // nullを「!」で明示的になくす
   const userId: string = useSelector(selectUserId)!
 
-
   // 注文情報の削除のキャンセル
   const cancelOrder = (uniqueOrderId: string | undefined) => {
     // string型の保証
@@ -55,12 +54,12 @@ export const TableRowContents = React.memo((props: any) => {
           title="Contemplative Reptile"
         />
       </TableCell>
-      <TableCell align="right">{orderList.itemPrice}</TableCell>
+      <TableCell align="right">{Number(orderList.itemPrice).toLocaleString()}円</TableCell>
       <TableCell align="right">{orderList.itemCount}</TableCell>
-      <TableCell align="right">{(orderList.itemPrice * orderList.itemCount)}円（税込）</TableCell>
+      <TableCell align="right">{Number(orderList.itemPrice * orderList.itemCount).toLocaleString()}円</TableCell>
       {order.orderItems.length === (indexNum + 1)
-        ? <TableCell align="right">{(order.totoalPrice)}円（税込）</TableCell>
-        : ""}
+        ? <TableCell align="right">{Number(order.totoalPrice).toLocaleString()}円</TableCell>
+        : null}
       {/* 発送済みまたはキャンセル済みまたはこの注文をキャンセルを場合分け */}
       <TableCell align="right">
         {order.orderItems.length === (indexNum + 1) && order.status === 9
@@ -73,7 +72,6 @@ export const TableRowContents = React.memo((props: any) => {
           : order.orderItems.length === (indexNum + 1) && order.status !== 9 && (Number(order.orderDate?.slice(0, 4)) < new Date().getFullYear())
             ?
             <>
-              <p>年が未満の場合</p>
               <p>配達希望日：{order.orderDate}</p>
               <Button disabled={true} variant="contained">発送済み</Button>
             </>
@@ -81,7 +79,6 @@ export const TableRowContents = React.memo((props: any) => {
             : order.orderItems.length === (indexNum + 1) && order.status !== 9 && (Number(order.orderDate?.slice(0, 4)) === new Date().getFullYear()) && (Number(order.orderDate?.slice(5, 7)) < new Date().getMonth() + 1)
               ?
               <>
-                <p>年は一緒だけど、月は未満の場合</p>
                 <p>配達希望日：{order.orderDate}</p>
                 <Button disabled={true} variant="contained">発送済み</Button>
               </>
@@ -89,7 +86,6 @@ export const TableRowContents = React.memo((props: any) => {
               : order.orderItems.length === (indexNum + 1) && order.status !== 9 && (Number(order.orderDate?.slice(0, 4)) === new Date().getFullYear()) && (Number(order.orderDate?.slice(5, 7)) === new Date().getMonth() + 1) && (Number(order.orderDate?.slice(8, 10)) <= new Date().getDate())
                 ?
                 <>
-                  <p>年は一緒だけど、月は一緒だけれど日付が以下の場合</p>
                   <p>配達希望日：{order.orderDate}</p>
                   <Button disabled={true} variant="contained">発送済み</Button>
                 </>
@@ -100,7 +96,7 @@ export const TableRowContents = React.memo((props: any) => {
                     <Button onClick={() => { cancelOrder(order.orderUniqueId) }} variant="contained">この注文をキャンセル</Button>
 
                   </>
-                  : ""
+                  : null
         }
       </TableCell>
     </TableRow>

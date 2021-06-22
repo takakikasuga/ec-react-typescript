@@ -53,7 +53,6 @@ export const OrderHistory = () => {
     <>
       <Header></Header>
       <h1>注文履歴画面です</h1>
-
       {!orderHistory.length ? <h2>注文履歴がございません。</h2> :
         <ContainerPadding>
           <TableContainer component={Paper}>
@@ -68,7 +67,7 @@ export const OrderHistory = () => {
                           return element.id === orderList.itemId
                         })
                         return (
-                          <TableRowContents order={order} orderList={orderList} indexNum={index} key={index} imagePath={imageObject?.imagePath}></TableRowContents>
+                          <TableRowContents order={order} orderList={orderList} indexNum={index} key={index} imagePath={imageObject?.imagePath} />
                         )
                       })}
                     </TableBody>

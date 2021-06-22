@@ -127,10 +127,10 @@ export const CartList = () => {
                     </TableBody>
                   </Table>
                 </TableContainer>
-                <span onClick={() => { orderConfirm() }}>
-                  <PrimaryButton>注文確認画面へ</PrimaryButton>
-                </span>
               </ContainerPadding>
+              <span onClick={() => { orderConfirm() }}>
+                <PrimaryButton>注文確認画面へ</PrimaryButton>
+              </span>
             </>
       }
     </>
@@ -138,5 +138,6 @@ export const CartList = () => {
 }
 
 const ContainerPadding = styled.div`
-  padding:0 40px
+  padding:0 40px;
+  margin-bottom: 32px;
 `

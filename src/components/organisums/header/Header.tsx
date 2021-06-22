@@ -184,10 +184,6 @@ export const Header = () => {
                   <ShoppingCartIcon></ShoppingCartIcon>
                   <span className={classes.fontHeaderSize}>カート</span>
                 </span>
-                <span className={classes.flexColum + " " + classes.margin}>
-                  <StarIcon></StarIcon>
-                  <span className={classes.fontHeaderSize}>お気に入り</span>
-                </span>
                 <span onClick={() => { history.push('/orderHistory') }} className={classes.flexColum + " " + classes.margin}>
                   <ViewListIcon></ViewListIcon>
                   <span className={classes.fontHeaderSize}>注文履歴</span>

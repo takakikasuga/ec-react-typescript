@@ -69,9 +69,9 @@ export const TableRowContents = (props: any) => {
           title="Contemplative Reptile"
         />
       </TableCell>
-      <TableCell align="right">{(row.itemPrice)}</TableCell>
+      <TableCell align="right">{Number(row.itemPrice).toLocaleString()}円</TableCell>
       <TableCell align="right">{row.itemCount}</TableCell>
-      <TableCell align="right">{((row.itemPrice) * (row.itemCount))}</TableCell>
+      <TableCell align="right">{Number((row.itemPrice) * (row.itemCount)).toLocaleString()}円</TableCell>
       <TableCell align="right">
         <span onClick={() => { deleteCart(indexNum) }}>
           <DeleteButton></DeleteButton>
