@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 
 // 機能のインポート
 import { selectUserId, selectUserName, loginUserAsync, signOutUserInfoAsync } from '../../../features/user/userSlice'
-import { fetchItemsAsync, selectItems, searchItemsAsync } from '../../../features/items/itemsSlice'
-import { deleteOrderItem, fetchOrderAsync, selectFetchOrder, logoutUserItems } from '../../../features/order/fetchOrderSlice'
+import { searchItemsAsync } from '../../../features/items/itemsSlice'
+import { selectFetchOrder, logoutUserItems } from '../../../features/order/fetchOrderSlice'
 import { selectSuggestItems } from '../../../features/suggest/suggestSlice'
 import { logoutUserHistoryItems } from "../../../features/order/orderHistorySlice"
 import { selectLocalCartStrage } from "../../../features/cartLists/localCartStrageSlice"
-
-// コンポーネント
-import { SearchInput } from '../../atoms/search/SearchInput'
 
 
 // 型のインポート
@@ -25,8 +22,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import StarIcon from '@material-ui/icons/Star';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import ViewListIcon from '@material-ui/icons/ViewList';

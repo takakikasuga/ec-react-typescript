@@ -48,8 +48,8 @@ export const TableRowContents = React.memo((props: any) => {
         />
       </TableCell>
       <TableCell className={classes.descriptionWidth} align="left">{description}</TableCell>
-      <TableCell align="left">{(price.m)}</TableCell>
-      <TableCell align="left">{(price.l)}</TableCell>
+      <TableCell align="left">{Number(price.m).toLocaleString()}円</TableCell>
+      <TableCell align="left">{Number(price.l).toLocaleString()}円</TableCell>
       <TableCell align="left">
         <span onClick={() => { deleteAdminItem(uniqueId) }}>
           <DeleteButton></DeleteButton>

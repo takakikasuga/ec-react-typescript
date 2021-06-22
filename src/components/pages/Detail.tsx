@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
@@ -12,7 +12,7 @@ import { addOrderAsync } from '../../features/order/orderSlice'
 import { selectUserId } from '../../features/user/userSlice'
 import { selectFetchOrder } from '../../features/order/fetchOrderSlice'
 import { orderUpdateAsync } from '../../features/order/orderUpdateSlice'
-import { setLocalCartStrage, selectLocalCartStrage } from "../../features/cartLists/localCartStrageSlice"
+import { setLocalCartStrage } from "../../features/cartLists/localCartStrageSlice"
 
 // コンポーネント
 import { PrimaryButton } from '../atoms/button/PrimaryButton'
@@ -108,36 +108,45 @@ export const Deatail = () => {
   return (
     <>
       <Header></Header>
-      <h1>Detailです</h1>
       {itemDetail.map((detail: fetchItems, index: number) => (
-        <Grid container spacing={3} className={classes.root} key={index}>
-          <Grid item xs={12}>
-            <Paper className={classes.paper}>
-              <h3>{detail.name}</h3>
-              <ImageWrapper src={detail!.imagePath!} alt="" />
-              <p>{detail.description}</p>
-            </Paper>
-            <FlexItems>
-              <RadioButton detail={detail}></RadioButton>
-              <ItemCount>数量を選択</ItemCount>
-            </FlexItems>
-            <div>
-              <h4>合計金額</h4>
-              <p>{Number(itemPrice * itemCount).toLocaleString()}円（税込）</p>
-            </div>
+        <ContainerPadding key={index}>
+          <Grid container spacing={3} className={classes.root}>
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <h3>{detail.name}</h3>
+                <ImageWrapper src={detail!.imagePath!} alt="" />
+                <p>{detail.description}</p>
+              </Paper>
+              <FlexItems>
+                <RadioButton detail={detail}></RadioButton>
+                <ItemCount>数量を選択</ItemCount>
+              </FlexItems>
+              <div>
+                <h4>合計金額</h4>
+                <p>{Number(itemPrice * itemCount).toLocaleString()}円（税込）</p>
+              </div>
+            </Grid>
           </Grid>
-        </Grid>
+        </ContainerPadding>
       ))}
-      <WrapperButton onClick={() => { addOrder(`/cartList`) }}>
-        <PrimaryButton>カートに追加</PrimaryButton>
-      </WrapperButton>
+      <Wrapper>
+        <WrapperButton onClick={() => { addOrder(`/cartList`) }}>
+          <PrimaryButton>カートに追加</PrimaryButton>
+        </WrapperButton>
+      </Wrapper>
     </>
   )
 }
 
+const ContainerPadding = styled.div`
+  margin-top: 40px;
+  padding:0 40px;
+  margin-bottom: 32px;
+`
 
 const WrapperButton = styled.span`
   text-align: center;
+  margin-bottom: 32px;
 `
 const ImageWrapper = styled.img`
   display: block;
@@ -150,6 +159,10 @@ const FlexItems = styled.div`
   display: flex;
   align-items:center;
   justify-content: center;
+`
+
+const Wrapper = styled.div`
+  margin-bottom: 32px;
 `
 
 

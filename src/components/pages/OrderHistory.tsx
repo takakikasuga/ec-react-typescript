@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 // コンポーネント
@@ -7,7 +7,7 @@ import { TableHeaer } from '../organisums/tableHistory/TableHeader'
 import { TableRowContents } from '../organisums/tableHistory/TableRowContents'
 
 // 機能
-import { orderHistoryAsync, selectOrderHistory, cancelOrderHistoryAsync } from '../../features/order/orderHistorySlice'
+import { orderHistoryAsync, selectOrderHistory } from '../../features/order/orderHistorySlice'
 import { selectUserId } from '../../features/user/userSlice'
 import { selectItems } from '../../features/items/itemsSlice'
 
@@ -19,12 +19,8 @@ import { fetchItems } from '../../types/items/items'
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
   table: {
@@ -52,7 +48,6 @@ export const OrderHistory = () => {
   return (
     <>
       <Header></Header>
-      <h1>注文履歴画面です</h1>
       {!orderHistory.length ? <h2>注文履歴がございません。</h2> :
         <ContainerPadding>
           <TableContainer component={Paper}>
@@ -82,5 +77,7 @@ export const OrderHistory = () => {
 }
 
 const ContainerPadding = styled.div`
-  padding:0 40px
+   margin-top: 40px;
+  padding:0 40px;
+  margin-bottom: 32px;
 `

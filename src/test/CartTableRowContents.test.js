@@ -1,7 +1,6 @@
 import React from "react"
-import { render, cleanup, screen, fireEvent, waitFor } from "@testing-library/react"
+import { render, cleanup, screen } from "@testing-library/react"
 import { afterEach, expect } from "@jest/globals"
-import userEvent from "@testing-library/user-event"
 import { TableRowContents } from "../components/organisums/tableCart/TableRowContents"
 import { store } from "../app/store"
 import { Provider } from "react-redux"

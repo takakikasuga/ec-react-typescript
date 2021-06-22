@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import styled from "styled-components"
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
@@ -32,7 +33,16 @@ export const Home = () => {
   return (
     <>
       <Header></Header>
-      <Items outputConsole={output}></Items>
+      <ContainerPadding>
+        <Items outputConsole={output}></Items>
+      </ContainerPadding>
     </>
   )
 }
+
+
+const ContainerPadding = styled.div`
+  padding:0 40px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+`

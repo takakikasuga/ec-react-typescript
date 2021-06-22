@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom'
 
 // コンポーネント
 import { Header } from '../organisums/header/Header'
-import { DeleteButton } from '../atoms/button/DeleteButton'
 import { PrimaryButton } from '../atoms/button/PrimaryButton'
 import { TableHeaer } from "../organisums/tableCart/TableHeader"
 import { TableRowContents } from "../organisums/tableCart/TableRowContents"
@@ -83,7 +82,7 @@ export const CartList = () => {
           // ログインしていない状態でローカルストレージに商品情報がある場合
           : localCartStrage.orderItems.length && !userId
             ?
-            <>
+            <Wrapper>
               <h2>ログインしていない状態でローカルストレージに商品情報がある場合</h2>
               <ContainerPadding>
                 <TableContainer component={Paper}>
@@ -101,14 +100,14 @@ export const CartList = () => {
                     })}
                   </Table>
                 </TableContainer>
-                <span onClick={() => { orderConfirm() }}>
-                  <PrimaryButton>注文確認画面へ</PrimaryButton>
-                </span>
               </ContainerPadding>
-            </>
+              <span onClick={() => { orderConfirm() }}>
+                <PrimaryButton>注文確認画面へ</PrimaryButton>
+              </span>
+            </Wrapper>
             /* ログイン状態かつFirebaseのstatus0の商品がある場合*/
             :
-            <>
+            <Wrapper>
               <h2>ログイン状態かつFirebaseのstatus0の商品がある場合</h2>
               <ContainerPadding>
                 <TableContainer component={Paper}>
@@ -131,13 +130,17 @@ export const CartList = () => {
               <span onClick={() => { orderConfirm() }}>
                 <PrimaryButton>注文確認画面へ</PrimaryButton>
               </span>
-            </>
+            </Wrapper>
       }
     </>
   );
 }
 
 const ContainerPadding = styled.div`
+  margin-top: 40px;
   padding:0 40px;
+  margin-bottom: 32px;
+`
+const Wrapper = styled.div`
   margin-bottom: 32px;
 `

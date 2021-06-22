@@ -6,7 +6,6 @@ import styled from 'styled-components'
 
 // コンポーネント
 import { Header } from '../organisums/header/Header'
-import { PrimaryButton } from '../atoms/button/PrimaryButton'
 import { TotalPrice } from '../molecules/itemPrice/TotalPrice'
 import { TableHeaer } from '../organisums/tableConfirm/TableHeader'
 import { TableRowContents } from '../organisums/tableConfirm/TableRowContents'
@@ -27,17 +26,11 @@ import { selectItems } from '../../features/items/itemsSlice'
 import { makeStyles, createStyles, Theme, } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 // 入力フォーム
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
@@ -50,9 +43,7 @@ import RecentActorsIcon from '@material-ui/icons/RecentActors';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
 import Button from '@material-ui/core/Button';
-import { createFalse } from 'typescript';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -160,7 +151,6 @@ export const OrderConfirm = () => {
       <Header></Header>
       {!orderFlag ? " " : <FontColorRed>注文が確定しました。およそ3秒後にトップページへ画面遷移します。</FontColorRed>}
       <ContainerPadding>
-        <h2>OrderConfirmです。</h2>
         {!fetchData.length ? <h2>カートに商品情報はありません</h2> :
           <>
             <TableContainer component={Paper}>
@@ -180,7 +170,9 @@ export const OrderConfirm = () => {
               </Table>
             </TableContainer>
             <TotalPrice totoalPrice={totoalPrice}></TotalPrice>
-            <Button disabled={flag} onClick={() => { changeFlag() }} variant="contained">お届け先情報を入力する</Button>
+            <Wrapper>
+              <Button disabled={flag} onClick={() => { changeFlag() }} variant="contained">お届け先情報を入力する</Button>
+            </Wrapper>
             {/* 入力するを許可したときに入力フィールドが出力される */}
             {!flag ? '' :
               <>
@@ -420,7 +412,8 @@ export const OrderConfirm = () => {
 }
 
 const ContainerPadding = styled.div`
-  padding:0 40px
+  padding:0 40px;
+  margin-top: 40px;
 `
 const BorderLine = styled.div`
   border-bottom:1px solid #000;
@@ -450,4 +443,7 @@ const SubmitButton = styled.input`
      color         : #000066;     /* 背景色     */
      background    : #ffffff;     /* 文字色     */
   }
+`
+const Wrapper = styled.div`
+  margin-bottom: 32px;
 `
