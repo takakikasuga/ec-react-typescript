@@ -12,7 +12,7 @@ describe("DetailのItemCountコンポーネント", () => {
   // 各処理が通った後にアンマウントさせる
   afterEach(() => cleanup())
 
-  describe.only("ItemCountコンポーネントでカウント数のテスト", () => {
+  describe.only("ItemCountコンポーネントで表示テスト", () => {
     test("要素出現の確認", () => {
       render(
         <Provider store={store}>

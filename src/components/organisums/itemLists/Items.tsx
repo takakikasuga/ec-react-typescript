@@ -58,7 +58,7 @@ export const Items = ({ outputConsole }: any) => {
           <h1>該当する商品がございません。</h1>
 
           <div data-testid="発火テスト" onClick={displayItems} >
-            <PrimaryButton>商品一覧へ</PrimaryButton>
+            <PrimaryButton >商品一覧へ</PrimaryButton>
           </div>
         </>
         :
@@ -92,7 +92,6 @@ export const Items = ({ outputConsole }: any) => {
           <div onClick={displayItems} >
             <PrimaryButton>商品一覧へ</PrimaryButton>
           </div>
-          <div data-testid="onClickEvent">0</div>
         </>
       }
     </>

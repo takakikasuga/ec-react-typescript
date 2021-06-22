@@ -25,15 +25,30 @@ describe("Itemsコンポーネント", () => {
 
   describe("特定の文字列を含んでいるか否かの確認", () => {
     test("グローバルのアイテム情報を取得した場合に表示される「詳細」という文字列が初回レンダリング時には存在しないこと", () => {
+      render(
+        <Provider store={store}>
+          <Items />
+        </Provider>
+      )
       // この要素がないことを確かめる
       expect(screen.queryByText(/詳細/)).toBeNull()
     })
     test("グローバルのアイテム情報を取得した場合に表示される「商品一覧へ」という文字列が初回レンダリング時には存在すること", () => {
+      render(
+        <Provider store={store}>
+          <Items />
+        </Provider>
+      )
       // スクリーンオブジェクトでテキストを取得する
       screen.getByText("商品一覧へ")
       expect(screen.getByText("商品一覧へ")).toBeInTheDocument()
     })
     test("いかなる状況下でも「Searches for JavaScript」という文字列が存在しないこと", () => {
+      render(
+        <Provider store={store}>
+          <Items />
+        </Provider>
+      )
       // スクリーンオブジェクトでテキストを取得する
       // HTMLタグで取得して、その中身の存在を確認する
       expect(screen.queryByText(/Searches for JavaScript/)).toBeNull();
@@ -44,13 +59,17 @@ describe("Itemsコンポーネント", () => {
     // test("buttonタグを取得して、type属性が含まれているかの確認", () => {
     //   expect(screen.getByRole("button")).toHaveAttribute("type")
     // })
-    test("buttonタグを取得してその中に文字列が含まれているかの確認", () => {
-      // スクリーンオブジェクトでテキストを取得する
-      // HTMLタグで取得して、その中身の存在wを確認する
-      expect(screen.getByRole("button")).toBeInTheDocument()
-      screen.debug()
-    })
+    render(
+      <Provider store={store}>
+        <Items />
+      </Provider>
+    )
     test("h1タグを取得してその中に文字列が含まれているかの確認", () => {
+      render(
+        <Provider store={store}>
+          <Items />
+        </Provider>
+      )
       // スクリーンオブジェクトでテキストを取得する
       // HTMLタグで取得して、その中身の存在を確認する
       expect(screen.getByRole("heading")).toBeInTheDocument()
@@ -59,11 +78,21 @@ describe("Itemsコンポーネント", () => {
   })
   describe("指定したHTMLタグが要素数を確認", () => {
     test("buttonタグの数を確認（特定数）", () => {
+      render(
+        <Provider store={store}>
+          <Items />
+        </Provider>
+      )
       expect(screen.getAllByRole("button")).toHaveLength(1);
     })
   })
   describe("レンダリングされているかを確認", () => {
     test("全ての要素が正しくレンダリングされているのか否か", () => {
+      render(
+        <Provider store={store}>
+          <Items />
+        </Provider>
+      )
       screen.debug()
       expect(screen.getAllByRole("button")).toBeTruthy();
     })
@@ -83,7 +112,7 @@ describe("Itemsコンポーネント", () => {
       expect(outputConsole).toHaveBeenCalled()
     })
   })
-  describe.only("レンダリングされているかを確認", () => {
+  describe("レンダリングされているかを確認", () => {
     test("data-testidを使った発火テスト", () => {
 
       const outputConsole = jest.fn()

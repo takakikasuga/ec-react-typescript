@@ -7,7 +7,7 @@ import { store } from "../app/store"
 import { Provider } from "react-redux"
 
 
-describe("Itemsコンポーネント", () => {
+describe("RadioButtonコンポーネント", () => {
 
   // 各処理が通った後にアンマウントさせる
   afterEach(() => cleanup())
