@@ -17,7 +17,7 @@ import { fetchItems } from '../../types/items/items'
 
 // 各種機能のインポート
 import { selectOrderUpdate } from '../../features/order/orderUpdateSlice'
-import { fetchOrderAsync, selectFetchOrder } from '../../features/order/fetchOrderSlice'
+import { fetchOrderAsync, selectFetchOrder, orderCompletedItems } from '../../features/order/fetchOrderSlice'
 import { selectUserId } from '../../features/user/userSlice'
 import { updateOrderStatusAsync } from '../../features/order/updateOrderStatusSlice'
 import { statusZeroIdAsync, selectStatusZeroId } from '../../features/statusZeroId/statusZeroIdSlice'
@@ -85,8 +85,9 @@ type Inputs = {
 };
 
 export const OrderConfirm = () => {
+  const history = useHistory()
   const classes = useStyles();
-  const dipatch = useDispatch()
+  const dispatch = useDispatch()
   const statusZeroId = useSelector(selectStatusZeroId)
   const items: fetchItems[] = useSelector(selectItems)
 
@@ -98,6 +99,7 @@ export const OrderConfirm = () => {
   const orderUpdate = useSelector(selectOrderUpdate)
   const fetchData: Array<FetchOrder> = useSelector(selectFetchOrder)
   const [flag, setFlag] = useState<boolean>(false)
+  const [orderFlag, setOrderFlag] = useState<boolean>(false)
 
   const changeFlag = () => {
     setFlag(!flag)
@@ -107,7 +109,7 @@ export const OrderConfirm = () => {
     // string型であることを保証する
     if (typeof userId === 'string') {
       // カートリストの中でstatusが0の注文情報をとってくる
-      dipatch(fetchOrderAsync(userId))
+      dispatch(fetchOrderAsync(userId))
     }
     // orderUpdateの配列状況が変更されるたびに発火して最新のカート情報をFirebaseから取得するようにする。
   }, [orderUpdate.length])
@@ -115,7 +117,7 @@ export const OrderConfirm = () => {
   useEffect(() => {
     if (typeof userId === 'string') {
       // 現在のstatus0の注文情報IDを取得
-      dipatch(statusZeroIdAsync(userId))
+      dispatch(statusZeroIdAsync(userId))
     }
     // 一回だけ発火して現在のstatus0注文情報を取得する
   }, [])
@@ -129,6 +131,11 @@ export const OrderConfirm = () => {
 
   // 入力フォーム完了時
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+    setOrderFlag(true)
+    dispatch(orderCompletedItems())
+    setTimeout(() => {
+      history.push("/")
+    }, 3000)
     // オブジェクトをコピー
     const update = { ...data }
     // 代引きでcreditNumbernのプロパティを保持している時は削除
@@ -144,12 +151,14 @@ export const OrderConfirm = () => {
       userId,
       update,
     }
-    dipatch(updateOrderStatusAsync(updateObject))
+    dispatch(updateOrderStatusAsync(updateObject))
   }
+  console.log(fetchData.length)
 
   return (
     <>
       <Header></Header>
+      {!orderFlag ? " " : <FontColorRed>注文が確定しました。およそ3秒後にトップページへ画面遷移します。</FontColorRed>}
       <ContainerPadding>
         <h2>OrderConfirmです。</h2>
         {!fetchData.length ? <h2>カートに商品情報はありません</h2> :
@@ -420,7 +429,6 @@ const BorderLine = styled.div`
 const FontColorRed = styled.p`
   color:red
 `
-
 const AlignCenter = styled.div`
   text-align: center;
 `

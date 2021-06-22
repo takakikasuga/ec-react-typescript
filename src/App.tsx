@@ -50,12 +50,6 @@ function App() {
   useEffect(() => {
     dispach(fetchItemsAsync())
     dispach(suggestItemsAsync())
-    // if (userId) {
-    //   // 管理者IDと一致しない場合
-    //   if (userId !== AdminIdTest) {
-
-    //   }
-    // }
   }, [dispach, userId])
 
   useEffect(() => {

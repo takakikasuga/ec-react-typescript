@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { setItemCount } from '../../../features/itemCount/itemCountSlice'
+
 // マテリアルUI
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -52,6 +53,9 @@ export const ItemCount = (props: any) => {
     setOpen(false);
   };
 
+  // セレクトボックスのもエラーはマテリアルUIの問題
+  // https://teratail.com/questions/249414
+
   return (
     <div>
       <Button className={classes.borderLine} onClick={handleClickOpen}>{children}</Button>
@@ -66,7 +70,7 @@ export const ItemCount = (props: any) => {
                 labelId="demo-dialog-select-label"
                 id="demo-dialog-select"
                 value={count}
-                onChange={handleChange}
+                onChange={(e) => { handleChange(e) }}
                 input={<Input />}
               >
                 <MenuItem value={0}>0</MenuItem>

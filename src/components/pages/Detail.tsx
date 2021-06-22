@@ -105,7 +105,7 @@ export const Deatail = () => {
         dispatch(setLocalCartStrage(addOrder))
       }
 
-      // カートリストへ画面遷移z
+      // カートリストへ画面遷移
       history.push(path)
     }
   }

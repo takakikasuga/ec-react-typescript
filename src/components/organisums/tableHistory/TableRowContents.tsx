@@ -44,10 +44,9 @@ export const TableRowContents = React.memo((props: any) => {
         dispatch(cancelOrderHistoryAsync({ userId, uniqueOrderId }))
       }
     }
-
   }
   return (
-    <TableRow  >
+    <TableRow>
       <TableCell component="th" scope="row">
         {orderList.itemName}
         <CardMedia
@@ -65,33 +64,38 @@ export const TableRowContents = React.memo((props: any) => {
       {/* 発送済みまたはキャンセル済みまたはこの注文をキャンセルを場合分け */}
       <TableCell align="right">
         {order.orderItems.length === (indexNum + 1) && order.status === 9
-          ? <>
+          ?
+          <>
             <p>配達希望日：{order.orderDate}</p>
             <Button disabled={true} variant="contained">キャンセル済み</Button>
           </>
           // 年が未満の場合
           : order.orderItems.length === (indexNum + 1) && order.status !== 9 && (Number(order.orderDate?.slice(0, 4)) < new Date().getFullYear())
-            ? <>
+            ?
+            <>
               <p>年が未満の場合</p>
               <p>配達希望日：{order.orderDate}</p>
               <Button disabled={true} variant="contained">発送済み</Button>
             </>
             // 年は一緒だけど、月は未満の場合
             : order.orderItems.length === (indexNum + 1) && order.status !== 9 && (Number(order.orderDate?.slice(0, 4)) === new Date().getFullYear()) && (Number(order.orderDate?.slice(5, 7)) < new Date().getMonth() + 1)
-              ? <>
+              ?
+              <>
                 <p>年は一緒だけど、月は未満の場合</p>
                 <p>配達希望日：{order.orderDate}</p>
                 <Button disabled={true} variant="contained">発送済み</Button>
               </>
               // 年は一緒だけど、月は一緒だけれど日付が以下の場合
               : order.orderItems.length === (indexNum + 1) && order.status !== 9 && (Number(order.orderDate?.slice(0, 4)) === new Date().getFullYear()) && (Number(order.orderDate?.slice(5, 7)) === new Date().getMonth() + 1) && (Number(order.orderDate?.slice(8, 10)) <= new Date().getDate())
-                ? <>
+                ?
+                <>
                   <p>年は一緒だけど、月は一緒だけれど日付が以下の場合</p>
                   <p>配達希望日：{order.orderDate}</p>
                   <Button disabled={true} variant="contained">発送済み</Button>
                 </>
                 : order.orderItems.length === (indexNum + 1) && order.status !== 9
-                  ? <>
+                  ?
+                  <>
                     <p>配達希望日：{order.orderDate}</p>
                     <Button onClick={() => { cancelOrder(order.orderUniqueId) }} variant="contained">この注文をキャンセル</Button>
 

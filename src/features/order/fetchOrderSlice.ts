@@ -133,6 +133,10 @@ export const fetchOrderSlice = createSlice({
     logoutUserItems: (state) => {
       state.splice(0)
       return state
+    },
+    orderCompletedItems: (state) => {
+      state.splice(0)
+      return state
     }
   },
 
@@ -148,7 +152,7 @@ export const fetchOrderSlice = createSlice({
   },
 });
 
-export const { deleteOrderItem, logoutUserItems } = fetchOrderSlice.actions;
+export const { deleteOrderItem, logoutUserItems, orderCompletedItems } = fetchOrderSlice.actions;
 
 export const selectFetchOrder = (state: RootState) => state.fetchOrder
 
