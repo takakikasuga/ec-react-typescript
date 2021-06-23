@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CartリストのTableRowContentsコンポーネント jest renderer test render correctly 1`] = `
+<tr
+  className="MuiTableRow-root"
+  role={null}
+>
+  <th
+    aria-sort={null}
+    className="MuiTableCell-root"
+    role="cell"
+    scope="row"
+    style={
+      Object {
+        "width": "240px",
+      }
+    }
+  >
+    <div
+      className="MuiCardMedia-root makeStyles-media-1"
+      style={
+        Object {
+          "backgroundImage": "url(\\"noImage.png\\")",
+        }
+      }
+      title="Contemplative Reptile"
+    />
+  </th>
+  <td
+    aria-sort={null}
+    className="MuiTableCell-root MuiTableCell-alignRight"
+    data-testid="price"
+  >
+    3,000
+    円
+  </td>
+  <td
+    aria-sort={null}
+    className="MuiTableCell-root MuiTableCell-alignRight"
+    data-testid="count"
+  >
+    3
+    個
+  </td>
+  <td
+    aria-sort={null}
+    className="MuiTableCell-root MuiTableCell-alignRight"
+  >
+    9,000
+    円
+  </td>
+  <td
+    aria-sort={null}
+    className="MuiTableCell-root MuiTableCell-alignRight"
+  >
+    <span
+      onClick={[Function]}
+    >
+      <button
+        className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
+        disabled={false}
+        onBlur={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <span
+          className="MuiButton-label"
+        >
+          削除
+        </span>
+      </button>
+    </span>
+  </td>
+</tr>
+`;

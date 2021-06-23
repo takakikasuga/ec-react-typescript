@@ -4,6 +4,7 @@ import { afterEach, expect } from "@jest/globals"
 import { TableRowContents } from "../components/organisums/tableCart/TableRowContents"
 import { store } from "../app/store"
 import { Provider } from "react-redux"
+import renderer from 'react-test-renderer';
 
 
 describe("CartリストのTableRowContentsコンポーネント", () => {
@@ -26,6 +27,16 @@ describe("CartリストのTableRowContentsコンポーネント", () => {
   // 各処理が通った後にアンマウントさせる
   afterEach(() => cleanup())
 
+  describe("jest renderer test", () => {
+    test("render correctly", () => {
+      const tree = renderer
+        .create(<Provider store={store}>
+          <TableRowContents row={row} />
+        </Provider>)
+        .toJSON();
+      expect(tree).toMatchSnapshot();
+    })
+  })
   describe("cartリストのrowコンテンツの確認", () => {
     test("rowコンテンツの金額が3000円であることの表示確認（パターン１）", () => {
       // screen.debug()
