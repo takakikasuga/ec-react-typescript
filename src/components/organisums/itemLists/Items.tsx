@@ -90,7 +90,7 @@ export const Items = ({ outputConsole }: any) => {
             ))}
           </FlecItems>
           <div onClick={displayItems} >
-            <PrimaryButton>商品一覧へ</PrimaryButton>
+            <PrimaryButton>商一覧へ</PrimaryButton>
           </div>
         </>
       }

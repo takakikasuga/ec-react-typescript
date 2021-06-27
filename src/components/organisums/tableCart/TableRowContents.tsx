@@ -70,7 +70,7 @@ export const TableRowContents = (props: any) => {
         />
       </TableCell>
       <TableCell data-testid="price" align="right">{Number(row.itemPrice).toLocaleString()}円</TableCell>
-      <TableCell data-testid="count" align="right">{row.itemCount}</TableCell>
+      <TableCell data-testid="count" align="right">{row.itemCount}個</TableCell>
       <TableCell align="right">{Number((row.itemPrice) * (row.itemCount)).toLocaleString()}円</TableCell>
       <TableCell align="right">
         <span onClick={() => { deleteCart(indexNum) }}>

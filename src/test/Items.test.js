@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event"
 import { Items } from "../components/organisums/itemLists/Items"
 import { store } from "../app/store"
 import { Provider } from "react-redux"
+import renderer from 'react-test-renderer';
 
 
 describe("Itemsコンポーネント", () => {
@@ -93,12 +94,13 @@ describe("Itemsコンポーネント", () => {
           <Items />
         </Provider>
       )
-      screen.debug()
+      // screen.debug()
       expect(screen.getAllByRole("button")).toBeTruthy();
     })
   })
   describe("レンダリングされているかを確認", () => {
     test(" 関数が発火しているか否か", () => {
+
 
       const outputConsole = jest.fn()
       // 関数が発火しているか否か
@@ -107,7 +109,6 @@ describe("Itemsコンポーネント", () => {
           <Items outputConsole={outputConsole} />
         </Provider>
       )
-      // screen.debug()
       userEvent.click(screen.getByRole("button"))
       expect(outputConsole).toHaveBeenCalled()
     })

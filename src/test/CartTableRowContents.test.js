@@ -47,6 +47,7 @@ describe("CartリストのTableRowContentsコンポーネント", () => {
     test("rowコンテンツの金額が3000円であることの表示確認（パターン２）", () => {
       // screen.debug()
       screen.debug(screen.getByTestId("price"))
+      console.log(screen.getByTestId("price").textContent)
       // textContentはDOM要素のtextContentにアクセス
       expect(screen.getByTestId("price").textContent).toBe("3,000円")
     })
@@ -54,6 +55,9 @@ describe("CartリストのTableRowContentsコンポーネント", () => {
       // screen.debug()
       screen.debug(screen.getByTestId("price"))
       // .toBeInTheDocumentはDOM要素があるか否かの確認
+      console.log("アイウエオ")
+
+      console.log(screen.getByTestId("price"))
       expect(screen.getByTestId("price")).toBeInTheDocument()
     })
     test("rowコンテンツの個数が3個であることの表示確認", () => {
