@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { useHistory } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
 
-import { uploadItemDataAsync, fetchUploadItemData, selectAdmin } from '../../features/admin/adminSlice'
+import {
+  uploadItemDataAsync,
+  fetchUploadItemData,
+  selectAdmin,
+} from '../../features/admin/adminSlice';
 // import firebase from 'firebase'
 import { useDispatch, useSelector } from 'react-redux';
 
 // コンポーネント
-import { AdminHeader } from '../organisums/header/AdminHeader'
+import { AdminHeader } from '../organisums/header/AdminHeader';
 
 // マテリアルUI
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
@@ -30,58 +34,65 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     margin: {
       margin: theme.spacing(1),
-      width: "400px"
+      width: '400px',
     },
-  }),
+  })
 );
 
-
 //0〜9の正数（正規表現）
-const numberRegExp = /^([1-9]\d*|0)$/
+const numberRegExp = /^([1-9]\d*|0)$/;
 
 type UploadState = {
   price_m: number | string;
   price_l: number | string;
   description: string;
   name: string;
-  image: any
-}
+  image: any;
+};
 
 export const Admin = () => {
   const classes = useStyles();
-  const history = useHistory()
-  const adminArray = useSelector(selectAdmin)
-  const [image, setImage] = useState<null | any>(null)
-  const [flag, setFlag] = useState<boolean>(false)
-  const dispatch = useDispatch()
+  const history = useHistory();
+  const adminArray = useSelector(selectAdmin);
+  const [image, setImage] = useState<null | any>(null);
+  const [flag, setFlag] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
-  const { register, handleSubmit, watch, formState: { errors }, control } = useForm<UploadState>();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    control,
+  } = useForm<UploadState>();
 
   useEffect(() => {
-    dispatch(fetchUploadItemData())
-  }, [])
+    dispatch(fetchUploadItemData());
+  }, []);
 
   const handleChange = (e: any) => {
     if (e.target.files[0]) {
-      setImage(e.target.files[0])
+      setImage(e.target.files[0]);
     }
-  }
+  };
 
   // Firebaseにアップロードできるとき
   const onSubmit: SubmitHandler<UploadState> = (data: UploadState) => {
-
     // 文字列である金額をparseIntメソッドで10進数の数値に変換
-    const new_Price_m = parseInt(data.price_m as string, 10)
-    const new_Price_l = parseInt(data.price_l as string, 10)
+    const new_Price_m = parseInt(data.price_m as string, 10);
+    const new_Price_l = parseInt(data.price_l as string, 10);
 
-    let newItemId = adminArray![adminArray.length - 1]!.id! + 1
+    let newItemId = adminArray![adminArray.length - 1]!.id! + 1;
 
     // imageファイルがアップロードされていない場合
     if (!image) {
-      alert("画像ファイルをアップロードしてください。")
+      alert('画像ファイルをアップロードしてください。');
       // 画像ファイルの拡張子を検証して問題なければFirebaseに登録する処理を走らせる
-    } else if ((image.name.slice(-3) === "png") || (image.name.slice(-3) === "jpg") || image.name.slice(-4) === "jpeg") {
-
+    } else if (
+      image.name.slice(-3) === 'png' ||
+      image.name.slice(-3) === 'jpg' ||
+      image.name.slice(-4) === 'jpeg'
+    ) {
       let itemObject = {
         // 今Firebase上にある商品情報末尾のidに１を足す
         id: newItemId,
@@ -91,167 +102,161 @@ export const Admin = () => {
         price: {
           m: new_Price_m,
           l: new_Price_l,
-        }
-      }
+        },
+      };
       // 非同期通信uploadItemDataAsyncへ処理を繋ぐ
-      dispatch(uploadItemDataAsync(itemObject))
-      setFlag(true)
+      dispatch(uploadItemDataAsync(itemObject));
+      setFlag(true);
       setTimeout(() => {
-        history.push("adminItems")
-      }, 5000)
+        history.push('adminItems');
+      }, 5000);
     } else {
       // 拡張子が指定のもの以外の時のアラート
-      alert("拡張子を「.png」「.jpg」「.jpeg」のいずれかにしてください。")
+      alert('拡張子を「.png」「.jpg」「.jpeg」のいずれかにしてください。');
     }
-  }
+  };
   return (
     <div>
       <AdminHeader></AdminHeader>
-      {!adminArray.length ? "ローディング中" :
+      {!adminArray.length ? (
+        'ローディング中'
+      ) : (
         <>
           <form onSubmit={handleSubmit(onSubmit)}>
             <p>商品情報の追加</p>
             <p>画像は拡張子が「.png」「.jpg」や「.jpeg」にしてください。</p>
-            <Button
-              variant="contained" component="label">
-              {image ?
+            <Button variant='contained' component='label'>
+              {image ? (
                 <p>以下のファイルが選択されています。</p>
-                : <p>商品画像を選択</p>}
-              <input type="file" hidden onChange={handleChange} />
+              ) : (
+                <p>商品画像を選択</p>
+              )}
+              <input type='file' hidden onChange={handleChange} />
             </Button>
-            {errors.image &&
-              <FontColorRed>
-                {errors.image.message}
-              </FontColorRed>
-            }
-            {!image ?
+            {errors.image && (
+              <FontColorRed>{errors.image.message}</FontColorRed>
+            )}
+            {!image ? (
               <p>商品画像の選択が未完了です。</p>
-              : <p>ファイル名：{image.name}</p>}
+            ) : (
+              <p>ファイル名：{image.name}</p>
+            )}
             <FlexColunm>
-
               {/* 商品名入力エリア */}
               <TextField
-                {...register("name", {
+                {...register('name', {
                   required: '商品名を入力してください。',
                 })}
                 className={classes.margin}
-                id="input-with-icon-textfield"
-                label="商品名"
+                id='input-with-icon-textfield'
+                label='商品名'
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position="start">
+                    <InputAdornment position='start'>
                       <FastfoodIcon />
                     </InputAdornment>
                   ),
                 }}
               />
-              {errors.name &&
-                <FontColorRed>
-                  {errors.name.message}
-                </FontColorRed>
-              }
+              {errors.name && (
+                <FontColorRed>{errors.name.message}</FontColorRed>
+              )}
 
               {/* 商品詳細入力エリア */}
               <TextField
-                {...register("description", {
+                {...register('description', {
                   required: '商品詳細を入力してください。',
                 })}
                 className={classes.margin}
-                id="input-with-icon-textfield"
-                label="商品詳細"
+                id='input-with-icon-textfield'
+                label='商品詳細'
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position="start">
+                    <InputAdornment position='start'>
                       <DescriptionIcon />
                     </InputAdornment>
                   ),
                 }}
               />
-              {errors.description &&
-                <FontColorRed>
-                  {errors.description.message}
-                </FontColorRed>
-              }
+              {errors.description && (
+                <FontColorRed>{errors.description.message}</FontColorRed>
+              )}
 
               {/* Mサイズの金額入力エリア */}
               <TextField
-                {...register("price_m", {
+                {...register('price_m', {
                   required: 'Mサイズの金額を入力してください。',
                   pattern: {
                     value: numberRegExp,
-                    message: "整数値（１〜９）で入力してください。"
+                    message: '整数値（１〜９）で入力してください。',
                   },
                 })}
                 className={classes.margin}
-                id="input-with-icon-textfield"
-                label="Mサイズ"
+                id='input-with-icon-textfield'
+                label='Mサイズ'
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position="start">
+                    <InputAdornment position='start'>
                       <MonetizationOnIcon />
                     </InputAdornment>
                   ),
                 }}
               />
-              {errors.price_m &&
-                <FontColorRed>
-                  {errors.price_m.message}
-                </FontColorRed>
-              }
+              {errors.price_m && (
+                <FontColorRed>{errors.price_m.message}</FontColorRed>
+              )}
 
               {/* Lサイズの金額入力エリア */}
               <TextField
-                {...register("price_l", {
+                {...register('price_l', {
                   required: 'Lサイズの金額を入力してください。',
                   pattern: {
                     value: numberRegExp,
-                    message: "整数値（１〜９）で入力してください。"
+                    message: '整数値（１〜９）で入力してください。',
                   },
                 })}
                 className={classes.margin}
-                id="input-with-icon-textfield"
-                label="Lサイズ"
+                id='input-with-icon-textfield'
+                label='Lサイズ'
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position="start">
+                    <InputAdornment position='start'>
                       <MonetizationOnIcon />
                     </InputAdornment>
                   ),
                 }}
               />
-              {errors.price_l &&
-                <FontColorRed>
-                  {errors.price_l.message}
-                </FontColorRed>
-              }
+              {errors.price_l && (
+                <FontColorRed>{errors.price_l.message}</FontColorRed>
+              )}
             </FlexColunm>
             <Button
-              component="label"
-              color="primary"
-              style={{ border: "1px solid #3F51B5" }}
-            >
-              <button type="submit" hidden>送信</button>
+              component='label'
+              color='primary'
+              style={{ border: '1px solid #3F51B5' }}>
+              <button type='submit' hidden>
+                送信
+              </button>
               アップロード
             </Button>
           </form>
           {flag && <p>5秒後に商品一覧画面に遷移します。</p>}
         </>
-      }
+      )}
     </div>
-  )
-}
-
+  );
+};
 
 const FlexColunm = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`
+`;
 
 const FontColorRed = styled.p`
-  color:red
-`
+  color: red;
+`;
 const InputArea = styled.input`
   font: 15px/24px sans-serif;
 	box-sizing: border-box;
@@ -265,6 +270,6 @@ const InputArea = styled.input`
     border-bottom: 2px solid #da3c41;
 	  outline: none;
   }
-`
+`;
 
 // onClick = { handleUpload } variant = "contained" component = "label"

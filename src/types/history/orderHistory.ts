@@ -11,7 +11,7 @@ export interface FetchObject {
   email: string;
   name: string;
   orderDate: string;
-  orderItems: Array<OrderItems>
+  orderItems: Array<OrderItems>;
   orderUniqueId?: string;
   phoneNumber: string;
   status?: number;
@@ -19,5 +19,4 @@ export interface FetchObject {
   zipcode: string;
 }
 
-export type FetchHistory = Array<FetchObject>
-
+export type FetchHistory = Array<FetchObject>;

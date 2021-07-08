@@ -1,3 +1,3 @@
 export interface PrimaryButtonName {
-  children: string
+  children: string;
 }

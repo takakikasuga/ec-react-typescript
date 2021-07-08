@@ -1,109 +1,108 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useParams, useHistory } from 'react-router-dom'
-import styled from 'styled-components'
-
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 
 // スライサーよりアイテムデータを取得
-import { selectItems } from '../../features/items/itemsSlice'
-import { selectItemPrice } from '../../features/itemPrice/itemPriceSlice'
-import { selectItemCount } from '../../features/itemCount/itemCountSlice'
-import { addOrderAsync } from '../../features/order/orderSlice'
-import { selectUserId } from '../../features/user/userSlice'
-import { selectFetchOrder } from '../../features/order/fetchOrderSlice'
-import { orderUpdateAsync } from '../../features/order/orderUpdateSlice'
-import { setLocalCartStrage } from "../../features/cartLists/localCartStrageSlice"
+import { selectItems } from '../../features/items/itemsSlice';
+import { selectItemPrice } from '../../features/itemPrice/itemPriceSlice';
+import { selectItemCount } from '../../features/itemCount/itemCountSlice';
+import { addOrderAsync } from '../../features/order/orderSlice';
+import { selectUserId } from '../../features/user/userSlice';
+import { selectFetchOrder } from '../../features/order/fetchOrderSlice';
+import { orderUpdateAsync } from '../../features/order/orderUpdateSlice';
+import { setLocalCartStrage } from '../../features/cartLists/localCartStrageSlice';
 
 // コンポーネント
-import { PrimaryButton } from '../atoms/button/PrimaryButton'
-import { RadioButton } from '../organisums/radio/RadioButton'
-import { ItemCount } from '../organisums/count/ItemCount'
-import { Header } from '../organisums/header/Header'
+import { PrimaryButton } from '../atoms/button/PrimaryButton';
+import { RadioButton } from '../organisums/radio/RadioButton';
+import { ItemCount } from '../organisums/count/ItemCount';
+import { Header } from '../organisums/header/Header';
 
 // 型のインポート
-import { Params } from '../../types/params/parameter'
-import { fetchItems } from '../../types/items/items'
-import { firebaseOrderInfo } from '../../types/order/firebaseOrderInfo'
+import { Params } from '../../types/params/parameter';
+import { fetchItems } from '../../types/items/items';
+import { firebaseOrderInfo } from '../../types/order/firebaseOrderInfo';
 
 // マテリアルUI
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      paddingRight: "30px",
-      paddingLeft: "30px",
+      paddingRight: '30px',
+      paddingLeft: '30px',
     },
     paper: {
       padding: theme.spacing(2),
       textAlign: 'center',
-      marginBottom: "32px",
+      marginBottom: '32px',
       color: theme.palette.text.secondary,
     },
-  }),
+  })
 );
 
 export const Deatail = () => {
   const classes = useStyles();
-  const dispatch = useDispatch()
-  const history = useHistory()
-  const items: Array<fetchItems> = useSelector(selectItems)
-  const itemPrice: number = useSelector(selectItemPrice)
-  const itemCount: number = useSelector(selectItemCount)
-  const userId: string | null = useSelector(selectUserId)
-  const fetchData: any = useSelector(selectFetchOrder)
-  const { id }: Params = useParams()
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const items: Array<fetchItems> = useSelector(selectItems);
+  const itemPrice: number = useSelector(selectItemPrice);
+  const itemCount: number = useSelector(selectItemCount);
+  const userId: string | null = useSelector(selectUserId);
+  const fetchData: any = useSelector(selectFetchOrder);
+  const { id }: Params = useParams();
 
   // 詳細画面に一致する商品を抽出する
   const itemDetail = items.filter((item: fetchItems) => {
-    return item.id === Number(id)
-  })
+    return item.id === Number(id);
+  });
 
   const addOrder = (path: string) => {
     if (itemPrice === 0) {
-      alert(`${itemDetail[0].name}のサイズを選択してください。`)
+      alert(`${itemDetail[0].name}のサイズを選択してください。`);
     } else if (itemCount === 0) {
-      alert(`${itemDetail[0].name}の数量を選択してください。`)
+      alert(`${itemDetail[0].name}の数量を選択してください。`);
     } else {
       let addOrder: firebaseOrderInfo = {
         userId: userId!,
         orderInfo: {
-          orderItems: [{
-            itemId: itemDetail[0].id!,
-            itemCount: itemCount,
-            itemName: itemDetail[0].name!,
-            itemPrice: itemPrice,
-            uniqueItemId: ''
-          }],
-          status: 0
+          orderItems: [
+            {
+              itemId: itemDetail[0].id!,
+              itemCount: itemCount,
+              itemName: itemDetail[0].name!,
+              itemPrice: itemPrice,
+              uniqueItemId: '',
+            },
+          ],
+          status: 0,
         },
-      }
+      };
       // ログインがされている状態であればFirebaseを用いた非同期通信を行い、カート情報を追加する
       if (userId) {
         // statusが0のものが存在するか否かでの場合わけ（新規or追加）
         if (!fetchData.length) {
-          dispatch(addOrderAsync(addOrder))
+          dispatch(addOrderAsync(addOrder));
         } else {
-          dispatch(orderUpdateAsync(addOrder))
+          dispatch(orderUpdateAsync(addOrder));
         }
         // ログインがされていない場合は、ローカルストレージに商品を保存する
       } else {
         // Firebaseにおける一意のidを作成する代わりに今の日付で作成、追加する
         let id = new Date().getTime().toString();
         // 現状の情報に一意のId（uniqueItemId）を追加
-        addOrder.orderInfo.orderItems[0].uniqueItemId = id
-        dispatch(setLocalCartStrage(addOrder))
+        addOrder.orderInfo.orderItems[0].uniqueItemId = id;
+        dispatch(setLocalCartStrage(addOrder));
       }
 
       // カートリストへ画面遷移
-      history.push(path)
+      history.push(path);
     }
-  }
+  };
 
   return (
     <>
@@ -114,7 +113,7 @@ export const Deatail = () => {
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <h3>{detail.name}</h3>
-                <ImageWrapper src={detail!.imagePath!} alt="" />
+                <ImageWrapper src={detail!.imagePath!} alt='' />
                 <p>{detail.description}</p>
               </Paper>
               <FlexItems>
@@ -123,46 +122,49 @@ export const Deatail = () => {
               </FlexItems>
               <div>
                 <h4>合計金額</h4>
-                <p>{Number(itemPrice * itemCount).toLocaleString()}円（税込）</p>
+                <p>
+                  {Number(itemPrice * itemCount).toLocaleString()}円（税込）
+                </p>
               </div>
             </Grid>
           </Grid>
         </ContainerPadding>
       ))}
       <Wrapper>
-        <WrapperButton onClick={() => { addOrder(`/cartList`) }}>
+        <WrapperButton
+          onClick={() => {
+            addOrder(`/cartList`);
+          }}>
           <PrimaryButton>カートに追加</PrimaryButton>
         </WrapperButton>
       </Wrapper>
     </>
-  )
-}
+  );
+};
 
 const ContainerPadding = styled.div`
   margin-top: 40px;
-  padding:0 40px;
+  padding: 0 40px;
   margin-bottom: 32px;
-`
+`;
 
 const WrapperButton = styled.span`
   text-align: center;
   margin-bottom: 32px;
-`
+`;
 const ImageWrapper = styled.img`
   display: block;
   object-fit: cover;
   width: 80%;
-  margin:0 auto;
-  max-height: 800px;
-`
+  margin: 0 auto;
+  height: 600px;
+`;
 const FlexItems = styled.div`
   display: flex;
-  align-items:center;
+  align-items: center;
   justify-content: center;
-`
+`;
 
 const Wrapper = styled.div`
   margin-bottom: 32px;
-`
-
-
+`;

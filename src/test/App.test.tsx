@@ -11,5 +11,5 @@ test('renders learn react link', () => {
     </Provider>
   );
 
-  expect(getByText(/トップページ/)).toBeTruthy()
+  expect(getByText(/トップページ/)).toBeTruthy();
 });

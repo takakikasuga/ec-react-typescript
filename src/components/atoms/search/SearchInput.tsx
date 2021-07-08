@@ -1,5 +1,10 @@
-import React from 'react'
-import { createStyles, fade, Theme, makeStyles } from '@material-ui/core/styles';
+import React from 'react';
+import {
+  createStyles,
+  fade,
+  Theme,
+  makeStyles,
+} from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 
@@ -43,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
       },
     },
-  }),
+  })
 );
 
 export const SearchInput = () => {
@@ -55,7 +60,7 @@ export const SearchInput = () => {
         <SearchIcon />
       </div>
       <InputBase
-        placeholder="Search…"
+        placeholder='Search…'
         classes={{
           root: classes.inputRoot,
           input: classes.inputInput,
@@ -63,5 +68,5 @@ export const SearchInput = () => {
         inputProps={{ 'aria-label': 'search' }}
       />
     </div>
-  )
-}
+  );
+};

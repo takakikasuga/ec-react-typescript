@@ -11,11 +11,11 @@ export interface CancelObject {
   email: string;
   name: string;
   orderDate: string;
-  orderItems: Array<OrderItems>
+  orderItems: Array<OrderItems>;
   orderUniqueId?: string;
   phoneNumber: string;
-  status?: number
-  totoalPrice: number
+  status?: number;
+  totoalPrice: number;
   zipcode: string;
 }
 
@@ -23,9 +23,9 @@ export type CancelOrder = {
   // order: Array<CancelObject>;
   uniqueOrderId: string;
   userId: string;
-}
+};
 
 export type UpdateCancelOrder = {
   copyOrderHistory: Array<CancelObject>;
   uniqueOrderId: string;
-}
+};

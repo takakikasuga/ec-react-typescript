@@ -1,4 +1,4 @@
-import { fetchItems } from "../items/items"
+import { fetchItems } from '../items/items';
 export interface RadioProps {
-  detail: fetchItems
+  detail: fetchItems;
 }

@@ -1,19 +1,22 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 
 // スライサーより取得
-import { selectItems, fetchItemsAsync } from '../../../features/items/itemsSlice'
+import {
+  selectItems,
+  fetchItemsAsync,
+} from '../../../features/items/itemsSlice';
 
 // コンポーネント
-import { ItemdetailPrice } from '../../molecules/itemPrice/ItemdetailPrice'
-import { FavoriteIconHeart } from '../../atoms/icons/FavoriteIconHeart'
-import { StarIcon } from '../../atoms/icons/StarIcon'
-import { PrimaryButton } from '../../atoms/button/PrimaryButton'
+import { ItemdetailPrice } from '../../molecules/itemPrice/ItemdetailPrice';
+import { FavoriteIconHeart } from '../../atoms/icons/FavoriteIconHeart';
+import { StarIcon } from '../../atoms/icons/StarIcon';
+import { PrimaryButton } from '../../atoms/button/PrimaryButton';
 
 // 型のインポート
-import { fetchItems } from '../../../types/items/items'
+import { fetchItems } from '../../../types/items/items';
 
 // マテリアルUI
 import { makeStyles } from '@material-ui/core/styles';
@@ -24,44 +27,42 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 
-
 const useStyles = makeStyles({
   root: {
-    width: "30%",
-    margin: "20px"
+    width: '30%',
+    margin: '20px',
   },
   media: {
     height: 300,
   },
 });
 export const Items = ({ outputConsole }: any) => {
-  const items: fetchItems[] = useSelector(selectItems)
-  const dispatch = useDispatch()
-  const history = useHistory()
-
+  const items: fetchItems[] = useSelector(selectItems);
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const changeToDetail = (path: string) => {
-    history.push(path)
-  }
+    history.push(path);
+  };
 
   // アイテム一覧を再表示する
   const displayItems = () => {
-    outputConsole("テスト関数が発火しました。")
-    dispatch(fetchItemsAsync())
-  }
+    outputConsole('テスト関数が発火しました。');
+    dispatch(fetchItemsAsync());
+  };
 
   const classes = useStyles();
   return (
     <>
-      {!items.length ?
+      {!items.length ? (
         <>
           <h1>該当する商品がございません。</h1>
 
-          <div data-testid="発火テスト" onClick={displayItems} >
-            <PrimaryButton >商品一覧へ</PrimaryButton>
+          <div data-testid='発火テスト' onClick={displayItems}>
+            <PrimaryButton>商品一覧へ</PrimaryButton>
           </div>
         </>
-        :
+      ) : (
         <>
           <FlecItems>
             {items.map((item: any, index: number) => (
@@ -73,7 +74,7 @@ export const Items = ({ outputConsole }: any) => {
                     title={item.name}
                   />
                   <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
+                    <Typography gutterBottom variant='h5' component='h2'>
                       {item.name}
                     </Typography>
                     <ItemdetailPrice item={item}></ItemdetailPrice>
@@ -83,21 +84,23 @@ export const Items = ({ outputConsole }: any) => {
                   <FavoriteIconHeart></FavoriteIconHeart>
                   <StarIcon></StarIcon>
                 </CardActions>
-                <div onClick={() => { changeToDetail(`/detail/${item.id}`) }}>
+                <div
+                  onClick={() => {
+                    changeToDetail(`/detail/${item.id}`);
+                  }}>
                   <PrimaryButton>詳細へ</PrimaryButton>
                 </div>
               </Card>
             ))}
           </FlecItems>
-          <div onClick={displayItems} >
+          <div onClick={displayItems}>
             <PrimaryButton>商一覧へ</PrimaryButton>
           </div>
         </>
-      }
+      )}
     </>
   );
-
-}
+};
 
 // スタイルコンポーネント
 const FlecItems = styled.div`
@@ -105,7 +108,4 @@ const FlecItems = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
-`
-
-
-
+`;

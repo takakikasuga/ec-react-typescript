@@ -1,6 +1,6 @@
 export interface AdminItems {
   uniqueId?: string;
-  id?: number | null,
+  id?: number | null;
   description?: string | null;
   imagePath?: string | null;
   name?: string | null;
@@ -11,5 +11,5 @@ export interface AdminItems {
 }
 
 export interface FetchAdminItems {
-  adminItems?: Array<AdminItems>
+  adminItems?: Array<AdminItems>;
 }
